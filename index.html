@@ -214,10 +214,10 @@
             errorMsg.style.display = "none";
 
             const URL_APPS_SCRIPT = typeof CONFIG !== 'undefined' ? CONFIG.URL_APPS_SCRIPT : ""; 
-            const DESTINO = typeof CONFIG !== 'undefined' ? CONFIG.PAGINA_DESTINO : "panel_principal.html";
+            const DESTINO = typeof CONFIG !== 'undefined' ? CONFIG.PAGINA_DESTINO : home.html;
 
             if(!URL_APPS_SCRIPT) {
-                errorMsg.innerText = "Error: Falta configuración (2_config.js).";
+                errorMsg.innerText = "Error: Falta configuración (config.js).";
                 errorMsg.style.display = "block";
                 btn.disabled = false;
                 btn.innerHTML = '<span>INICIAR SESIÓN</span> <i class="fas fa-sign-in-alt"></i>';
