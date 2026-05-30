@@ -1,1 +1,26 @@
+// Dentro de tu función iniciarSesion()
+async function iniciarSesion() {
+    const user = document.getElementById('user').value;
+    const pass = document.getElementById('pass').value;
+    
+    // Usamos la configuración específica del nuevo archivo
+    const URL_APPS_SCRIPT = CONFIG.URL_APPS_SCRIPT; 
 
+    try {
+        const res = await fetch(`${URL_APPS_SCRIPT}?user=${user}&pass=${pass}`);
+        const data = await res.json();
+        
+        if (data.acceso) {
+            sessionStorage.setItem("usuario", data.usuario);
+            sessionStorage.setItem("sector", data.sector);
+            
+            // REDIRECCIÓN DINÁMICA
+            window.location.href = CONFIG.PAGINA_DESTINO; 
+        } else {
+            alert("Usuario o contraseña incorrectos.");
+        }
+    } catch (error) {
+        console.error(error);
+        alert("Error de conexión.");
+    }
+}
