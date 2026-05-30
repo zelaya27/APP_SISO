@@ -214,7 +214,7 @@
             errorMsg.style.display = "none";
 
             const URL_APPS_SCRIPT = typeof CONFIG !== 'undefined' ? CONFIG.URL_APPS_SCRIPT : ""; 
-            const DESTINO = typeof CONFIG !== 'undefined' ? CONFIG.PAGINA_DESTINO : home.html;
+         
 
             if(!URL_APPS_SCRIPT) {
                 errorMsg.innerText = "Error: Falta configuración (config.js).";
@@ -231,7 +231,7 @@
                 if (data.acceso) {
                     sessionStorage.setItem("usuario", data.usuario);
                     sessionStorage.setItem("sector", data.sector);
-                    window.location.href = DESTINO; 
+                    window.location.href = home.html; 
                 } else {
                     errorMsg.innerText = "Usuario o contraseña incorrectos.";
                     errorMsg.style.display = "block";
