@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar Sesión - Sistema de Registros</title>
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <script src="2_config.js"></script>
 
     <style>
-        /* Paleta de colores heredada del Panel Principal */
         :root {
             --bg-color: #0b141d;
             --card-color: #14212d;
@@ -81,7 +81,7 @@
 
         .input-group input {
             width: 100%;
-            padding: 12px 15px 12px 40px; /* Espacio para el ícono */
+            padding: 12px 15px 12px 40px;
             box-sizing: border-box;
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
@@ -157,4 +157,100 @@
 
     <div class="login-wrapper">
         <div class="logo-container">
-            <img src="
+            <img src="https://github.com/zelaya27/IMAGENES_AZ/blob/main/UTCD%20Vertical.png?raw=true" alt="Logo UTCD">
+        </div>
+        
+        <h2 class="login-title">ACCESO AL SISTEMA</h2>
+
+        <div class="input-group">
+            <i class="fas fa-user icon-left"></i>
+            <input type="text" id="user" placeholder="Usuario" autocomplete="off">
+        </div>
+
+        <div class="input-group">
+            <i class="fas fa-lock icon-left"></i>
+            <input type="password" id="pass" placeholder="Contraseña">
+            <button type="button" class="btn-toggle-pass" onclick="togglePassword()" title="Mostrar/Ocultar">
+                <i class="fas fa-eye" id="eye-icon"></i>
+            </button>
+        </div>
+
+        <button class="btn-enviar" id="btn-login" onclick="iniciarSesion()">
+            <span>INICIAR SESIÓN</span> <i class="fas fa-sign-in-alt"></i>
+        </button>
+
+        <div id="mensaje-error" class="error-message">Usuario o contraseña incorrectos.</div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const p = document.getElementById('pass');
+            const icon = document.getElementById('eye-icon');
+            if (p.type === 'password') {
+                p.type = 'text';
+                icon.classList.remove('fa-eye');
+                icon.classList.add('fa-eye-slash');
+            } else {
+                p.type = 'password';
+                icon.classList.remove('fa-eye-slash');
+                icon.classList.add('fa-eye');
+            }
+        }
+
+        async function iniciarSesion() {
+            const user = document.getElementById('user').value;
+            const pass = document.getElementById('pass').value;
+            const btn = document.getElementById('btn-login');
+            const errorMsg = document.getElementById('mensaje-error');
+            
+            if(!user || !pass) {
+                errorMsg.innerText = "Por favor, completa todos los campos.";
+                errorMsg.style.display = "block";
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+            errorMsg.style.display = "none";
+
+            const URL_APPS_SCRIPT = typeof CONFIG !== 'undefined' ? CONFIG.URL_APPS_SCRIPT : ""; 
+            const DESTINO = typeof CONFIG !== 'undefined' ? CONFIG.PAGINA_DESTINO : "panel_principal.html";
+
+            if(!URL_APPS_SCRIPT) {
+                errorMsg.innerText = "Error: Falta configuración (2_config.js).";
+                errorMsg.style.display = "block";
+                btn.disabled = false;
+                btn.innerHTML = '<span>INICIAR SESIÓN</span> <i class="fas fa-sign-in-alt"></i>';
+                return;
+            }
+
+            try {
+                const res = await fetch(`${URL_APPS_SCRIPT}?user=${user}&pass=${pass}`);
+                const data = await res.json();
+                
+                if (data.acceso) {
+                    sessionStorage.setItem("usuario", data.usuario);
+                    sessionStorage.setItem("sector", data.sector);
+                    window.location.href = DESTINO; 
+                } else {
+                    errorMsg.innerText = "Usuario o contraseña incorrectos.";
+                    errorMsg.style.display = "block";
+                }
+            } catch (error) {
+                console.error(error);
+                errorMsg.innerText = "Error de conexión con el servidor.";
+                errorMsg.style.display = "block";
+            } finally {
+                btn.disabled = false;
+                btn.innerHTML = '<span>INICIAR SESIÓN</span> <i class="fas fa-sign-in-alt"></i>';
+            }
+        }
+
+        document.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                iniciarSesion();
+            }
+        });
+    </script>
+</body>
+</html>
