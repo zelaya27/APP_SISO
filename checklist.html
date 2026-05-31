@@ -976,20 +976,7 @@
             </tbody>
         </table>
     </div>
-             <div id="modalFirma" class="modal-firma-container" style="display: none;">
-    <div class="modal-firma-content">
-        <h4>Firma Digital</h4>
-        <p style="font-size: 12px; color: #aaa; margin-top: -10px;">Dibuje su firma en el recuadro blanco</p>
-        
-        <canvas id="pizarraFirma" width="320" height="200"></canvas>
-        
-        <div class="modal-botones">
-            <button type="button" class="btn-firma-limpiar" onclick="limpiarPizarra()">Limpiar</button>
-            <button type="button" class="btn-firma-cancelar" onclick="cerrarModalFirma()">Cancelar</button>
-            <button type="button" class="btn-firma-guardar" onclick="guardarFirma()">Aceptar</button>
-        </div>
-    </div>
-</div>
+   
 </div>
 
 <div class="step-content" id="step-7">
@@ -1020,8 +1007,7 @@
         <i class="fas fa-plus-circle"></i> Agregar Integrante
     </button>
     
-<div id="modalFirma" class="modal-firma-container" style="display: none;">
-    </div>
+
 
     
 </div>
@@ -1259,35 +1245,47 @@ function detenerDibujo() {
 }
 
 // ---------------- LÓGICA DE LOS BOTONES DEL MODAL ---------------- //
+// --- LÓGICA DE FIRMA ROBUSTA ---
+window.campoDestino = ""; // Variable global para saber qué input actualizar
+
 window.abrirModalFirma = function(id) {
-function abrirModalFirma(columnaId) {
-    campoDestino = columnaId; // Le decimos al sistema en qué columna guardar (col62 o col66)
+    window.campoDestino = id;
     document.getElementById("modalFirma").style.display = "flex";
-    limpiarPizarra(); // Siempre abrimos el lienzo en blanco
-}
-
-function cerrarModalFirma() {
-    document.getElementById("modalFirma").style.display = "none";
-}
-
-function limpiarPizarra() {
+    // Limpiar canvas al abrir
+    const canvas = document.getElementById("pizarraFirma");
+    const ctx = canvas.getContext("2d");
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-}
+};
 
-function guardarFirma() {
-    // Convierte el dibujo a código Base64 (Texto largo que representa la imagen)
+window.cerrarModalFirma = function() {
+    document.getElementById("modalFirma").style.display = "none";
+};
+
+window.limpiarPizarra = function() {
+    const canvas = document.getElementById("pizarraFirma");
+    const ctx = canvas.getContext("2d");
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+window.guardarFirma = function() {
+    const canvas = document.getElementById("pizarraFirma");
     const imagenBase64 = canvas.toDataURL("image/png");
     
-    // Inyecta el código en el input oculto para que viaje a Google Sheets
-    document.getElementById(campoDestino).value = imagenBase64;
+    // Inyecta en el input oculto
+    const inputDestino = document.getElementById(window.campoDestino);
+    if(inputDestino) {
+        inputDestino.value = imagenBase64;
+    }
     
-    // Muestra la imagen generada en la tabla para que el usuario la vea
-    const imgPreview = document.getElementById("img_" + campoDestino);
-    imgPreview.src = imagenBase64;
-    imgPreview.style.display = "block";
+    // Si tienes una imagen previa (img_ + id), muéstrala
+    const imgPreview = document.getElementById("img_" + window.campoDestino);
+    if(imgPreview) {
+        imgPreview.src = imagenBase64;
+        imgPreview.style.display = "block";
+    }
     
     cerrarModalFirma();
-}}
+};
 /* =========================================
    LÓGICA DEL PASO 7 (PERSONAL DINÁMICO)
    Corregido para asegurar visibilidad de funciones
@@ -1347,5 +1345,16 @@ document.addEventListener("DOMContentLoaded", function() {
 
         
     </script>
+    <div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+    <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
+        <h4>Firma Digital</h4>
+        <canvas id="pizarraFirma" width="320" height="200" style="border: 1px solid #ccc; background: #fff;"></canvas>
+        <div class="modal-botones" style="margin-top: 10px;">
+            <button type="button" onclick="limpiarPizarra()">Limpiar</button>
+            <button type="button" onclick="cerrarModalFirma()">Cancelar</button>
+            <button type="button" onclick="guardarFirma()">Aceptar</button>
+        </div>
+    </div>
+</div>
 </body>
 </html>
