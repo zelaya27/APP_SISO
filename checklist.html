@@ -290,6 +290,12 @@
                 <div class="step-circle">2</div>
                 <div class="step-label">Tiempos</div>
             </div>
+    <div class="step-line"></div>
+    <div class="step-indicator" id="ind-3">
+        <div class="step-circle">3</div>
+        <div class="step-label">Riesgos</div>
+    </div>
+</div>
         </div>
 
         <form id="checklistForm">
@@ -386,23 +392,57 @@
                     </div>
                 </div>
             </div>
-<!-- INDICADORES WIZARD -->
-<div class="steps-container">
-    <div class="step-indicator active" id="ind-1">
-        <div class="step-circle">1</div>
-        <div class="step-label">Generales</div>
+<!-- ==========================================
+     STEP 3: COLUMNAS 26 A 27 (RIESGOS)
+     ========================================== -->
+<div class="step-content" id="step-3">
+    <h3><i class="fas fa-exclamation-triangle"></i> Paso 3: Riesgos Potenciales</h3>
+    <p style="font-size: 13px; color: var(--muted-text); margin-bottom: 20px;">
+        Seleccione todos los riesgos identificados en la planificación del trabajo:
+    </p>
+
+    <!-- Col 26 -->
+    <div class="riesgos-grid">
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ruido Continuo"> <span class="riesgo-text">Ruido Continuo</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Posturas Inadecuadas y Manipulación de Cargas"> <span class="riesgo-text">Posturas Inadecuadas y Manipulación de Cargas</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Trabajo en Altura"> <span class="riesgo-text">Trabajo en Altura</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Espacios Confinados"> <span class="riesgo-text">Espacios Confinados</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Caídas de Objetos"> <span class="riesgo-text">Caídas de Objetos</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Maquinaria en Movimiento"> <span class="riesgo-text">Maquinaria en Movimiento</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Exposición a Radiaciones Solares"> <span class="riesgo-text">Exposición a Radiaciones Solares</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Superficies Calientes"> <span class="riesgo-text">Superficies Calientes</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Descargas Atmosféricas"> <span class="riesgo-text">Descargas Atmosféricas</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Descargas Eléctricas Naturales (Rayos)"> <span class="riesgo-text">Descargas Eléctricas Naturales (Rayos)</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Vibraciones"> <span class="riesgo-text">Vibraciones</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Orden público (atraco, robo, atentados)"> <span class="riesgo-text">Orden público (atraco, robo, atentados)</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Precipitaciones (Lluvia)"> <span class="riesgo-text">Precipitaciones (Lluvia)</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Tráfico Vehicular"> <span class="riesgo-text">Tráfico Vehicular</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Contacto Eléctrico Indirecto"> <span class="riesgo-text">Contacto Eléctrico Indirecto</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Contacto Eléctrico Directo"> <span class="riesgo-text">Contacto Eléctrico Directo</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Caídas a Distinto Nivel"> <span class="riesgo-text">Caídas a Distinto Nivel</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Material Particulado"> <span class="riesgo-text">Material Particulado</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picadura de Ofidios (Serpientes)"> <span class="riesgo-text">Picadura de Ofidios (Serpientes)</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picaduras de Insectos"> <span class="riesgo-text">Picaduras de Insectos</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ataque de Animales (Bovinos, Porcinos, Equinos, etc)"> <span class="riesgo-text">Ataque de Animales</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Derrame de Sustancias Químicas"> <span class="riesgo-text">Derrame de Sustancias Químicas</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Gases o Vapores"> <span class="riesgo-text">Gases o Vapores</span></label>
+        
+        <!-- Opción OTROS con el evento onchange -->
+        <label class="riesgo-item" style="border-color: var(--warning-color);">
+            <input type="checkbox" id="chk_otros" name="col_26" value="Otros" onchange="verificarRiesgosOtros()"> 
+            <span class="riesgo-text" style="color: var(--warning-color); font-weight: bold;">Otros</span>
+        </label>
     </div>
-    <div class="step-line"></div>
-    <div class="step-indicator" id="ind-2">
-        <div class="step-circle">2</div>
-        <div class="step-label">Tiempos</div>
-    </div>
-    <div class="step-line"></div>
-    <div class="step-indicator" id="ind-3">
-        <div class="step-circle">3</div>
-        <div class="step-label">Riesgos</div>
+
+    <!-- Col 27 (CONDICIONAL) -->
+    <div class="form-group hidden-field" id="grupo_col_27">
+        <label style="color: var(--warning-color); font-size: 14px;">Especifique otros riesgos:</label>
+        <textarea id="col_27" rows="2" placeholder="Describa el riesgo detectado..."></textarea>
     </div>
 </div>
+
+
+            
             <div class="espacio-footer"></div>
 
             <!-- BOTONES FIJOS EN LA PARTE INFERIOR (STICKY) -->
