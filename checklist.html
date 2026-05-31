@@ -266,6 +266,58 @@
     border-color: var(--blue-active);
     background-color: rgba(59, 130, 246, 0.1); /* Fondo azul translúcido */
 }
+        
+ /* Estilos para la tabla del Step 5 */
+.tabla-sino {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+    color: #fff; /* Ajusta si tu app es clara u oscura */
+}
+.tabla-sino th {
+    background-color: #222;
+    padding: 12px;
+    text-align: center;
+}
+.tabla-sino td {
+    padding: 12px 8px;
+    border-bottom: 1px solid #444;
+    vertical-align: middle;
+}
+.tabla-sino td:first-child {
+    text-align: left;
+    width: 55%; /* Le da más espacio a la pregunta */
+}
+.td-center {
+    text-align: center;
+}
+
+/* Ocultar el radio button original */
+.btn-radio {
+    display: none;
+}
+
+/* Diseño del botón (Píldora) */
+.btn-label {
+    display: inline-block;
+    padding: 6px 12px;
+    border-radius: 20px;
+    background-color: #333;
+    color: #ccc;
+    cursor: pointer;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    border: 1px solid #555;
+    margin: 2px;
+}
+
+/* Colores cuando están seleccionados */
+.btn-radio:checked + .btn-label.si { background-color: #28a745; color: white; border-color: #28a745; }
+.btn-radio:checked + .btn-label.no { background-color: #dc3545; color: white; border-color: #dc3545; }
+.btn-radio:checked + .btn-label.na { background-color: #6c757d; color: white; border-color: #6c757d; }       
+    
+    
+    
     </style>
 </head>
 <body>
@@ -440,9 +492,142 @@
         <textarea id="col_27" rows="2" placeholder="Describa el riesgo detectado..."></textarea>
     </div>
 </div>
+<div class="form-group">
+    <label>28. EQUIPO PARA ASCENSO Y DESCENSO EN ALTURA</label>
+    <select id="col28" name="col28" class="form-control" onchange="verificarOtroEquipo()">
+        <option value="">Seleccione...</option>
+        <option value="Carro canasta">Carro canasta</option>
+        <option value="Escalera">Escalera</option>
+        <option value="Arnés">Arnés</option>
+        <option value="Pretales">Pretales</option>
+        <option value="Otro">Otro</option>
+    </select>
+</div>
 
+<div class="form-group" id="divCol29" style="display: none;">
+    <label>29. OTRO EQUIPO ¿Cuál?</label>
+    <input type="text" id="col29" name="col29" class="form-control" placeholder="Especifique el equipo...">
+</div>
 
-            
+<div class="form-group">
+    <label>30. Altura de trabajo (m)</label>
+    <input type="number" id="col30" name="col30" class="form-control" step="0.1" placeholder="Ej: 5.5">
+</div>
+
+        <div class="table-responsive">
+    <table class="tabla-sino">
+        <thead>
+            <tr>
+                <th>Pregunta de Validación</th>
+                <th>SI</th>
+                <th>NO</th>
+                <th>N/A</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>31. ¿Existe un encargado supervisor o ingeniero durante la actividad?</td>
+                <td class="td-center">
+                    <input type="radio" id="col31_si" name="col31" value="SI" class="btn-radio">
+                    <label for="col31_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col31_no" name="col31" value="NO" class="btn-radio">
+                    <label for="col31_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col31_na" name="col31" value="N/A" class="btn-radio">
+                    <label for="col31_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>32. ¿El poste o estructura donde va a trabajar se encuentra en buen estado?</td>
+                <td class="td-center">
+                    <input type="radio" id="col32_si" name="col32" value="SI" class="btn-radio"><label for="col32_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col32_no" name="col32" value="NO" class="btn-radio"><label for="col32_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col32_na" name="col32" value="N/A" class="btn-radio"><label for="col32_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>33. ¿Ha verificado que NO haya presencia de abejas en la zona de trabajo?</td>
+                <td class="td-center">
+                    <input type="radio" id="col33_si" name="col33" value="SI" class="btn-radio"><label for="col33_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col33_no" name="col33" value="NO" class="btn-radio"><label for="col33_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col33_na" name="col33" value="N/A" class="btn-radio"><label for="col33_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>34. ¿En caso de haber abejas, que controles implementó para ejecutar el trabajo? ____________________</td>
+                <td class="td-center">
+                    <input type="radio" id="col34_si" name="col34" value="SI" class="btn-radio"><label for="col34_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col34_no" name="col34" value="NO" class="btn-radio"><label for="col34_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col34_na" name="col34" value="N/A" class="btn-radio"><label for="col34_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>35. ¿Ha identificado que dispositivo alimenta el suministro de energía en la zona de trabajo?</td>
+                <td class="td-center">
+                    <input type="radio" id="col35_si" name="col35" value="SI" class="btn-radio"><label for="col35_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col35_no" name="col35" value="NO" class="btn-radio"><label for="col35_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col35_na" name="col35" value="N/A" class="btn-radio"><label for="col35_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>46. ¿Es viable realizar el trabajo con el equipo, las herramientas y el personal que dispone para la tarea?</td>
+                <td class="td-center">
+                    <input type="radio" id="col46_si" name="col46" value="SI" class="btn-radio"><label for="col46_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col46_no" name="col46" value="NO" class="btn-radio"><label for="col46_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col46_na" name="col46" value="N/A" class="btn-radio"><label for="col46_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+
+            <tr>
+                <td>47. ¿Algún trabajador del equipo de trabajo se encuentra actualmente bajo la influencia de sustancias psicoactivas...?</td>
+                <td class="td-center">
+                    <input type="radio" id="col47_si" name="col47" value="SI" class="btn-radio"><label for="col47_si" class="btn-label si">SI</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col47_no" name="col47" value="NO" class="btn-radio"><label for="col47_no" class="btn-label no">NO</label>
+                </td>
+                <td class="td-center">
+                    <input type="radio" id="col47_na" name="col47" value="N/A" class="btn-radio"><label for="col47_na" class="btn-label na">N/A</label>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="form-group" style="margin-top: 30px;">
+    <label style="color: #ffc107; font-weight: bold;">
+        48. NOTA: Si alguna de las respuestas anteriores es negativa o N/A, por favor argumente en este segmento el porqué "NO" o "N/A":
+    </label>
+    <textarea id="col48" name="col48" class="form-control" rows="5" placeholder="Escriba aquí sus observaciones..."></textarea>
+</div>    
             <div class="espacio-footer"></div>
 
             <!-- BOTONES FIJOS EN LA PARTE INFERIOR (STICKY) -->
@@ -500,7 +685,17 @@
                 document.getElementById('col_27').value = ""; // Limpia el texto si se desmarca
             }
         }
-   
+   function verificarOtroEquipo() {
+    const selectEquipo = document.getElementById('col28');
+    const divOtro = document.getElementById('divCol29');
+    
+    if (selectEquipo.value === 'Otro') {
+        divOtro.style.display = 'block';
+    } else {
+        divOtro.style.display = 'none';
+        document.getElementById('col29').value = ''; // Limpia el texto si se arrepiente
+    }
+}
 let pasoActual = 1;
         const TOTAL_PASOS = 3; // Añadimos esta variable para que sepa que ahora son 3 pasos
 
