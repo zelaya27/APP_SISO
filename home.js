@@ -60,3 +60,40 @@ async function nuevoRegistro() {
         btn.innerHTML = '<i class="fas fa-plus"></i> NUEVO REGISTRO';
     }
 }
+
+// 1. Cargamos los registros automáticamente al abrir la página
+document.addEventListener('DOMContentLoaded', () => {
+    // ... tu código de usuario que ya tenías ...
+    
+    // Llamamos a la función de carga
+    cargarRegistros();
+});
+
+async function cargarRegistros() {
+    const tbody = document.getElementById("tabla-body");
+    tbody.innerHTML = '<tr><td colspan="5">Cargando datos...</td></tr>'; // Indicador de carga
+
+    try {
+        // Llamamos al mismo URL con el parámetro ?action=obtenerRegistros
+        const res = await fetch(`${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`);
+        const data = await res.json();
+        
+        tbody.innerHTML = ""; // Limpiamos el mensaje de "cargando"
+        
+        // Dibujamos las filas
+        data.forEach(row => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+                <td>${row.ID || ""}</td>
+                <td>${row.FECHA || ""}</td>
+                <td>${row.ESTADO || ""}</td>
+                <td>(Descripción aquí)</td> 
+                <td><button onclick="editar('${row.ID}')">Ver</button></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    } catch (error) {
+        console.error("Error al cargar:", error);
+        tbody.innerHTML = '<tr><td colspan="5">Error al cargar registros.</td></tr>';
+    }
+}
