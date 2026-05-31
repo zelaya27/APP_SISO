@@ -488,6 +488,19 @@
                 document.getElementById('col_19').value = ((minF - minI) / 60).toFixed(2);
             }
         }
+   
+        function verificarRiesgosOtros() {
+            const chkOtros = document.getElementById('chk_otros');
+            const cajaOtros = document.getElementById('grupo_col_27');
+            
+            if (chkOtros.checked) {
+                cajaOtros.classList.remove('hidden-field');
+            } else {
+                cajaOtros.classList.add('hidden-field');
+                document.getElementById('col_27').value = ""; // Limpia el texto si se desmarca
+            }
+        }
+   
 let pasoActual = 1;
         const TOTAL_PASOS = 3; // Añadimos esta variable para que sepa que ahora son 3 pasos
 
