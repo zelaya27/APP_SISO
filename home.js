@@ -13,7 +13,7 @@ async function nuevoRegistro() {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
 
-    const nuevoID = "REG-" + Math.random().toString(36).substring(2, 8).toUpperCase();
+    const nuevoID = Math.random().toString(36).substring(2, 8).toUpperCase();
     
     const payload = {
         action: "crearChecklist",
