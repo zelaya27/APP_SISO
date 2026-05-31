@@ -1030,7 +1030,7 @@
             </div>
         </form>
     </div>
-
+<script src="config.js"></script>
     <!-- JS de lógica (Mantenido intacto) -->
     <script>
         function verificarActividad() {
@@ -1114,9 +1114,7 @@ let pasoActual = 1;
         });
 
    // Asegúrate de tener tu configuración al inicio de tu archivo .js
-const CONFIG = {
-    URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycby0jvY2vqOD_rofiy449P-04Mg6v7uSYV768INns38QONeEF2qp9ZFppIvRIGTb0-s6/exec"
-};
+
 
 async function enviarFormulario() {
     const btn = document.getElementById('btnGuardar');
@@ -1140,12 +1138,13 @@ async function enviarFormulario() {
     };
 
     // 3. Enviar al servidor
-    try {
-        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
-            method: "POST",
-            mode: "no-cors", // Requerido para evitar bloqueos de CORS
-            body: JSON.stringify(payload)
+ const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+            method: 'POST',
+            mode: 'cors',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(datosJSON)
         });
+    }
 
         // NOTA: Con 'no-cors', la respuesta suele ser opaca. 
         // Si necesitas confirmar, lo ideal es manejar la lógica de éxito en el cliente.
