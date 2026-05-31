@@ -1,13 +1,5 @@
-// Carga inicial
-window.onload = function() {
-    if (!sessionStorage.getItem("usuario")) {
-        window.location.href = "index.html";
-    }
-    document.getElementById("nombre-usuario").innerText = sessionStorage.getItem("usuario");
-    document.getElementById("nombre-sector").innerText = sessionStorage.getItem("sector");
-};
+// En tu función dentro de home.js, cambia el fetch por esto:
 
-// Generar ID y Crear Registro
 async function nuevoRegistro() {
     const btn = document.querySelector('.btn-nueva');
     btn.disabled = true;
@@ -15,6 +7,10 @@ async function nuevoRegistro() {
 
     const nuevoID = Math.random().toString(36).substring(2, 8).toUpperCase();
     
+    // Configuración del Proxy (La solución al error CORS)
+    const PROXY_URL = "https://corsproxy.io/?"; 
+    const URL_CON_PROXY = PROXY_URL + encodeURIComponent(CONFIG.URL_APPS_SCRIPT);
+
     const payload = {
         action: "crearChecklist",
         ID: nuevoID,
@@ -25,20 +21,18 @@ async function nuevoRegistro() {
     };
 
     try {
-        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+        // Hacemos el fetch al PROXY, no directo a Google
+        const response = await fetch(URL_CON_PROXY, {
             method: 'POST',
             body: JSON.stringify(payload)
         });
         
+        // Si todo sale bien, redirigimos
         window.location.href = `checklist.html?id=${nuevoID}`;
     } catch (error) {
-        alert("Error al crear registro");
+        console.error("Error:", error);
+        alert("Error de conexión. Intenta de nuevo.");
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-plus"></i> NUEVO REGISTRO';
     }
-}
-
-function cerrarSesion() {
-    sessionStorage.clear();
-    window.location.href = "index.html";
 }
