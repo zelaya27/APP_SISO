@@ -1259,7 +1259,7 @@ function detenerDibujo() {
 }
 
 // ---------------- LÓGICA DE LOS BOTONES DEL MODAL ---------------- //
-
+window.abrirModalFirma = function(id) {
 function abrirModalFirma(columnaId) {
     campoDestino = columnaId; // Le decimos al sistema en qué columna guardar (col62 o col66)
     document.getElementById("modalFirma").style.display = "flex";
@@ -1287,60 +1287,64 @@ function guardarFirma() {
     imgPreview.style.display = "block";
     
     cerrarModalFirma();
-}
+}}
 /* =========================================
    LÓGICA DEL PASO 7 (PERSONAL DINÁMICO)
+   Corregido para asegurar visibilidad de funciones
 ========================================= */
-let contadorPersonal = 0;
+window.contadorPersonal = 0;
 
-// Agregar una fila nueva
+// 1. Aseguramos que la función sea global para que el onclick funcione siempre
+window.eliminarIntegrante = function(idFila) {
+    const fila = document.getElementById(idFila);
+    if (fila) {
+        fila.remove();
+        window.actualizarCorrelativos();
+    }
+};
+
+window.actualizarCorrelativos = function() {
+    const filas = document.querySelectorAll('#tbodyPersonal tr');
+    filas.forEach((fila, index) => {
+        fila.querySelector('.num-fila').innerText = index + 1;
+    });
+};
+
 function agregarIntegrante() {
-    contadorPersonal++;
+    window.contadorPersonal++;
     const tbody = document.getElementById('tbodyPersonal');
     const tr = document.createElement('tr');
-    tr.id = `fila_per_${contadorPersonal}`;
+    tr.id = `fila_per_${window.contadorPersonal}`;
 
-    // Creamos los inputs. Nota que cada ID de firma es único: firma_per_1, firma_per_2...
+    // Usamos window.abrirModalFirma para asegurar que el navegador la encuentre
     tr.innerHTML = `
-        <td style="text-align: center; color: #a0aec0;" class="num-fila">${contadorPersonal}</td>
-        <td><input type="text" id="nombre_per_${contadorPersonal}" placeholder="Nombres y Apellidos"></td>
-        <td><input type="text" id="empresa_per_${contadorPersonal}" placeholder="Empresa"></td>
-        <td><input type="text" id="identidad_per_${contadorPersonal}" placeholder="N° Identidad"></td>
+        <td style="text-align: center; color: #a0aec0;" class="num-fila">${window.contadorPersonal}</td>
+        <td><input type="text" id="nombre_per_${window.contadorPersonal}" placeholder="Nombres y Apellidos"></td>
+        <td><input type="text" id="empresa_per_${window.contadorPersonal}" placeholder="Empresa"></td>
+        <td><input type="text" id="identidad_per_${window.contadorPersonal}" placeholder="N° Identidad"></td>
         <td style="text-align: center;">
-            <button type="button" class="btn-firma-pequeno" onclick="abrirModalFirma('firma_per_${contadorPersonal}')">
+            <button type="button" class="btn-firma-pequeno" onclick="window.abrirModalFirma('firma_per_${window.contadorPersonal}')">
                 <i class="fas fa-pen-nib"></i> Firmar
             </button>
-            <img id="img_firma_per_${contadorPersonal}" class="preview-firma" style="display: none; max-width: 100px; max-height: 50px; margin-top: 5px;" />
-            <input type="hidden" id="firma_per_${contadorPersonal}">
+            <img id="img_firma_per_${window.contadorPersonal}" class="preview-firma" style="display: none; max-width: 100px; max-height: 50px; margin-top: 5px;" />
+            <input type="hidden" id="firma_per_${window.contadorPersonal}">
         </td>
         <td>
-            <button type="button" class="btn-eliminar-fila" onclick="eliminarIntegrante('${tr.id}')">
+            <button type="button" class="btn-eliminar-fila" onclick="window.eliminarIntegrante('${tr.id}')">
                 <i class="fas fa-trash"></i>
             </button>
         </td>
     `;
     tbody.appendChild(tr);
-    actualizarCorrelativos();
+    window.actualizarCorrelativos();
 }
 
-// Eliminar una fila y reordenar los números
-function eliminarIntegrante(idFila) {
-    document.getElementById(idFila).remove();
-    actualizarCorrelativos();
-}
-
-// Actualiza la columna "N°" para que siempre sea 1, 2, 3... aunque se borren filas del medio
-function actualizarCorrelativos() {
-    const filas = document.querySelectorAll('#tbodyPersonal tr');
-    filas.forEach((fila, index) => {
-        fila.querySelector('.num-fila').innerText = index + 1;
-    });
-}
-
-// Llamar a la función una vez al cargar la página para que inicie con 1 fila vacía
+// Iniciar con la primera fila al cargar
 document.addEventListener("DOMContentLoaded", function() {
     agregarIntegrante(); 
 });
+
+
         
     </script>
 </body>
