@@ -1,9 +1,6 @@
-// --- home.js ---
+// --- home.js para APP SISO (SIN PROXY) ---
 
-// Definición del proxy para saltar el bloqueo CORS
-const PROXY = "https://corsproxy.io/?";
-
-// 1. CARGA INICIAL: Lee los datos y verifica sesión
+// 1. CARGA INICIAL
 document.addEventListener('DOMContentLoaded', () => {
     const user = sessionStorage.getItem("usuario");
     const sector = sessionStorage.getItem("sector");
@@ -13,18 +10,17 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         document.getElementById("nombre-usuario").textContent = user;
         document.getElementById("nombre-sector").textContent = sector;
-        // Llamamos a la función de carga automáticamente
+        // Llamamos a la función
         cargarRegistros();
     }
 });
 
-// 2. CERRAR SESIÓN
 function cerrarSesion() {
     sessionStorage.clear();
     window.location.href = "index.html";
 }
 
-// 3. NUEVO REGISTRO (POST)
+// 2. NUEVO REGISTRO (COPIANDO LÓGICA DE MANIOBRAS)
 async function nuevoRegistro() {
     const btn = document.querySelector('.btn-nueva');
     if (btn.disabled) return;
@@ -34,37 +30,40 @@ async function nuevoRegistro() {
 
     const nuevoID = Math.random().toString(36).substring(2, 8).toUpperCase();
     
-    const params = new URLSearchParams();
-    params.append("action", "crearChecklist");
-    params.append("ID", nuevoID);
-    params.append("USUARIO", sessionStorage.getItem("usuario"));
-    params.append("SECTOR", sessionStorage.getItem("sector"));
-    params.append("FECHA", new Date().toLocaleDateString());
-    params.append("ESTADO", "Pendiente");
+    // CREAMOS UN OBJETO JSON (La clave del éxito)
+    const datosJSON = {
+        action: "crearChecklist",
+        ID: nuevoID,
+        USUARIO: sessionStorage.getItem("usuario"),
+        SECTOR: sessionStorage.getItem("sector"),
+        FECHA: new Date().toLocaleDateString(),
+        ESTADO: "Pendiente"
+    };
 
     try {
-        // Usamos el proxy para la petición POST
-        const response = await fetch(`${PROXY}${encodeURIComponent(CONFIG.URL_APPS_SCRIPT)}`, {
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
-            body: params
+            mode: 'cors', // IGUAL QUE EN MANIOBRAS
+            body: JSON.stringify(datosJSON) // Convertimos el objeto a texto
         });
 
-        const resultado = await response.text();
+        // Ahora esperamos JSON, no texto
+        const res = await response.json();
         
-        if (resultado.trim() === "ÉXITO") {
+        if (res.status === "ÉXITO") {
             window.location.href = `checklist.html?id=${nuevoID}`;
         } else {
-            throw new Error("Respuesta servidor: " + resultado);
+            throw new Error(res.error || res.message);
         }
     } catch (error) {
-        console.error("Error:", error);
-        alert("Error al crear registro. Verifica conexión.");
+        console.error("Error al crear:", error);
+        alert("Error al crear registro: " + error.message);
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-plus"></i> NUEVO REGISTRO';
     }
 }
 
-// 4. CARGAR REGISTROS (GET)
+// 3. CARGAR REGISTROS (GET)
 async function cargarRegistros() {
     const tbody = document.getElementById("tabla-body");
     if (!tbody) return;
@@ -72,14 +71,16 @@ async function cargarRegistros() {
     tbody.innerHTML = '<tr><td colspan="5">Cargando datos...</td></tr>';
 
     try {
-        // Envolvemos la URL original en el proxy usando encodeURIComponent
-        const urlFinal = `${PROXY}${encodeURIComponent(CONFIG.URL_APPS_SCRIPT + "?action=obtenerRegistros")}`;
+        // GET simple idéntico al de Maniobras
+        const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`;
         
         const res = await fetch(urlFinal);
         const data = await res.json();
         
         tbody.innerHTML = "";
         
+        if (data.error) throw new Error(data.error);
+
         if (data.length === 0) {
             tbody.innerHTML = '<tr><td colspan="5">No hay registros aún.</td></tr>';
             return;
