@@ -412,7 +412,69 @@
     .tabla-firmas td { display: block; width: 100%; box-sizing: border-box; }
     .tabla-firmas td:first-child { border-bottom: 4px solid #003366; }
 }
-    
+
+/* Estilos para Tabla Dinámica (Paso 7) */
+.tabla-dinamica {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--card-color, #14212d);
+    border: 1px solid var(--border-color, #2c3e50);
+    margin-bottom: 15px;
+}
+.tabla-dinamica th {
+    background-color: #1a202c;
+    color: #a0aec0;
+    padding: 10px;
+    text-align: center;
+    font-size: 13px;
+    border: 1px solid var(--border-color, #2c3e50);
+}
+.tabla-dinamica td {
+    padding: 8px;
+    border: 1px solid var(--border-color, #2c3e50);
+    vertical-align: middle;
+}
+.tabla-dinamica input {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 8px;
+    border-radius: 4px;
+    background-color: #2d3748;
+    color: white;
+    border: 1px solid #4a5568;
+}
+.btn-agregar-fila {
+    background-color: #48bb78;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    display: inline-block;
+    transition: 0.3s;
+}
+.btn-agregar-fila:hover { background-color: #38a169; }
+
+.btn-eliminar-fila {
+    background-color: #e53e3e;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+}
+.btn-eliminar-fila:hover { background-color: #c53030; }
+
+.btn-firma-pequeno {
+    background-color: #3b82f6;
+    color: white; border: none; padding: 6px; width: 100%; border-radius: 5px; cursor: pointer; font-size: 12px;
+}
+
+
+
+        
     
     </style>
 </head>
