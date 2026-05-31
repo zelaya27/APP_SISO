@@ -16,7 +16,7 @@
             </div>
             <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: bold;">PANEL PRINCIPAL - REGISTROS</h2>
         </div>
-        <div class="user-info">
+        <div class="user-info" style="display: flex; gap: 15px; align-items: center;">
             <span class="info-item"><i class="fas fa-user-circle"></i> <span id="nombre-usuario">Usuario</span></span>
             <span>|</span>
             <span class="info-item"><i class="fas fa-map-marker-alt"></i> <span id="nombre-sector">Sector</span></span>
@@ -29,7 +29,20 @@
             <button class="btn-nueva" onclick="nuevoRegistro()">
                 <i class="fas fa-plus"></i> NUEVO REGISTRO
             </button>
-            <div class="filtros-contenedor">
+            
+            <div class="filtros-container">
+                <button class="btn-filtro activo" onclick="filtrar('Todos')">
+                    <i class="fas fa-list"></i> Todos
+                </button>
+                <button class="btn-filtro" onclick="filtrar('Pendiente')">
+                    <i class="fas fa-clock"></i> Pendientes
+                </button>
+                <button class="btn-filtro" onclick="filtrar('Completado')">
+                    <i class="fas fa-check-circle"></i> Completados
+                </button>
+            </div>
+
+            <div class="filtros-contenedor" style="display: flex; gap: 10px; align-items: center;">
                 <div class="filtros-grupo">
                     <label>Mostrar:</label>
                     <select id="limitSelector" class="input-filtro">
@@ -37,7 +50,6 @@
                         <option value="ALL">Todos</option>
                     </select>
                 </div>
-                <button class="btn-limpiar"><i class="fas fa-times-circle"></i> Limpiar</button>
             </div>
         </div>
 
