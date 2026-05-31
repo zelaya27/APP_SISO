@@ -930,6 +930,35 @@
 </div>
 </div>
 
+<div class="step-content" id="step-7">
+    <h3 class="titulo-seccion">Paso 7: PERSONAL QUE PARTICIPA EN LA ACTIVIDAD</h3>
+    
+    <div class="alert-info" style="margin-bottom: 15px; font-size: 0.9em; color: #a0aec0;">
+        <i class="fas fa-info-circle"></i> Agregue a todos los integrantes que participan en la labor. Firme cada uno en su fila correspondiente.
+    </div>
+
+    <div class="table-responsive">
+        <table class="tabla-dinamica" id="tablaPersonal">
+            <thead>
+                <tr>
+                    <th style="width: 5%;">N°</th>
+                    <th style="width: 25%;">NOMBRE TRABAJADOR</th>
+                    <th style="width: 20%;">EMPRESA</th>
+                    <th style="width: 20%;">IDENTIDAD</th>
+                    <th style="width: 20%;">FIRMA</th>
+                    <th style="width: 10%;">QUITAR</th>
+                </tr>
+            </thead>
+            <tbody id="tbodyPersonal">
+                </tbody>
+        </table>
+    </div>
+    
+    <button type="button" class="btn-agregar-fila" onclick="agregarIntegrante()">
+        <i class="fas fa-plus-circle"></i> Agregar Integrante
+    </button>
+</div>
+            
             
         
             <div class="espacio-footer"></div>
@@ -1048,6 +1077,39 @@ let pasoActual = 1;
                 alert("¡Registro guardado correctamente!");
                 window.location.href = "home.html";
             }, 1000);
+
+            // Úsala dentro de tu función de Guardar (enviarFormulario)
+            
+function obtenerDatosPersonal() {
+    // Jalamos el ID del Checklist (Asumo que lo guardas en col_0 como vimos antes)
+    const idChecklist = document.getElementById('col_0').value; 
+    
+    const filas = document.querySelectorAll('#tbodyPersonal tr');
+    const arregloPersonal = [];
+
+    filas.forEach((fila, index) => {
+        const inputs = fila.querySelectorAll('input');
+        const nombre = inputs[0].value;
+        const empresa = inputs[1].value;
+        const identidad = inputs[2].value;
+        const firma = inputs[3].value; // El input hidden
+
+        // Solo guardamos la fila si al menos escribieron el nombre
+        if (nombre.trim() !== "") {
+            arregloPersonal.push({
+                id_checklist: idChecklist,
+                n: index + 1,
+                nombre: nombre,
+                empresa: empresa,
+                identidad: identidad,
+                firma: firma
+            });
+        }
+    });
+
+    // Convierte el arreglo en un texto que pueda viajar por internet
+    return JSON.stringify(arregloPersonal); 
+}
         }
 
         /* =========================================
@@ -1159,6 +1221,60 @@ function guardarFirma() {
     
     cerrarModalFirma();
 }
+/* =========================================
+   LÓGICA DEL PASO 7 (PERSONAL DINÁMICO)
+========================================= */
+let contadorPersonal = 0;
+
+// Agregar una fila nueva
+function agregarIntegrante() {
+    contadorPersonal++;
+    const tbody = document.getElementById('tbodyPersonal');
+    const tr = document.createElement('tr');
+    tr.id = `fila_per_${contadorPersonal}`;
+
+    // Creamos los inputs. Nota que cada ID de firma es único: firma_per_1, firma_per_2...
+    tr.innerHTML = `
+        <td style="text-align: center; color: #a0aec0;" class="num-fila">${contadorPersonal}</td>
+        <td><input type="text" id="nombre_per_${contadorPersonal}" placeholder="Nombres y Apellidos"></td>
+        <td><input type="text" id="empresa_per_${contadorPersonal}" placeholder="Empresa"></td>
+        <td><input type="text" id="identidad_per_${contadorPersonal}" placeholder="N° Identidad"></td>
+        <td style="text-align: center;">
+            <button type="button" class="btn-firma-pequeno" onclick="abrirModalFirma('firma_per_${contadorPersonal}')">
+                <i class="fas fa-pen-nib"></i> Firmar
+            </button>
+            <img id="img_firma_per_${contadorPersonal}" class="preview-firma" style="display: none; max-width: 100px; max-height: 50px; margin-top: 5px;" />
+            <input type="hidden" id="firma_per_${contadorPersonal}">
+        </td>
+        <td>
+            <button type="button" class="btn-eliminar-fila" onclick="eliminarIntegrante('${tr.id}')">
+                <i class="fas fa-trash"></i>
+            </button>
+        </td>
+    `;
+    tbody.appendChild(tr);
+    actualizarCorrelativos();
+}
+
+// Eliminar una fila y reordenar los números
+function eliminarIntegrante(idFila) {
+    document.getElementById(idFila).remove();
+    actualizarCorrelativos();
+}
+
+// Actualiza la columna "N°" para que siempre sea 1, 2, 3... aunque se borren filas del medio
+function actualizarCorrelativos() {
+    const filas = document.querySelectorAll('#tbodyPersonal tr');
+    filas.forEach((fila, index) => {
+        fila.querySelector('.num-fila').innerText = index + 1;
+    });
+}
+
+// Llamar a la función una vez al cargar la página para que inicie con 1 fila vacía
+document.addEventListener("DOMContentLoaded", function() {
+    agregarIntegrante(); 
+});
+        
     </script>
 </body>
 </html>
