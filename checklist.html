@@ -1113,57 +1113,71 @@ let pasoActual = 1;
             document.getElementById('col_3').value = new Date().toLocaleDateString('es-ES');
         });
 
-        async function enviarFormulario() {
-            const btn = document.getElementById('btnGuardar');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+       async function enviarFormulario() {
+    const btn = document.getElementById('btnGuardar');
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
-            const params = new URLSearchParams();
-            params.append("action", "guardarRespuestasChecklist");
-            for(let i=0; i<=66; i++) {
-                let el = document.getElementById(`col_${i}`);
-                if(el) params.append(`col_${i}`, el.value);
-            }
+    // 1. Construir los datos de los 66 campos
+    const datosChecklist = {};
+    for(let i=0; i<=66; i++) {
+        let el = document.getElementById(`col_${i}`);
+        if(el) datosChecklist[`col_${i}`] = el.value;
+    }
 
-            // Aquí agregarás tu fetch real a URL_APPS_SCRIPT
-            setTimeout(() => {
-                alert("¡Registro guardado correctamente!");
-                window.location.href = "home.html";
-            }, 1000);
+    // 2. Crear el paquete completo
+    const payload = {
+        action: "guardarRespuestasChecklist",
+        checklist: datosChecklist,
+        personal: obtenerDatosPersonal() // Obtenemos el arreglo aquí
+    };
 
-            // Úsala dentro de tu función de Guardar (enviarFormulario)
-            
-function obtenerDatosPersonal() {
-    // Jalamos el ID del Checklist (Asumo que lo guardas en col_0 como vimos antes)
+    // 3. Enviar todo en un solo POST
+    try {
+        const response = await fetch("TU_URL_DE_APPS_SCRIPT_AQUI", {
+            method: "POST",
+            mode: "no-cors", // Importante por políticas de seguridad
+            body: JSON.stringify(payload)
+        });
+        
+        alert("¡Registro guardado correctamente!");
+        window.location.href = "home.html";
+        
+    } catch (error) {
+        btn.disabled = false;
+        btn.innerHTML = 'Guardar';
+        alert("Error al guardar: " + error);
+    }
+           function obtenerDatosPersonal() {
     const idChecklist = document.getElementById('col_0').value; 
-    
     const filas = document.querySelectorAll('#tbodyPersonal tr');
     const arregloPersonal = [];
 
     filas.forEach((fila, index) => {
         const inputs = fila.querySelectorAll('input');
-        const nombre = inputs[0].value;
-        const empresa = inputs[1].value;
-        const identidad = inputs[2].value;
-        const firma = inputs[3].value; // El input hidden
+        // Aseguramos que existan los inputs antes de acceder
+        if(inputs.length >= 4) {
+            const nombre = inputs[0].value;
+            const empresa = inputs[1].value;
+            const identidad = inputs[2].value;
+            const firma = inputs[3].value; 
 
-        // Solo guardamos la fila si al menos escribieron el nombre
-        if (nombre.trim() !== "") {
-            arregloPersonal.push({
-                id_checklist: idChecklist,
-                n: index + 1,
-                nombre: nombre,
-                empresa: empresa,
-                identidad: identidad,
-                firma: firma
-            });
+            if (nombre.trim() !== "") {
+                arregloPersonal.push({
+                    id_checklist: idChecklist,
+                    n: index + 1,
+                    nombre: nombre,
+                    empresa: empresa,
+                    identidad: identidad,
+                    firma: firma
+                });
+            }
         }
     });
-
-    // Convierte el arreglo en un texto que pueda viajar por internet
-    return JSON.stringify(arregloPersonal); 
+    // RETORNAMOS EL ARREGLO, NO EL STRING
+    return arregloPersonal; 
 }
-        }
+}
 
         /* =========================================
    LÓGICA DEL PAD DE FIRMAS (STEP 6)
