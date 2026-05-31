@@ -225,7 +225,7 @@
             }
 
             try {
-                const res = await fetch(`${URL_APPS_SCRIPT}?user=${user}&pass=${pass}`);
+                const res = await fetch(`${URL_APPS_SCRIPT}?action=login&user=${user}&pass=${pass}`);
                 const data = await res.json();
                 
                 if (data.acceso) {
