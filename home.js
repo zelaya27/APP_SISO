@@ -1,27 +1,30 @@
 // --- home.js ---
 
-// 1. CARGA INICIAL: Lee los datos y los pone en el HTML
+// Definición del proxy para saltar el bloqueo CORS
+const PROXY = "https://corsproxy.io/?";
+
+// 1. CARGA INICIAL: Lee los datos y verifica sesión
 document.addEventListener('DOMContentLoaded', () => {
     const user = sessionStorage.getItem("usuario");
     const sector = sessionStorage.getItem("sector");
 
-    // Seguridad básica: si no hay usuario, regresa al login
     if (!user) {
         window.location.href = "index.html";
     } else {
-        // Ponemos los datos en el HTML
         document.getElementById("nombre-usuario").textContent = user;
         document.getElementById("nombre-sector").textContent = sector;
+        // Llamamos a la función de carga automáticamente
+        cargarRegistros();
     }
 });
 
 // 2. CERRAR SESIÓN
 function cerrarSesion() {
-    sessionStorage.clear(); // Limpia los datos
-    window.location.href = "index.html"; // Regresa al login
+    sessionStorage.clear();
+    window.location.href = "index.html";
 }
 
-// 3. NUEVO REGISTRO
+// 3. NUEVO REGISTRO (POST)
 async function nuevoRegistro() {
     const btn = document.querySelector('.btn-nueva');
     if (btn.disabled) return;
@@ -31,7 +34,6 @@ async function nuevoRegistro() {
 
     const nuevoID = Math.random().toString(36).substring(2, 8).toUpperCase();
     
-    // Parámetros simples para evitar problemas de CORS
     const params = new URLSearchParams();
     params.append("action", "crearChecklist");
     params.append("ID", nuevoID);
@@ -41,9 +43,10 @@ async function nuevoRegistro() {
     params.append("ESTADO", "Pendiente");
 
     try {
-        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+        // Usamos el proxy para la petición POST
+        const response = await fetch(`${PROXY}${encodeURIComponent(CONFIG.URL_APPS_SCRIPT)}`, {
             method: 'POST',
-            body: params 
+            body: params
         });
 
         const resultado = await response.text();
@@ -61,39 +64,40 @@ async function nuevoRegistro() {
     }
 }
 
-// 1. Cargamos los registros automáticamente al abrir la página
-document.addEventListener('DOMContentLoaded', () => {
-    // ... tu código de usuario que ya tenías ...
-    
-    // Llamamos a la función de carga
-    cargarRegistros();
-});
-
+// 4. CARGAR REGISTROS (GET)
 async function cargarRegistros() {
     const tbody = document.getElementById("tabla-body");
-    tbody.innerHTML = '<tr><td colspan="5">Cargando datos...</td></tr>'; // Indicador de carga
+    if (!tbody) return;
+    
+    tbody.innerHTML = '<tr><td colspan="5">Cargando datos...</td></tr>';
 
     try {
-        // Llamamos al mismo URL con el parámetro ?action=obtenerRegistros
-        const res = await fetch(`${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`);
+        // Envolvemos la URL original en el proxy usando encodeURIComponent
+        const urlFinal = `${PROXY}${encodeURIComponent(CONFIG.URL_APPS_SCRIPT + "?action=obtenerRegistros")}`;
+        
+        const res = await fetch(urlFinal);
         const data = await res.json();
         
-        tbody.innerHTML = ""; // Limpiamos el mensaje de "cargando"
+        tbody.innerHTML = "";
         
-        // Dibujamos las filas
+        if (data.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5">No hay registros aún.</td></tr>';
+            return;
+        }
+
         data.forEach(row => {
             const tr = document.createElement("tr");
             tr.innerHTML = `
                 <td>${row.ID || ""}</td>
                 <td>${row.FECHA || ""}</td>
                 <td>${row.ESTADO || ""}</td>
-                <td>(Descripción aquí)</td> 
+                <td>N/A</td> 
                 <td><button onclick="editar('${row.ID}')">Ver</button></td>
             `;
             tbody.appendChild(tr);
         });
     } catch (error) {
         console.error("Error al cargar:", error);
-        tbody.innerHTML = '<tr><td colspan="5">Error al cargar registros.</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="5">Error de conexión.</td></tr>';
     }
 }
