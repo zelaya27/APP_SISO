@@ -79,10 +79,9 @@
                 icon.classList.add('fa-eye');
             }
         }
-
-        async function iniciarSesion() {
-            const user = document.getElementById('user').value;
-            const pass = document.getElementById('pass').value;
+    async function iniciarSesion() {
+            const user = document.getElementById('user').value.trim();
+            const pass = document.getElementById('pass').value.trim();
             const btn = document.getElementById('btn-login');
             const errorMsg = document.getElementById('mensaje-error');
             
@@ -96,30 +95,40 @@
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
             errorMsg.style.display = "none";
 
-            const URL_APPS_SCRIPT = CONFIG.URL_APPS_SCRIPT; 
+            // AQUÍ ESTÁ LA SOLUCIÓN: Empaquetamos en JSON igual que en home.js
+            const datosJSON = {
+                action: "login",
+                user: user,
+                pass: pass
+            };
 
             try {
-                // TU CONEXIÓN ORIGINAL QUE FUNCIONA PERFECTO
-                const res = await fetch(`${URL_APPS_SCRIPT}?user=${user}&pass=${pass}`);
-                const data = await res.json();
+                const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+                    method: 'POST',
+                    mode: 'cors',
+                    body: JSON.stringify(datosJSON) // Se envía oculto en el cuerpo
+                });
+                
+                const data = await response.json();
                 
                 if (data.acceso) {
                     sessionStorage.setItem("usuario", data.usuario);
                     sessionStorage.setItem("sector", data.sector);
-                    window.location.href = "home.html"; // O dashboard.html, según prefieras
+                    window.location.href = "home.html"; // Redirige al inicio
                 } else {
-                    errorMsg.innerText = "Usuario o contraseña incorrectos.";
+                    errorMsg.innerText = data.error || "Usuario o contraseña incorrectos.";
                     errorMsg.style.display = "block";
                 }
             } catch (error) {
-                console.error(error);
-                errorMsg.innerText = "Error de conexión con Google Sheets.";
+                console.error("Error en login:", error);
+                errorMsg.innerText = "Error de conexión. Revisa consola (F12).";
                 errorMsg.style.display = "block";
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>INICIAR SESIÓN</span> <i class="fas fa-sign-in-alt"></i>';
             }
         }
+       
 
         document.addEventListener("keypress", function(event) {
             if (event.key === "Enter") {
