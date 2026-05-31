@@ -346,6 +346,15 @@
     <div class="step-indicator" id="ind-3">
         <div class="step-circle">3</div>
         <div class="step-label">Riesgos</div>
+          </div> 
+        <div class="step-line"></div>
+    <div class="step-indicator" id="ind-4">
+        <div class="step-circle">4</div>
+        <div class="step-label">Equipo de Altura</div>
+      </div> 
+            <div class="step-indicator" id="ind-5">
+        <div class="step-circle">5</div>
+        <div class="step-label">Area de Trabajo</div>
     </div>
 </div>
         </div>
@@ -492,6 +501,8 @@
         <textarea id="col_27" rows="2" placeholder="Describa el riesgo detectado..."></textarea>
     </div>
 </div>
+
+               <div class="step-content" id="step-4">
 <div class="form-group">
     <label>28. EQUIPO PARA ASCENSO Y DESCENSO EN ALTURA</label>
     <select id="col28" name="col28" class="form-control" onchange="verificarOtroEquipo()">
@@ -503,7 +514,7 @@
         <option value="Otro">Otro</option>
     </select>
 </div>
-
+</div>
 <div class="form-group" id="divCol29" style="display: none;">
     <label>29. OTRO EQUIPO ¿Cuál?</label>
     <input type="text" id="col29" name="col29" class="form-control" placeholder="Especifique el equipo...">
@@ -513,7 +524,8 @@
     <label>30. Altura de trabajo (m)</label>
     <input type="number" id="col30" name="col30" class="form-control" step="0.1" placeholder="Ej: 5.5">
 </div>
-
+            
+<div class="step-content" id="step-5">
         <div class="table-responsive">
     <table class="tabla-sino">
         <thead>
@@ -628,6 +640,9 @@
     </label>
     <textarea id="col48" name="col48" class="form-control" rows="5" placeholder="Escriba aquí sus observaciones..."></textarea>
 </div>    
+    </div>
+
+        
             <div class="espacio-footer"></div>
 
             <!-- BOTONES FIJOS EN LA PARTE INFERIOR (STICKY) -->
@@ -697,7 +712,7 @@
     }
 }
 let pasoActual = 1;
-        const TOTAL_PASOS = 3; // Añadimos esta variable para que sepa que ahora son 3 pasos
+        const TOTAL_PASOS = 5; // Añadimos esta variable para que sepa que ahora son 3 pasos
 
         function cambiarPaso(dir) {
             document.getElementById(`step-${pasoActual}`).classList.remove('activo');
