@@ -4,10 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Principal - Registros</title>
+
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+
+    <script src="config_nuevo.js"></script>
+
     <style>
-        /* 1. PALETA DE COLORES PRINCIPAL (Idéntica al original) */
         :root {
             --bg-color: #0b141d;
             --card-color: #14212d;
@@ -21,7 +23,6 @@
             --border-color: #2c3e50;
         }
 
-        /* 2. DISEÑO GENERAL DE LA PÁGINA */
         body { 
             font-family: 'Segoe UI', Arial, sans-serif; 
             background-color: var(--bg-color); 
@@ -29,7 +30,6 @@
             margin: 0; padding: 0; 
         }
         
-        /* 3. ENCABEZADO (Menú superior) */
         header { 
             background-color: var(--card-color); 
             padding: 10px 20px; 
@@ -38,9 +38,9 @@
             align-items: center; 
             border-bottom: 1px solid var(--border-color); 
         }
+
         .user-info { display: flex; align-items: center; gap: 15px; }
         
-        /* 4. CONTENEDOR PRINCIPAL */
         .container {
             max-width: 1400px;
             margin: 30px auto;
@@ -50,163 +50,151 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.3);
         }
 
-        /* 5. ZONA DE FILTROS */
         .header-panel {
             display: flex; justify-content: space-between; 
             align-items: center; gap: 15px; flex-wrap: wrap; 
             margin-bottom: 20px; border-bottom: 1px solid var(--border-color);
             padding-bottom: 15px;
         }
-        .filtros-contenedor { display: flex; align-items: center; gap: 15px; flex-wrap: wrap; }
-        .filtros-grupo { display: flex; align-items: center; gap: 8px; color: white; }
-        .filtros-grupo label { margin: 0; font-weight: 600; font-size: 13px; color: var(--muted-text); }
-        .input-filtro {
-            padding: 6px 10px; border-radius: 5px; 
-            background: var(--bg-color); color: white; 
-            border: 1px solid var(--border-color); 
-            cursor: pointer; font-size: 13px; outline: none; color-scheme: dark; 
-        }
 
-        /* 6. ESTILOS DE TABLA */
         .table-responsive { overflow-x: auto; }
+
         table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+
         th, td { padding: 12px 15px; text-align: left; border-bottom: 1px solid var(--border-color); }
+
         th { background-color: var(--accent-color); color: white; font-weight: 600; }
+
         tr:hover { background-color: #665112; } 
 
-        /* 7. ESTILOS DE BOTONES */
-        .btn-limpiar { background: #34495e; color: white; border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 5px; cursor: pointer; display: flex; align-items: center; gap: 5px; }
-        .btn-limpiar:hover { background: var(--danger-color); border-color: var(--danger-color); }
-        
         .btn-nueva { background: #27ae60; color: white; border: none; padding: 10px 15px; cursor: pointer; border-radius: 5px; font-weight: bold; display: flex; align-items: center; gap: 8px; font-size: 14px; }
+
         .btn-nueva:hover { background: #f39c12; }
+
         .btn-logout { background: var(--danger-color); color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+
         .btn-logout:hover { background: #f39c12; }
-        
-        /* Botones dentro de la tabla */
+
         .btn-accion {
             height: 34px; padding: 0 12px; border: none; border-radius: 4px;
             cursor: pointer; color: white; font-size: 12px;
             display: inline-flex; align-items: center; justify-content: center; gap: 6px; margin: 0 2px;
         }
-        .btn-form { background-color: #3498db; } .btn-form:hover { background: #f39c12; }
-        .acciones-td { display: flex; justify-content: flex-start; align-items: center; gap: 5px;}
-        
+
+        .btn-form { background-color: #3498db; }
+
+        .btn-form:hover { background: #f39c12; }
+
+        .acciones-td { display: flex; gap: 5px;}
+
         .badge {
             padding: 4px 8px; border-radius: 12px; font-size: 11px; font-weight: bold;
         }
-        .badge-activo { background-color: #27ae60; color: white; }
-        .badge-pendiente { background-color: #f39c12; color: white; }
+
+        .badge-activo { background-color: #27ae60; }
+
+        .badge-pendiente { background-color: #e74c3c; }
     </style>
 </head>
+
 <body>
 
-    <header>
-        <div style="display: flex; align-items: center; gap: 20px;">
-            <div style="background: white; padding: 5px 10px; border-radius: 4px; display: flex;">
-                <img src="https://raw.githubusercontent.com/zelaya27/IMAGENES_AZ/main/UTCD%20Vertical.png" height="30" alt="Logo UTCD">
-            </div>
-            <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: bold;">
-                PANEL PRINCIPAL - REGISTROS
-            </h2>
-        </div>
-        
-        <div class="user-info">
-            <span class="info-item"><i class="fas fa-user-circle"></i> <span id="nombre-usuario">Usuario</span> </span>
-            <span>|</span>
-             <span class="info-item"><i class="fas fa-map-marker-alt"></i>  <span id="nombre-sector">Sector</span></span>
-            <button class="btn-logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
-        </div>
-    </header>
+<header>
+    <h2>PANEL PRINCIPAL - REGISTROS</h2>
+    <div class="user-info">
+        <span id="nombre-usuario">Usuario</span> |
+        <span id="nombre-sector">Sector</span>
+        <button class="btn-logout" onclick="cerrarSesion()">Cerrar Sesión</button>
+    </div>
+</header>
 
-    <div class="container">
-        <div class="header-panel">
-            <button class="btn-nueva" onclick="nuevoRegistro()">
-                <i class="fas fa-plus"></i> NUEVO REGISTRO
-            </button>
-             
-            <div class="filtros-contenedor">
-                <div class="filtros-grupo">
-                    <label>Mostrar:</label>
-                    <select id="limitSelector" class="input-filtro">
-                        <option value="10" selected>Últimos 10</option>
-                        <option value="20">Últimos 20</option>
-                        <option value="ALL">Todos</option>
-                    </select>
-                </div>
-
-                <div class="filtros-grupo">
-                    <label><i class="fas fa-filter"></i> Estado:</label>
-                    <select id="filtroEstado" class="input-filtro">
-                        <option value="ALL">Todos</option>
-                        <option value="ACTIVO">Activo</option>
-                        <option value="PENDIENTE">Pendiente</option>
-                    </select>
-                </div>
-
-                <button class="btn-limpiar" title="Borrar filtros">
-                    <i class="fas fa-times-circle"></i> Limpiar
-                </button>
-            </div>
-        </div>
-
-        <div class="table-responsive">
-            <table>
-                <thead>
-                    <tr>
-                        <th style="width: 15%;">ID</th>
-                        <th style="width: 15%;">FECHA</th>
-                        <th style="width: 15%;">ESTADO</th>
-                        <th style="width: 40%;">DESCRIPCIÓN</th>
-                        <th style="width: 15%;">ACCIONES</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-body">
-                    <tr>
-                        <td><strong>REG-001928</strong></td>
-                        <td>28/10/2023</td>
-                        <td><span class="badge badge-activo">Activo</span></td>
-                        <td>Inspección general de área norte completada.</td>
-                        <td class="acciones-td">
-                            <button class="btn-accion btn-form">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><strong>REG-001929</strong></td>
-                        <td>29/10/2023</td>
-                        <td><span class="badge badge-pendiente">Pendiente</span></td>
-                        <td>Revisión de tableros eléctricos pendiente de validación.</td>
-                        <td class="acciones-td">
-                            <button class="btn-accion btn-form">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
+<div class="container">
+    <div class="header-panel">
+        <button class="btn-nueva" onclick="nuevoRegistro()">
+            <i class="fas fa-plus"></i> NUEVO REGISTRO
+        </button>
     </div>
 
-    <script>
-        // Función para generar un ID automáticamente al presionar "NUEVO REGISTRO"
-        function nuevoRegistro() {
-            // Genera un ID usando el prefijo REG- y 6 números aleatorios o de tiempo
-            const numeroAleatorio = Math.floor(100000 + Math.random() * 900000);
-            const nuevoID = "REG-" + numeroAleatorio;
-            
-            // Para mostrar que funciona (Puedes borrar esta alerta después)
-            alert("Se ha generado un nuevo ID: " + nuevoID + "\n\nRedirigiendo a la pantalla de captura...");
-            
-            // Aquí haces la redirección enviando el ID generado por la URL
-            // Ejemplo: window.location.href = "nuevo_registro_app.html?id=" + nuevoID;
-        }
+    <div class="table-responsive">
+        <table>
 
-        function cerrarSesion() {
-            sessionStorage.clear();
-            window.location.href = "index.html"; // O tu página de login
-        }
-    </script>
+            <!-- ✅ TU THEAD EXACTO -->
+            <thead>
+                <tr>
+                    <th style="width: 15%;">ID</th>
+                    <th style="width: 15%;">FECHA</th>
+                    <th style="width: 15%;">ESTADO</th>
+                    <th style="width: 40%;">DESCRIPCIÓN</th>
+                    <th style="width: 15%;">ACCIONES</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td><strong>REG-001928</strong></td>
+                    <td>28/10/2023</td>
+                    <td><span class="badge badge-activo">Activo</span></td>
+                    <td>Inspección general</td>
+                    <td class="acciones-td">
+                        <button class="btn-accion btn-form" onclick="abrirChecklist('REG-001928')">
+                            <i class="fas fa-clipboard-list"></i> Checklist
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+</div>
+
+<script>
+
+function nuevoRegistro() {
+
+    const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+    let nuevoID = "";
+
+    for (let i = 0; i < 6; i++) {
+        nuevoID += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+
+    const usuario = sessionStorage.getItem("usuario") || "Usuario";
+    const sector = sessionStorage.getItem("sector") || "Sector";
+    const fecha = new Date().toLocaleDateString("es-ES");
+
+    const data = {
+        id: nuevoID,
+        usuario: usuario,
+        sector: sector,
+        fecha: fecha,
+        estado: "Pendiente"
+    };
+
+    const url = CONFIG.URL_APPS_SCRIPT;
+
+    fetch(url, {
+        method: "POST",
+        body: JSON.stringify(data)
+    })
+    .then(res => res.json())
+    .then(() => {
+        window.location.href = "checklist.html?id=" + nuevoID;
+    })
+    .catch(() => {
+        alert("Error al guardar");
+    });
+}
+
+function abrirChecklist(id) {
+    window.location.href = "checklist.html?id=" + id;
+}
+
+function cerrarSesion() {
+    sessionStorage.clear();
+    window.location.href = "index.html";
+}
+
+</script>
+
 </body>
 </html>
