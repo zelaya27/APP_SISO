@@ -453,6 +453,16 @@
         <div class="step-circle">5</div>
         <div class="step-label">Area de Trabajo</div>
     </div>
+                  <div class="step-line"></div>
+    <div class="step-indicator" id="ind-6">
+        <div class="step-circle">6</div>
+        <div class="step-label">Responsables</div>
+      </div> 
+             <div class="step-line"></div>
+            <div class="step-indicator" id="ind-7">
+        <div class="step-circle">7</div>
+        <div class="step-label">Integrantes</div>
+    </div>
 </div>
         </div>
 
@@ -991,7 +1001,7 @@
     }
 }
 let pasoActual = 1;
-        const TOTAL_PASOS = 5; // Añadimos esta variable para que sepa que ahora son 3 pasos
+        const TOTAL_PASOS = 7; // Añadimos esta variable para que sepa que ahora son 3 pasos
 
         function cambiarPaso(dir) {
             document.getElementById(`step-${pasoActual}`).classList.remove('activo');
