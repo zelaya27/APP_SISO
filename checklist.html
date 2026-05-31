@@ -1113,55 +1113,67 @@ let pasoActual = 1;
             document.getElementById('col_3').value = new Date().toLocaleDateString('es-ES');
         });
 
-       async function enviarFormulario() {
+   // Asegúrate de tener tu configuración al inicio de tu archivo .js
+const CONFIG = {
+    URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycby0jvY2vqOD_rofiy449P-04Mg6v7uSYV768INns38QONeEF2qp9ZFppIvRIGTb0-s6/exec"
+};
+
+async function enviarFormulario() {
     const btn = document.getElementById('btnGuardar');
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
-    // 1. Construir los datos de los 66 campos
+    // 1. Recolectar los 66 campos automáticamente
     const datosChecklist = {};
-    for(let i=0; i<=66; i++) {
+    for (let i = 0; i <= 66; i++) {
         let el = document.getElementById(`col_${i}`);
-        if(el) datosChecklist[`col_${i}`] = el.value;
+        if (el) {
+            datosChecklist[`col_${i}`] = el.value;
+        }
     }
 
-    // 2. Crear el paquete completo
+    // 2. Construir el objeto de envío (Payload)
     const payload = {
         action: "guardarRespuestasChecklist",
         checklist: datosChecklist,
-        personal: obtenerDatosPersonal() // Obtenemos el arreglo aquí
+        personal: obtenerDatosPersonal() // Obtenemos el arreglo (sin stringify aquí)
     };
 
-    // 3. Enviar todo en un solo POST
+    // 3. Enviar al servidor
     try {
-        const response = await fetch("TU_URL_DE_APPS_SCRIPT_AQUI", {
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: "POST",
-            mode: "no-cors", // Importante por políticas de seguridad
+            mode: "no-cors", // Requerido para evitar bloqueos de CORS
             body: JSON.stringify(payload)
         });
-        
-        alert("¡Registro guardado correctamente!");
+
+        // NOTA: Con 'no-cors', la respuesta suele ser opaca. 
+        // Si necesitas confirmar, lo ideal es manejar la lógica de éxito en el cliente.
+        alert("¡Registro enviado correctamente!");
         window.location.href = "home.html";
-        
+
     } catch (error) {
+        console.error("Error:", error);
         btn.disabled = false;
-        btn.innerHTML = 'Guardar';
-        alert("Error al guardar: " + error);
+        btn.innerHTML = '<i class="fas fa-save"></i> Guardar';
+        alert("Error al guardar: " + error.message);
     }
-           function obtenerDatosPersonal() {
+}
+
+function obtenerDatosPersonal() {
     const idChecklist = document.getElementById('col_0').value; 
     const filas = document.querySelectorAll('#tbodyPersonal tr');
     const arregloPersonal = [];
 
     filas.forEach((fila, index) => {
         const inputs = fila.querySelectorAll('input');
-        // Aseguramos que existan los inputs antes de acceder
-        if(inputs.length >= 4) {
+        if (inputs.length >= 4) {
             const nombre = inputs[0].value;
             const empresa = inputs[1].value;
             const identidad = inputs[2].value;
             const firma = inputs[3].value; 
 
+            // Solo agregamos si hay datos básicos
             if (nombre.trim() !== "") {
                 arregloPersonal.push({
                     id_checklist: idChecklist,
@@ -1174,9 +1186,8 @@ let pasoActual = 1;
             }
         }
     });
-    // RETORNAMOS EL ARREGLO, NO EL STRING
+    // RETORNAMOS EL ARREGLO (Objeto puro)
     return arregloPersonal; 
-}
 }
 
         /* =========================================
