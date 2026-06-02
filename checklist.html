@@ -130,7 +130,54 @@
         .step-indicator.active .step-label { color: var(--blue-active); }
         .step-indicator.completed .step-circle { border-color: var(--success-color); background-color: var(--success-color); color: white; }
         .step-indicator.completed + .step-line { background-color: var(--success-color); }
+/* =========================================
+   AJUSTES EXCLUSIVOS PARA CELULAR (MÓVIL)
+========================================= */
+@media (max-width: 768px) {
+    
+    /* 1. Achicar los botones de Anterior, Siguiente y Guardar */
+    .btn-anterior, 
+    .btn-siguiente, 
+    .btn-guardar-principal,
+    .botones-wizard button,
+    button[onclick*="Paso"] {
+        font-size: 13px !important;       /* Letra más pequeña */
+        padding: 8px 12px !important;     /* Botón menos ancho y alto */
+        border-radius: 15px !important;
+    }
 
+    /* 2. Achicar los contenedores de los pasos (Steps) para que quepan los 6 */
+    .wizard-header,
+    .steps-container,
+    .stepper {
+        padding: 10px 5px !important;
+        gap: 5px !important;             /* Menos espacio entre los círculos */
+        overflow-x: auto !important;     /* Permite deslizar si la pantalla es muy angosta */
+    }
+
+    /* 3. Reducir el tamaño de los círculos y los números */
+    .step-circle, 
+    .circle {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 12px !important;
+        line-height: 26px !important;
+    }
+
+    /* 4. Reducir la letra del texto debajo del círculo (si aplica) */
+    .step-text,
+    .step-title,
+    .step p {
+        font-size: 10px !important;
+        margin-top: 4px !important;
+        text-align: center;
+    }
+
+    /* Opcional: Ocultar los textos de los pasos inactivos para ahorrar espacio */
+    .step:not(.active) .step-text {
+        display: none !important; 
+    }
+}
         /* =========================================
            FORMULARIO MÓVIL (Zonas Táctiles Amplias)
         ========================================= */
