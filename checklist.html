@@ -1072,92 +1072,24 @@
     </div>
 <script src="config.js"></script>
     <!-- JS de lógica (Mantenido intacto) -->
+// ==========================================
+// 1. VARIABLES GLOBALES Y CONFIGURACIÓN
+// ==========================================
     <script>
-        function verificarActividad() {
-            const val = document.getElementById('col_7').value;
-            const caja = document.getElementById('grupo_col_8');
-            if (val === "OTRO") { caja.classList.remove('hidden-field'); } 
-            else { caja.classList.add('hidden-field'); document.getElementById('col_8').value = ""; }
-        }
+const CONFIG = {
+    URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycbyk_RyziMJkywSryn1VE4Tb44cacCd9zO91fuPRnSQ4LF6FxAliynNjrv-NJ-f4KBIt/exec" // Asegúrate de que esta URL sea la correcta
+};
 
-        function verificarEmpresa() {
-            const val = document.getElementById('col_15').value;
-            const caja = document.getElementById('grupo_col_16');
-            if (val === "CONTRATISTA") { caja.classList.remove('hidden-field'); } 
-            else { caja.classList.add('hidden-field'); document.getElementById('col_16').value = ""; }
-        }
-
-        function calcularTiempoEstimado() {
-            const inicio = document.getElementById('col_17').value;
-            const fin = document.getElementById('col_18').value;
-            if (inicio && fin) {
-                const [hI, mI] = inicio.split(':').map(Number);
-                const [hF, mF] = fin.split(':').map(Number);
-                let minI = (hI * 60) + mI;
-                let minF = (hF * 60) + mF;
-                if (minF < minI) minF += (24 * 60); 
-                document.getElementById('col_19').value = ((minF - minI) / 60).toFixed(2);
-            }
-        }
-   
-        function verificarRiesgosOtros() {
-            const chkOtros = document.getElementById('chk_otros');
-            const cajaOtros = document.getElementById('grupo_col_27');
-            
-            if (chkOtros.checked) {
-                cajaOtros.classList.remove('hidden-field');
-            } else {
-                cajaOtros.classList.add('hidden-field');
-                document.getElementById('col_27').value = ""; // Limpia el texto si se desmarca
-            }
-        }
-   function verificarOtroEquipo() {
-    const selectEquipo = document.getElementById('col28');
-    const divOtro = document.getElementById('divCol29');
-    
-    if (selectEquipo.value === 'Otro') {
-        divOtro.style.display = 'block';
-    } else {
-        divOtro.style.display = 'none';
-        document.getElementById('col29').value = ''; // Limpia el texto si se arrepiente
-    }
-}
 let pasoActual = 1;
-        const TOTAL_PASOS = 7; // Añadimos esta variable para que sepa que ahora son 3 pasos
+const totalPasos = 6;
+window.contadorPersonal = 0;
+let canvas, ctx;
+let dibujando = false;
+window.campoDestino = "";
 
-        function cambiarPaso(dir) {
-            document.getElementById(`step-${pasoActual}`).classList.remove('activo');
-            document.getElementById(`ind-${pasoActual}`).classList.remove('active');
-            if (dir === 1) document.getElementById(`ind-${pasoActual}`).classList.add('completed');
-            
-            pasoActual += dir;
-            
-            document.getElementById(`step-${pasoActual}`).classList.add('activo');
-            document.getElementById(`ind-${pasoActual}`).classList.add('active');
-            if (dir === -1) document.getElementById(`ind-${pasoActual}`).classList.remove('completed');
-
-            // AQUÍ ESTABA EL ERROR: Ahora usamos TOTAL_PASOS en lugar de números fijos
-            document.getElementById('btnAnterior').style.display = pasoActual === 1 ? 'none' : 'flex';
-            document.getElementById('btnSiguiente').style.display = pasoActual === TOTAL_PASOS ? 'none' : 'flex';
-            document.getElementById('btnGuardar').style.display = pasoActual === TOTAL_PASOS ? 'flex' : 'none';
-            
-            // Subir al inicio suavemente al cambiar de paso
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const urlParams = new URLSearchParams(window.location.search);
-            document.getElementById('col_0').value = urlParams.get('id') || Math.random().toString(36).substring(2, 8).toUpperCase();
-            document.getElementById('col_1').value = sessionStorage.getItem("usuario") || "Usuario App";
-            document.getElementById('col_2').value = sessionStorage.getItem("sector") || "Desconocido";
-            document.getElementById('col_3').value = new Date().toLocaleDateString('es-ES');
-        });
-
-   // Asegúrate de tener tu configuración al inicio de tu archivo .js
-
-
-<script>
-// A. AGREGA ESTA FUNCIÓN ARRIBA DE TODO (Crea el código único)
+// ==========================================
+// 2. FUNCIÓN PARA GENERAR ID ÚNICO
+// ==========================================
 function generarIDUnico() {
     const fecha = new Date();
     const timestamp = fecha.getTime();
@@ -1165,8 +1097,14 @@ function generarIDUnico() {
     return "SISO-" + timestamp + "-" + aleatorio;
 }
 
-// 1. AL CARGAR LA PÁGINA: VERIFICAR SI VAMOS A EDITAR O CREAR
+// ==========================================
+// 3. INICIO DE LA PÁGINA (MODO NUEVO / EDICIÓN)
+// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
+    // A. Inicializar la pizarra de firmas
+    inicializarPizarra();
+
+    // B. Lógica de Nuevo Registro o Edición
     const urlParams = new URLSearchParams(window.location.search);
     const modo = urlParams.get('modo');
     const idRegistro = urlParams.get('id');
@@ -1176,131 +1114,177 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.cursor = "wait"; 
         cargarRegistroParaEditar(idRegistro);
     } else {
-        // --- AQUÍ ESTÁ LA SOLUCIÓN DEL ID ÚNICO PARA NUEVO REGISTRO ---
+        // Modo Nuevo: Generar ID
         const nuevoId = generarIDUnico();
-        
-        // Busca el input donde guardas el ID (asumiendo que es col_0) y le pega el nuevo código
         const campoId = document.getElementById("col_0");
-        if(campoId) {
+        
+        if (campoId) {
             campoId.value = nuevoId;
-            console.log("Éxito: Se generó el ID " + nuevoId);
-        } else {
-            console.warn("Cuidado: No existe un input con id='col_0' en tu HTML.");
+            console.log("Nuevo ID generado: " + nuevoId);
         }
 
-        // Modo Nuevo: Agrega la primera fila solo si NO estamos editando
+        // Agregamos la primera fila de personal por defecto
         if (typeof agregarIntegrante === "function") {
             agregarIntegrante();
         }
     }
 });
-    // 2. FUNCIÓN PARA DESCARGAR Y AUTOCOMPLETAR EL REGISTRO (MODO EDITAR)
-    async function cargarRegistroParaEditar(id) {
-        try {
-            const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistro&id=${id}`;
-            const res = await fetch(urlFinal);
-            const data = await res.json();
-            
-            document.body.style.cursor = "default";
 
-            if (data.error) {
-                alert("No se pudo cargar el registro: " + data.error);
-                return;
-            }
+// ==========================================
+// 4. LÓGICA DEL WIZARD (PASOS SIGUIENTE / ATRÁS)
+// ==========================================
+function siguientePaso() {
+    if (pasoActual < totalPasos) {
+        document.getElementById(`paso-${pasoActual}`).style.display = "none";
+        document.getElementById(`step-indicator-${pasoActual}`).classList.remove("active");
+        
+        pasoActual++;
+        
+        document.getElementById(`paso-${pasoActual}`).style.display = "block";
+        document.getElementById(`step-indicator-${pasoActual}`).classList.add("active");
+        
+        actualizarBotones();
+    }
+}
 
-            // Recorrer los datos que manda Google e inyectarlos en cada input/select
-            Object.keys(data).forEach(columnaName => {
-                const inputElement = document.getElementById(columnaName);
-                
-                if (inputElement) {
-                    if (inputElement.type === "checkbox" || inputElement.type === "radio") {
-                         inputElement.checked = (data[columnaName] === inputElement.value || data[columnaName] === true || data[columnaName] === "TRUE");
-                    } else if (inputElement.type === "date" && data[columnaName]) {
-                         let d = new Date(data[columnaName]);
-                         if (!isNaN(d.getTime())) {
-                             inputElement.value = d.toISOString().split('T')[0];
-                         }
-                     } else {
-                         inputElement.value = data[columnaName];
-                     }
-                }
-            });
+function pasoAnterior() {
+    if (pasoActual > 1) {
+        document.getElementById(`paso-${pasoActual}`).style.display = "none";
+        document.getElementById(`step-indicator-${pasoActual}`).classList.remove("active");
+        
+        pasoActual--;
+        
+        document.getElementById(`paso-${pasoActual}`).style.display = "block";
+        document.getElementById(`step-indicator-${pasoActual}`).classList.add("active");
+        
+        actualizarBotones();
+    }
+}
 
-            // Cambiar el texto del botón final
-            const btnGuardar = document.querySelector(".btn-guardar-principal") || document.getElementById("btnGuardar");
-            if (btnGuardar) {
-                btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Registro';
-            }
+function actualizarBotones() {
+    const btnAtras = document.getElementById("btnAtras");
+    const btnSiguiente = document.getElementById("btnSiguiente");
+    const btnGuardar = document.getElementById("btnGuardar");
 
-        } catch (error) {
-            console.error("Error cargando edición:", error);
-            alert("Error de conexión al intentar cargar los datos guardados.");
-            document.body.style.cursor = "default";
+    if (btnAtras) btnAtras.style.display = (pasoActual === 1) ? "none" : "inline-block";
+    
+    if (btnSiguiente && btnGuardar) {
+        if (pasoActual === totalPasos) {
+            btnSiguiente.style.display = "none";
+            btnGuardar.style.display = "inline-block";
+        } else {
+            btnSiguiente.style.display = "inline-block";
+            btnGuardar.style.display = "none";
         }
     }
+}
 
-    // 3. LA FUNCIÓN DE GUARDAR CORREGIDA (EMPAQUETA COMO ESPERA GOOGLE)
-    async function enviarFormulario() {
-        const btnGuardar = document.querySelector(".btn-guardar-principal") || document.getElementById("btnGuardar");
-        if (btnGuardar) btnGuardar.disabled = true; // Evitar doble clic
+// ==========================================
+// 5. CARGAR REGISTRO EXISTENTE (MODO EDITAR)
+// ==========================================
+async function cargarRegistroParaEditar(id) {
+    try {
+        const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistro&id=${id}`;
+        const res = await fetch(urlFinal);
+        const data = await res.json();
+        
+        document.body.style.cursor = "default";
 
-        try {
-            // A. Recolectar todas las 66 columnas dinámicamente
-            let datosChecklist = {};
-            for (let i = 0; i <= 66; i++) {
-                let inputId = `col_${i}`;
-                let elemento = document.getElementById(inputId);
-                
-                if (elemento) {
-                    if (elemento.type === "checkbox" || elemento.type === "radio") {
-                        datosChecklist[inputId] = elemento.checked;
-                    } else {
-                        datosChecklist[inputId] = elemento.value;
+        if (data.error) {
+            alert("No se pudo cargar el registro: " + data.error);
+            return;
+        }
+
+        Object.keys(data).forEach(columnaName => {
+            const inputElement = document.getElementById(columnaName);
+            if (inputElement) {
+                if (inputElement.type === "checkbox" || inputElement.type === "radio") {
+                    inputElement.checked = (data[columnaName] === inputElement.value || data[columnaName] === true || data[columnaName] === "TRUE");
+                } else if (inputElement.type === "date" && data[columnaName]) {
+                    let d = new Date(data[columnaName]);
+                    if (!isNaN(d.getTime())) {
+                        inputElement.value = d.toISOString().split('T')[0];
                     }
                 } else {
-                    datosChecklist[inputId] = ""; // Si no existe en HTML, mandar vacío
+                    inputElement.value = data[columnaName];
                 }
             }
+        });
 
-            // B. Recolectar datos de personal (si existe la función)
-            let personalData = [];
-            if (typeof obtenerDatosPersonal === "function") {
-                personalData = JSON.parse(obtenerDatosPersonal()); // Convertir a objeto para empaquetarlo
-            }
-
-            // C. EL PASO CLAVE: Crear el "Paquete" exacto que Apps Script está esperando
-            const paqueteFinal = {
-                action: "guardarRespuestasChecklist",
-                checklist: datosChecklist,     // <--- Aquí van las 66 columnas anidadas
-                personal: personalData         // <--- Aquí van las firmas
-            };
-
-            // D. Enviar a Google
-            const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
-                method: 'POST',
-                body: JSON.stringify(paqueteFinal) 
-                // Nota: Usamos fetch directo, asumiendo que ya configuraste CORS como vimos antes
-            });
-
-            const result = await response.json();
-
-            if (result.status === 'Éxito' || result.success) {
-                alert("Registro guardado/actualizado correctamente");
-                window.location.href = "home.html"; // Volver al inicio
-            } else {
-                throw new Error(result.message || result.error || "Error desconocido");
-            }
-
-        } catch (error) {
-            console.error("Error al guardar:", error);
-            alert("Hubo un error al guardar: " + error.message);
-            if (btnGuardar) btnGuardar.disabled = false;
+        const btnGuardar = document.getElementById("btnGuardar");
+        if (btnGuardar) {
+            btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Registro';
         }
+
+    } catch (error) {
+        console.error("Error cargando edición:", error);
+        alert("Error de conexión al intentar cargar los datos.");
+        document.body.style.cursor = "default";
     }
+}
 
+// ==========================================
+// 6. GUARDAR FORMULARIO
+// ==========================================
+async function enviarFormulario() {
+    const btnGuardar = document.getElementById("btnGuardar");
+    if (btnGuardar) btnGuardar.disabled = true;
 
+    try {
+        let datosChecklist = {};
+        for (let i = 0; i <= 66; i++) {
+            let inputId = `col_${i}`;
+            let elemento = document.getElementById(inputId);
+            
+            if (elemento) {
+                if (elemento.type === "checkbox" || elemento.type === "radio") {
+                    datosChecklist[inputId] = elemento.checked;
+                } else {
+                    datosChecklist[inputId] = elemento.value;
+                }
+            } else {
+                datosChecklist[inputId] = "";
+            }
+        }
+
+        let personalData = [];
+        if (typeof obtenerDatosPersonal === "function") {
+            // CORRECCIÓN AQUÍ: Ya no usamos JSON.parse, pasamos el arreglo directo
+            personalData = obtenerDatosPersonal(); 
+        }
+
+        const paqueteFinal = {
+            action: "guardarRespuestasChecklist",
+            checklist: datosChecklist,
+            personal: personalData
+        };
+
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+            method: 'POST',
+            body: JSON.stringify(paqueteFinal) 
+        });
+
+        const result = await response.json();
+
+        if (result.status === 'Éxito' || result.success) {
+            alert("Registro guardado correctamente");
+            window.location.href = "home.html";
+        } else {
+            throw new Error(result.message || result.error || "Error desconocido");
+        }
+
+    } catch (error) {
+        console.error("Error al guardar:", error);
+        alert("Hubo un error al guardar: " + error.message);
+        if (btnGuardar) btnGuardar.disabled = false;
+    }
+}
+
+// ==========================================
+// 7. LÓGICA DE PERSONAL (STEP 7)
+// ==========================================
 function obtenerDatosPersonal() {
-    const idChecklist = document.getElementById('col_0').value; 
+    const idChecklist = document.getElementById('col_0') ? document.getElementById('col_0').value : ""; 
     const filas = document.querySelectorAll('#tbodyPersonal tr');
     const arregloPersonal = [];
 
@@ -1312,7 +1296,6 @@ function obtenerDatosPersonal() {
             const identidad = inputs[2].value;
             const firma = inputs[3].value; 
 
-            // Solo agregamos si hay datos básicos
             if (nombre.trim() !== "") {
                 arregloPersonal.push({
                     id_checklist: idChecklist,
@@ -1325,138 +1308,9 @@ function obtenerDatosPersonal() {
             }
         }
     });
-    // RETORNAMOS EL ARREGLO (Objeto puro)
     return arregloPersonal; 
 }
 
-        /* =========================================
-   LÓGICA DEL PAD DE FIRMAS (STEP 6)
-========================================= */
-let canvas, ctx;
-let dibujando = false;
-let campoDestino = ""; // Aquí guardaremos si estamos firmando la col62 o la col66
-
-document.addEventListener("DOMContentLoaded", function() {
-    canvas = document.getElementById("pizarraFirma");
-    if(canvas) {
-        ctx = canvas.getContext("2d");
-        ctx.strokeStyle = "#000000"; // Tinta negra
-        ctx.lineWidth = 3;           // Grosor del lápiz
-        ctx.lineJoin = "round";
-        ctx.lineCap = "round";
-
-        // Eventos para Computadora (Mouse)
-        canvas.addEventListener("mousedown", empezarDibujo);
-        canvas.addEventListener("mousemove", dibujar);
-        canvas.addEventListener("mouseup", detenerDibujo);
-        canvas.addEventListener("mouseout", detenerDibujo);
-
-        // Eventos para Celular (Touch)
-        canvas.addEventListener("touchstart", empezarDibujoTouch, { passive: false });
-        canvas.addEventListener("touchmove", dibujarTouch, { passive: false });
-        canvas.addEventListener("touchend", detenerDibujo);
-    }
-});
-
-function obtenerPosicion(event) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-        x: event.clientX - rect.left,
-        y: event.clientY - rect.top
-    };
-}
-
-function obtenerPosicionTouch(event) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-        x: event.touches[0].clientX - rect.left,
-        y: event.touches[0].clientY - rect.top
-    };
-}
-
-function empezarDibujo(e) {
-    dibujando = true;
-    const pos = obtenerPosicion(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-}
-
-function empezarDibujoTouch(e) {
-    e.preventDefault(); // Evita que la pantalla haga scroll al tocar
-    dibujando = true;
-    const pos = obtenerPosicionTouch(e);
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-}
-
-function dibujar(e) {
-    if (!dibujando) return;
-    const pos = obtenerPosicion(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-}
-
-function dibujarTouch(e) {
-    if (!dibujando) return;
-    e.preventDefault();
-    const pos = obtenerPosicionTouch(e);
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-}
-
-function detenerDibujo() {
-    dibujando = false;
-}
-
-// ---------------- LÓGICA DE LOS BOTONES DEL MODAL ---------------- //
-// --- LÓGICA DE FIRMA ROBUSTA ---
-window.campoDestino = ""; // Variable global para saber qué input actualizar
-
-window.abrirModalFirma = function(id) {
-    window.campoDestino = id;
-    document.getElementById("modalFirma").style.display = "flex";
-    // Limpiar canvas al abrir
-    const canvas = document.getElementById("pizarraFirma");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-};
-
-window.cerrarModalFirma = function() {
-    document.getElementById("modalFirma").style.display = "none";
-};
-
-window.limpiarPizarra = function() {
-    const canvas = document.getElementById("pizarraFirma");
-    const ctx = canvas.getContext("2d");
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-};
-
-window.guardarFirma = function() {
-    const canvas = document.getElementById("pizarraFirma");
-    const imagenBase64 = canvas.toDataURL("image/png");
-    
-    // Inyecta en el input oculto
-    const inputDestino = document.getElementById(window.campoDestino);
-    if(inputDestino) {
-        inputDestino.value = imagenBase64;
-    }
-    
-    // Si tienes una imagen previa (img_ + id), muéstrala
-    const imgPreview = document.getElementById("img_" + window.campoDestino);
-    if(imgPreview) {
-        imgPreview.src = imagenBase64;
-        imgPreview.style.display = "block";
-    }
-    
-    cerrarModalFirma();
-};
-/* =========================================
-   LÓGICA DEL PASO 7 (PERSONAL DINÁMICO)
-   Corregido para asegurar visibilidad de funciones
-========================================= */
-window.contadorPersonal = 0;
-
-// 1. Aseguramos que la función sea global para que el onclick funcione siempre
 window.eliminarIntegrante = function(idFila) {
     const fila = document.getElementById(idFila);
     if (fila) {
@@ -1468,17 +1322,19 @@ window.eliminarIntegrante = function(idFila) {
 window.actualizarCorrelativos = function() {
     const filas = document.querySelectorAll('#tbodyPersonal tr');
     filas.forEach((fila, index) => {
-        fila.querySelector('.num-fila').innerText = index + 1;
+        const numCol = fila.querySelector('.num-fila');
+        if(numCol) numCol.innerText = index + 1;
     });
 };
 
 function agregarIntegrante() {
     window.contadorPersonal++;
     const tbody = document.getElementById('tbodyPersonal');
+    if(!tbody) return; // Evita error si la tabla no existe aún
+
     const tr = document.createElement('tr');
     tr.id = `fila_per_${window.contadorPersonal}`;
 
-    // Usamos window.abrirModalFirma para asegurar que el navegador la encuentre
     tr.innerHTML = `
         <td style="text-align: center; color: #a0aec0;" class="num-fila">${window.contadorPersonal}</td>
         <td><input type="text" id="nombre_per_${window.contadorPersonal}" placeholder="Nombres y Apellidos"></td>
@@ -1501,12 +1357,75 @@ function agregarIntegrante() {
     window.actualizarCorrelativos();
 }
 
+// ==========================================
+// 8. LÓGICA DE FIRMAS (PIZARRA)
+// ==========================================
+function inicializarPizarra() {
+    canvas = document.getElementById("pizarraFirma");
+    if(canvas) {
+        ctx = canvas.getContext("2d");
+        ctx.strokeStyle = "#000000"; 
+        ctx.lineWidth = 3;           
+        ctx.lineJoin = "round";
+        ctx.lineCap = "round";
 
+        canvas.addEventListener("mousedown", empezarDibujo);
+        canvas.addEventListener("mousemove", dibujar);
+        canvas.addEventListener("mouseup", detenerDibujo);
+        canvas.addEventListener("mouseout", detenerDibujo);
 
+        canvas.addEventListener("touchstart", empezarDibujoTouch, { passive: false });
+        canvas.addEventListener("touchmove", dibujarTouch, { passive: false });
+        canvas.addEventListener("touchend", detenerDibujo);
+    }
+}
 
+function obtenerPosicion(event) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: event.clientX - rect.left, y: event.clientY - rect.top };
+}
 
-        
-    </script>
+function obtenerPosicionTouch(event) {
+    const rect = canvas.getBoundingClientRect();
+    return { x: event.touches[0].clientX - rect.left, y: event.touches[0].clientY - rect.top };
+}
+
+function empezarDibujo(e) { dibujando = true; const pos = obtenerPosicion(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
+function empezarDibujoTouch(e) { e.preventDefault(); dibujando = true; const pos = obtenerPosicionTouch(e); ctx.beginPath(); ctx.moveTo(pos.x, pos.y); }
+function dibujar(e) { if (!dibujando) return; const pos = obtenerPosicion(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }
+function dibujarTouch(e) { if (!dibujando) return; e.preventDefault(); const pos = obtenerPosicionTouch(e); ctx.lineTo(pos.x, pos.y); ctx.stroke(); }
+function detenerDibujo() { dibujando = false; }
+
+window.abrirModalFirma = function(id) {
+    window.campoDestino = id;
+    const modal = document.getElementById("modalFirma");
+    if(modal) modal.style.display = "flex";
+    if(ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+window.cerrarModalFirma = function() {
+    const modal = document.getElementById("modalFirma");
+    if(modal) modal.style.display = "none";
+};
+
+window.limpiarPizarra = function() {
+    if(ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+};
+
+window.guardarFirma = function() {
+    if(!canvas) return;
+    const imagenBase64 = canvas.toDataURL("image/png");
+    const inputDestino = document.getElementById(window.campoDestino);
+    if(inputDestino) inputDestino.value = imagenBase64;
+    
+    const imgPreview = document.getElementById("img_" + window.campoDestino);
+    if(imgPreview) {
+        imgPreview.src = imagenBase64;
+        imgPreview.style.display = "block";
+    }
+    window.cerrarModalFirma();
+};
+  </script>            
     <div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
     <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
         <h4>Firma Digital</h4>
@@ -1518,5 +1437,6 @@ function agregarIntegrante() {
         </div>
     </div>
 </div>
+      
 </body>
 </html>
