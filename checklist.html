@@ -1134,38 +1134,32 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 // 4. NAVEGACIÓN DEL WIZARD (PASOS)
 // ==========================================
+// Función centralizada para manejar la transición visual
+function cambiarVisibilidadPaso(numeroPaso, mostrar) {
+    const paso = document.getElementById(`paso-${numeroPaso}`);
+    const indicador = document.getElementById(`step-indicator-${numeroPaso}`);
+    
+    if (paso) paso.style.display = mostrar ? "block" : "none";
+    if (indicador) {
+        mostrar ? indicador.classList.add("active") : indicador.classList.remove("active");
+    }
+}
+
+// Navegación simplificada
 function siguientePaso() {
     if (pasoActual < totalPasos) {
-        let pasoViejo = document.getElementById(`paso-${pasoActual}`);
-        let indicadorViejo = document.getElementById(`step-indicator-${pasoActual}`);
-        if(pasoViejo) pasoViejo.style.display = "none";
-        if(indicadorViejo) indicadorViejo.classList.remove("active");
-        
+        cambiarVisibilidadPaso(pasoActual, false); // Ocultar actual
         pasoActual++;
-        
-        let pasoNuevo = document.getElementById(`paso-${pasoActual}`);
-        let indicadorNuevo = document.getElementById(`step-indicator-${pasoActual}`);
-        if(pasoNuevo) pasoNuevo.style.display = "block";
-        if(indicadorNuevo) indicadorNuevo.classList.add("active");
-        
+        cambiarVisibilidadPaso(pasoActual, true);  // Mostrar nuevo
         actualizarBotones();
     }
 }
 
 function pasoAnterior() {
     if (pasoActual > 1) {
-        let pasoViejo = document.getElementById(`paso-${pasoActual}`);
-        let indicadorViejo = document.getElementById(`step-indicator-${pasoActual}`);
-        if(pasoViejo) pasoViejo.style.display = "none";
-        if(indicadorViejo) indicadorViejo.classList.remove("active");
-        
+        cambiarVisibilidadPaso(pasoActual, false); // Ocultar actual
         pasoActual--;
-        
-        let pasoNuevo = document.getElementById(`paso-${pasoActual}`);
-        let indicadorNuevo = document.getElementById(`step-indicator-${pasoActual}`);
-        if(pasoNuevo) pasoNuevo.style.display = "block";
-        if(indicadorNuevo) indicadorNuevo.classList.add("active");
-        
+        cambiarVisibilidadPaso(pasoActual, true);  // Mostrar nuevo
         actualizarBotones();
     }
 }
@@ -1177,17 +1171,10 @@ function actualizarBotones() {
 
     if (btnAtras) btnAtras.style.display = (pasoActual === 1) ? "none" : "inline-block";
     
-    if (btnSiguiente && btnGuardar) {
-        if (pasoActual === totalPasos) {
-            btnSiguiente.style.display = "none";
-            btnGuardar.style.display = "inline-block";
-        } else {
-            btnSiguiente.style.display = "inline-block";
-            btnGuardar.style.display = "none";
-        }
-    }
+    const esUltimo = (pasoActual === totalPasos);
+    if (btnSiguiente) btnSiguiente.style.display = esUltimo ? "none" : "inline-block";
+    if (btnGuardar) btnGuardar.style.display = esUltimo ? "inline-block" : "none";
 }
-
 // ==========================================
 // 5. CARGAR REGISTRO PARA EDITAR
 // ==========================================
@@ -1442,44 +1429,6 @@ window.guardarFirma = function() {
         </div>
     </div>
 </div>
-     <script>
-let pasoActual = 1;
-let totalPasos = 7;
-
-function mostrarPaso(paso) {
-    // Ocultar todos
-    document.querySelectorAll(".step-content").forEach(el => {
-        el.classList.remove("activo");
-    });
-
-    // Mostrar actual
-    document.getElementById("step-" + paso).classList.add("activo");
-
-    // Actualizar indicadores
-    document.querySelectorAll(".step-indicator").forEach((el, index) => {
-        el.classList.remove("active", "completed");
-
-        if (index + 1 < paso) {
-            el.classList.add("completed");
-        } else if (index + 1 === paso) {
-            el.classList.add("active");
-        }
-    });
-}
-
-function siguientePaso() {
-    if (pasoActual < totalPasos) {
-        pasoActual++;
-        mostrarPaso(pasoActual);
-    }
-}
-
-function anteriorPaso() {
-    if (pasoActual > 1) {
-        pasoActual--;
-        mostrarPaso(pasoActual);
-    }
-}
-</script> 
+   
 </body>
 </html>
