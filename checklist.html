@@ -1157,24 +1157,43 @@ let pasoActual = 1;
 
 
 <script>
+// A. AGREGA ESTA FUNCIÓN ARRIBA DE TODO (Crea el código único)
+function generarIDUnico() {
+    const fecha = new Date();
+    const timestamp = fecha.getTime();
+    const aleatorio = Math.floor(Math.random() * 1000);
+    return "SISO-" + timestamp + "-" + aleatorio;
+}
+
 // 1. AL CARGAR LA PÁGINA: VERIFICAR SI VAMOS A EDITAR O CREAR
-    document.addEventListener("DOMContentLoaded", () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const modo = urlParams.get('modo');
-        const idRegistro = urlParams.get('id');
+document.addEventListener("DOMContentLoaded", () => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const modo = urlParams.get('modo');
+    const idRegistro = urlParams.get('id');
 
-        if (modo === 'editar' && idRegistro) {
-            // Modo Edición: Cargar datos desde Google
-            document.body.style.cursor = "wait"; 
-            cargarRegistroParaEditar(idRegistro);
+    if (modo === 'editar' && idRegistro) {
+        // Modo Edición: Cargar datos desde Google
+        document.body.style.cursor = "wait"; 
+        cargarRegistroParaEditar(idRegistro);
+    } else {
+        // --- AQUÍ ESTÁ LA SOLUCIÓN DEL ID ÚNICO PARA NUEVO REGISTRO ---
+        const nuevoId = generarIDUnico();
+        
+        // Busca el input donde guardas el ID (asumiendo que es col_0) y le pega el nuevo código
+        const campoId = document.getElementById("col_0");
+        if(campoId) {
+            campoId.value = nuevoId;
+            console.log("Éxito: Se generó el ID " + nuevoId);
         } else {
-            // Modo Nuevo: Agrega la primera fila solo si NO estamos editando
-            if (typeof agregarIntegrante === "function") {
-                agregarIntegrante();
-            }
+            console.warn("Cuidado: No existe un input con id='col_0' en tu HTML.");
         }
-    });
 
+        // Modo Nuevo: Agrega la primera fila solo si NO estamos editando
+        if (typeof agregarIntegrante === "function") {
+            agregarIntegrante();
+        }
+    }
+});
     // 2. FUNCIÓN PARA DESCARGAR Y AUTOCOMPLETAR EL REGISTRO (MODO EDITAR)
     async function cargarRegistroParaEditar(id) {
         try {
