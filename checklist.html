@@ -913,70 +913,63 @@
    
     </div>
 
+
 <div class="step-content" id="step-6">
     <h3 class="titulo-seccion">Paso 6: Firmas de Responsabilidad</h3>
     
-    <div class="table-responsive">
-        <table class="tabla-firmas">
-            <thead>
-                <tr>
-                    <th style="width: 50%;">RESPONSABLE DE EJECUCIÓN (CONTRATISTA)</th>
-                    <th style="width: 50%;">RESPONSABLE UTCD / ENEE</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <label class="label-firma">Nombre y Apellidos:</label>
-                        <input type="text" id="col59" name="col59" class="form-control" placeholder="Escriba el nombre...">
-                    </td>
-                    <td>
-                        <label class="label-firma">Nombre y Apellidos:</label>
-                        <input type="text" id="col63" name="col63" class="form-control" placeholder="Escriba el nombre...">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label-firma">Cargo:</label>
-                        <input type="text" id="col60" name="col60" class="form-control" placeholder="Ej. Supervisor de Obra">
-                    </td>
-                    <td>
-                        <label class="label-firma">Cargo:</label>
-                        <input type="text" id="col64" name="col64" class="form-control" placeholder="Ej. Ingeniero Encargado">
-                    </td>
-                </tr>
-                <tr>
-                    <td>
-                        <label class="label-firma">Teléfono:</label>
-                        <input type="text" id="col61" name="col61" class="form-control" placeholder="Ej. 9999-9999">
-                    </td>
-                    <td>
-                        <label class="label-firma">Teléfono:</label>
-                        <input type="text" id="col65" name="col65" class="form-control" placeholder="Ej. 9999-9999">
-                    </td>
-                </tr>
-                <tr>
-                    <td style="text-align: center; padding-bottom: 20px;">
-                        <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col62')">
-                            <i class="fas fa-pen-nib"></i> Firmar Pantalla
-                        </button>
-                        <img id="img_col62" class="preview-firma" style="display: none;" />
-                        <input type="hidden" id="col62" name="col62">
-                    </td>
-                    <td style="text-align: center; padding-bottom: 20px;">
-                        <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col66')">
-                            <i class="fas fa-pen-nib"></i> Firmar Pantalla
-                        </button>
-                        <img id="img_col66" class="preview-firma" style="display: none;" />
-                        <input type="hidden" id="col66" name="col66">
-                    </td>
-                </tr>
-                
-       
-            </tbody>
-        </table>
+    <div style="margin-bottom: 25px; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background-color: var(--card-color);">
+        <div style="background-color: #003366; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 14px;">
+            PERSONA ENCARGADA DE LA ACTIVIDAD
+        </div>
+        <div style="padding: 15px;">
+            <div class="form-group">
+                <label class="label-firma">Nombre y Apellidos:</label>
+                <input type="text" id="col59" name="col59" class="form-control" placeholder="Escriba el nombre...">
+            </div>
+            <div class="form-group" style="margin-top: 12px;">
+                <label class="label-firma">Cargo:</label>
+                <input type="text" id="col60" name="col60" class="form-control" placeholder="Ej. Supervisor de Obra">
+            </div>
+            <div class="form-group" style="margin-top: 12px;">
+                <label class="label-firma">Teléfono:</label>
+                <input type="text" id="col61" name="col61" class="form-control" placeholder="Ej. 9999-9999">
+            </div>
+            <div class="form-group" style="margin-top: 20px; text-align: center;">
+                <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col62')">
+                    <i class="fas fa-pen-nib"></i> Firmar Pantalla
+                </button>
+                <img id="img_col62" class="preview-firma" style="display: none; margin: 10px auto 0;" />
+                <input type="hidden" id="col62" name="col62">
+            </div>
+        </div>
     </div>
-   
+
+    <div style="border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background-color: var(--card-color);">
+        <div style="background-color: #003366; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 14px;">
+            PERSONA UTCD-ENEE A CARGO DE LAS MANIOBRAS
+        </div>
+        <div style="padding: 15px;">
+            <div class="form-group">
+                <label class="label-firma">Nombre y Apellidos:</label>
+                <input type="text" id="col63" name="col63" class="form-control" placeholder="Escriba el nombre...">
+            </div>
+            <div class="form-group" style="margin-top: 12px;">
+                <label class="label-firma">Cargo:</label>
+                <input type="text" id="col64" name="col64" class="form-control" placeholder="Ej. Ingeniero Encargado">
+            </div>
+            <div class="form-group" style="margin-top: 12px;">
+                <label class="label-firma">Teléfono:</label>
+                <input type="text" id="col65" name="col65" class="form-control" placeholder="Ej. 9999-9999">
+            </div>
+            <div class="form-group" style="margin-top: 20px; text-align: center;">
+                <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col66')">
+                    <i class="fas fa-pen-nib"></i> Firmar Pantalla
+                </button>
+                <img id="img_col66" class="preview-firma" style="display: none; margin: 10px auto 0;" />
+                <input type="hidden" id="col66" name="col66">
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="step-content" id="step-7">
