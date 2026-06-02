@@ -1157,7 +1157,7 @@ let pasoActual = 1;
 
 
 <script>
-    // 1. AL CARGAR LA PÁGINA: VERIFICAR SI VAMOS A EDITAR O CREAR
+// 1. AL CARGAR LA PÁGINA: VERIFICAR SI VAMOS A EDITAR O CREAR
     document.addEventListener("DOMContentLoaded", () => {
         const urlParams = new URLSearchParams(window.location.search);
         const modo = urlParams.get('modo');
@@ -1165,10 +1165,10 @@ let pasoActual = 1;
 
         if (modo === 'editar' && idRegistro) {
             // Modo Edición: Cargar datos desde Google
-            document.body.style.cursor = "wait"; // Cambiar cursor a "cargando"
+            document.body.style.cursor = "wait"; 
             cargarRegistroParaEditar(idRegistro);
         } else {
-            // Modo Nuevo: Lógica normal (agregar primer integrante, etc.)
+            // Modo Nuevo: Agrega la primera fila solo si NO estamos editando
             if (typeof agregarIntegrante === "function") {
                 agregarIntegrante();
             }
@@ -1482,10 +1482,8 @@ function agregarIntegrante() {
     window.actualizarCorrelativos();
 }
 
-// Iniciar con la primera fila al cargar
-document.addEventListener("DOMContentLoaded", function() {
-    agregarIntegrante(); 
-});
+
+
 
 
         
