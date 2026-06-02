@@ -1087,12 +1087,7 @@
     </div>     
  
     <script>
-let pasoActual = 1;
-const totalPasos = 6;
-window.contadorPersonal = 0;
-let canvas, ctx;
-let dibujando = false;
-window.campoDestino = "";
+
 
 // ==========================================
 // 2. FUNCIÓN PARA GENERAR ID ÚNICO
@@ -1134,9 +1129,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 // 4. NAVEGACIÓN DEL WIZARD (PASOS)
 // ==========================================
-// Ajustamos el total de pasos a 7
-const totalPasos = 7; 
-
+let pasoActual = 1;
+const totalPasos = 7; // <- ¡Aquí definimos los 7 pasos una sola vez!
+window.contadorPersonal = 0;
+let canvas, ctx;
+let dibujando = false;
+window.campoDestino = "";
 // Función centralizada para manejar la transición visual
 function cambiarVisibilidadPaso(numeroPaso, mostrar) {
     // Corregimos los nombres para que coincidan con tu HTML (step- y ind-)
