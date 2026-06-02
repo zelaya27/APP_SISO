@@ -92,3 +92,84 @@ th { background-color: var(--accent-color); color: white; }
     color: var(--text-color);
     box-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
 }
+/* =========================================
+   DISEÑO DE TARJETAS PARA CELULAR (Reemplaza la tabla)
+========================================= */
+.registros-grid {
+    display: grid;
+    grid-template-columns: 1fr; /* 1 columna en celular */
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* En PC o Tablet, mostrar 2 o 3 columnas */
+@media (min-width: 768px) {
+    .registros-grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (min-width: 1024px) {
+    .registros-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.registro-card {
+    background-color: var(--bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    transition: transform 0.2s ease, border-color 0.2s ease;
+}
+
+.registro-card:hover {
+    border-color: var(--blue-active);
+    transform: translateY(-2px);
+}
+
+.registro-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+
+.registro-id {
+    font-weight: bold;
+    color: var(--text-color);
+    font-size: 16px;
+}
+
+.registro-body p {
+    margin: 5px 0;
+    font-size: 14px;
+    color: var(--muted-text);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.registro-body i {
+    color: var(--blue-active);
+    width: 16px;
+    text-align: center;
+}
+
+.registro-footer {
+    margin-top: 10px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+/* Badges de estado */
+.badge {
+    padding: 4px 10px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: bold;
+}
+.badge-pendiente { background-color: rgba(231, 76, 60, 0.2); color: #e74c3c; border: 1px solid #e74c3c; }
+.badge-generado { background-color: rgba(52, 152, 219, 0.2); color: #3498db; border: 1px solid #3498db; }
+.badge-revisado { background-color: rgba(39, 174, 96, 0.2); color: #27ae60; border: 1px solid #27ae60; }
