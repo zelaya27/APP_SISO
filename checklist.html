@@ -1442,6 +1442,44 @@ window.guardarFirma = function() {
         </div>
     </div>
 </div>
-      
+     <script>
+let pasoActual = 1;
+let totalPasos = 7;
+
+function mostrarPaso(paso) {
+    // Ocultar todos
+    document.querySelectorAll(".step-content").forEach(el => {
+        el.classList.remove("activo");
+    });
+
+    // Mostrar actual
+    document.getElementById("step-" + paso).classList.add("activo");
+
+    // Actualizar indicadores
+    document.querySelectorAll(".step-indicator").forEach((el, index) => {
+        el.classList.remove("active", "completed");
+
+        if (index + 1 < paso) {
+            el.classList.add("completed");
+        } else if (index + 1 === paso) {
+            el.classList.add("active");
+        }
+    });
+}
+
+function siguientePaso() {
+    if (pasoActual < totalPasos) {
+        pasoActual++;
+        mostrarPaso(pasoActual);
+    }
+}
+
+function anteriorPaso() {
+    if (pasoActual > 1) {
+        pasoActual--;
+        mostrarPaso(pasoActual);
+    }
+}
+</script> 
 </body>
 </html>
