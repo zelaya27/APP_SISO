@@ -1134,46 +1134,50 @@ document.addEventListener("DOMContentLoaded", () => {
 // ==========================================
 // 4. NAVEGACIÓN DEL WIZARD (PASOS)
 // ==========================================
+// Ajustamos el total de pasos a 7
+const totalPasos = 7; 
+
 // Función centralizada para manejar la transición visual
 function cambiarVisibilidadPaso(numeroPaso, mostrar) {
-    const paso = document.getElementById(`paso-${numeroPaso}`);
-    const indicador = document.getElementById(`step-indicator-${numeroPaso}`);
+    // Corregimos los nombres para que coincidan con tu HTML (step- y ind-)
+    const paso = document.getElementById(`step-${numeroPaso}`);
+    const indicador = document.getElementById(`ind-${numeroPaso}`);
     
-    if (paso) paso.style.display = mostrar ? "block" : "none";
+    if (paso) {
+        if(mostrar) {
+            paso.style.display = "block";
+            paso.classList.add("activo"); // Activa la animación CSS que creaste
+        } else {
+            paso.style.display = "none";
+            paso.classList.remove("activo");
+        }
+    }
     if (indicador) {
         mostrar ? indicador.classList.add("active") : indicador.classList.remove("active");
     }
 }
 
-// Navegación simplificada
-function siguientePaso() {
-    if (pasoActual < totalPasos) {
+// Esta es la función exacta que llaman tus botones en el HTML
+window.cambiarPaso = function(direccion) {
+    if ((direccion === 1 && pasoActual < totalPasos) || (direccion === -1 && pasoActual > 1)) {
         cambiarVisibilidadPaso(pasoActual, false); // Ocultar actual
-        pasoActual++;
+        pasoActual += direccion;                   // Avanzar o retroceder
         cambiarVisibilidadPaso(pasoActual, true);  // Mostrar nuevo
         actualizarBotones();
     }
-}
-
-function pasoAnterior() {
-    if (pasoActual > 1) {
-        cambiarVisibilidadPaso(pasoActual, false); // Ocultar actual
-        pasoActual--;
-        cambiarVisibilidadPaso(pasoActual, true);  // Mostrar nuevo
-        actualizarBotones();
-    }
-}
+};
 
 function actualizarBotones() {
-    const btnAtras = document.getElementById("btnAtras");
+    // Corregido el nombre a btnAnterior
+    const btnAtras = document.getElementById("btnAnterior");
     const btnSiguiente = document.getElementById("btnSiguiente");
     const btnGuardar = document.getElementById("btnGuardar");
 
-    if (btnAtras) btnAtras.style.display = (pasoActual === 1) ? "none" : "inline-block";
+    if (btnAtras) btnAtras.style.display = (pasoActual === 1) ? "none" : "flex";
     
     const esUltimo = (pasoActual === totalPasos);
-    if (btnSiguiente) btnSiguiente.style.display = esUltimo ? "none" : "inline-block";
-    if (btnGuardar) btnGuardar.style.display = esUltimo ? "inline-block" : "none";
+    if (btnSiguiente) btnSiguiente.style.display = esUltimo ? "none" : "flex";
+    if (btnGuardar) btnGuardar.style.display = esUltimo ? "flex" : "none";
 }
 // ==========================================
 // 5. CARGAR REGISTRO PARA EDITAR
