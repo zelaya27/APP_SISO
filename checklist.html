@@ -1070,15 +1070,17 @@
             </div>
         </form>
     </div>
+
 <script src="config.js"></script>
-    <!-- JS de lógica (Mantenido intacto) -->
-// ==========================================
-// 1. VARIABLES GLOBALES Y CONFIGURACIÓN
-// ==========================================
     <script>
-const CONFIG = {
-    URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycbyk_RyziMJkywSryn1VE4Tb44cacCd9zO91fuPRnSQ4LF6FxAliynNjrv-NJ-f4KBIt/exec" // Asegúrate de que esta URL sea la correcta
-};
+    // ==========================================
+    // 1. VARIABLES GLOBALES Y CONFIGURACIÓN
+    // ==========================================
+    const CONFIG = {
+        URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycbyk_RyziMJkywSryn1VE4Tb44cacCd9zO91fuPRnSQ4LF6FxAliynNjrv-NJ-f4KBIt/exec"
+    };
+    
+
 
 let pasoActual = 1;
 const totalPasos = 6;
@@ -1098,50 +1100,48 @@ function generarIDUnico() {
 }
 
 // ==========================================
-// 3. INICIO DE LA PÁGINA (MODO NUEVO / EDICIÓN)
+// 3. INICIO DE LA PÁGINA (NUEVO O EDICIÓN)
 // ==========================================
 document.addEventListener("DOMContentLoaded", () => {
-    // A. Inicializar la pizarra de firmas
     inicializarPizarra();
 
-    // B. Lógica de Nuevo Registro o Edición
     const urlParams = new URLSearchParams(window.location.search);
     const modo = urlParams.get('modo');
     const idRegistro = urlParams.get('id');
 
     if (modo === 'editar' && idRegistro) {
-        // Modo Edición: Cargar datos desde Google
         document.body.style.cursor = "wait"; 
         cargarRegistroParaEditar(idRegistro);
     } else {
-        // Modo Nuevo: Generar ID
         const nuevoId = generarIDUnico();
         const campoId = document.getElementById("col_0");
         
         if (campoId) {
             campoId.value = nuevoId;
-            console.log("Nuevo ID generado: " + nuevoId);
         }
 
-        // Agregamos la primera fila de personal por defecto
-        if (typeof agregarIntegrante === "function") {
-            agregarIntegrante();
+        if (typeof window.agregarIntegrante === "function") {
+            window.agregarIntegrante();
         }
     }
 });
 
 // ==========================================
-// 4. LÓGICA DEL WIZARD (PASOS SIGUIENTE / ATRÁS)
+// 4. NAVEGACIÓN DEL WIZARD (PASOS)
 // ==========================================
 function siguientePaso() {
     if (pasoActual < totalPasos) {
-        document.getElementById(`paso-${pasoActual}`).style.display = "none";
-        document.getElementById(`step-indicator-${pasoActual}`).classList.remove("active");
+        let pasoViejo = document.getElementById(`paso-${pasoActual}`);
+        let indicadorViejo = document.getElementById(`step-indicator-${pasoActual}`);
+        if(pasoViejo) pasoViejo.style.display = "none";
+        if(indicadorViejo) indicadorViejo.classList.remove("active");
         
         pasoActual++;
         
-        document.getElementById(`paso-${pasoActual}`).style.display = "block";
-        document.getElementById(`step-indicator-${pasoActual}`).classList.add("active");
+        let pasoNuevo = document.getElementById(`paso-${pasoActual}`);
+        let indicadorNuevo = document.getElementById(`step-indicator-${pasoActual}`);
+        if(pasoNuevo) pasoNuevo.style.display = "block";
+        if(indicadorNuevo) indicadorNuevo.classList.add("active");
         
         actualizarBotones();
     }
@@ -1149,13 +1149,17 @@ function siguientePaso() {
 
 function pasoAnterior() {
     if (pasoActual > 1) {
-        document.getElementById(`paso-${pasoActual}`).style.display = "none";
-        document.getElementById(`step-indicator-${pasoActual}`).classList.remove("active");
+        let pasoViejo = document.getElementById(`paso-${pasoActual}`);
+        let indicadorViejo = document.getElementById(`step-indicator-${pasoActual}`);
+        if(pasoViejo) pasoViejo.style.display = "none";
+        if(indicadorViejo) indicadorViejo.classList.remove("active");
         
         pasoActual--;
         
-        document.getElementById(`paso-${pasoActual}`).style.display = "block";
-        document.getElementById(`step-indicator-${pasoActual}`).classList.add("active");
+        let pasoNuevo = document.getElementById(`paso-${pasoActual}`);
+        let indicadorNuevo = document.getElementById(`step-indicator-${pasoActual}`);
+        if(pasoNuevo) pasoNuevo.style.display = "block";
+        if(indicadorNuevo) indicadorNuevo.classList.add("active");
         
         actualizarBotones();
     }
@@ -1180,7 +1184,7 @@ function actualizarBotones() {
 }
 
 // ==========================================
-// 5. CARGAR REGISTRO EXISTENTE (MODO EDITAR)
+// 5. CARGAR REGISTRO PARA EDITAR
 // ==========================================
 async function cargarRegistroParaEditar(id) {
     try {
@@ -1211,7 +1215,7 @@ async function cargarRegistroParaEditar(id) {
             }
         });
 
-        const btnGuardar = document.getElementById("btnGuardar");
+        const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
         if (btnGuardar) {
             btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Registro';
         }
@@ -1227,7 +1231,7 @@ async function cargarRegistroParaEditar(id) {
 // 6. GUARDAR FORMULARIO
 // ==========================================
 async function enviarFormulario() {
-    const btnGuardar = document.getElementById("btnGuardar");
+    const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
     if (btnGuardar) btnGuardar.disabled = true;
 
     try {
@@ -1248,9 +1252,8 @@ async function enviarFormulario() {
         }
 
         let personalData = [];
-        if (typeof obtenerDatosPersonal === "function") {
-            // CORRECCIÓN AQUÍ: Ya no usamos JSON.parse, pasamos el arreglo directo
-            personalData = obtenerDatosPersonal(); 
+        if (typeof window.obtenerDatosPersonal === "function") {
+            personalData = window.obtenerDatosPersonal(); 
         }
 
         const paqueteFinal = {
@@ -1281,9 +1284,9 @@ async function enviarFormulario() {
 }
 
 // ==========================================
-// 7. LÓGICA DE PERSONAL (STEP 7)
+// 7. LÓGICA DE PERSONAL Y FIRMAS
 // ==========================================
-function obtenerDatosPersonal() {
+window.obtenerDatosPersonal = function() {
     const idChecklist = document.getElementById('col_0') ? document.getElementById('col_0').value : ""; 
     const filas = document.querySelectorAll('#tbodyPersonal tr');
     const arregloPersonal = [];
@@ -1309,7 +1312,7 @@ function obtenerDatosPersonal() {
         }
     });
     return arregloPersonal; 
-}
+};
 
 window.eliminarIntegrante = function(idFila) {
     const fila = document.getElementById(idFila);
@@ -1327,10 +1330,10 @@ window.actualizarCorrelativos = function() {
     });
 };
 
-function agregarIntegrante() {
+window.agregarIntegrante = function() {
     window.contadorPersonal++;
     const tbody = document.getElementById('tbodyPersonal');
-    if(!tbody) return; // Evita error si la tabla no existe aún
+    if(!tbody) return; 
 
     const tr = document.createElement('tr');
     tr.id = `fila_per_${window.contadorPersonal}`;
@@ -1355,11 +1358,8 @@ function agregarIntegrante() {
     `;
     tbody.appendChild(tr);
     window.actualizarCorrelativos();
-}
+};
 
-// ==========================================
-// 8. LÓGICA DE FIRMAS (PIZARRA)
-// ==========================================
 function inicializarPizarra() {
     canvas = document.getElementById("pizarraFirma");
     if(canvas) {
@@ -1424,8 +1424,8 @@ window.guardarFirma = function() {
         imgPreview.style.display = "block";
     }
     window.cerrarModalFirma();
-};
-  </script>            
+};        
+</script>            
     <div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
     <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
         <h4>Firma Digital</h4>
