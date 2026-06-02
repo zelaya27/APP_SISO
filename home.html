@@ -336,14 +336,11 @@
             window.location.href = "index.html";
         }
 
-        // 3. NUEVO REGISTRO 
-        async function nuevoRegistro() {
-            const btn = document.querySelector('.btn-nueva');
-            if (btn && btn.disabled) return;
-            // Redirección simple para un registro en blanco
+    
+    // 3. NUEVO REGISTRO (Forzado Global)
+        window.nuevoRegistro = function() {
             window.location.href = "checklist.html";
-        }
-
+        };
         // 4. CARGAR REGISTROS CON FORMATO DE TARJETAS DE CELULAR
         async function cargarRegistros() {
             const contenedor = document.getElementById("contenedor-registros");
@@ -418,13 +415,15 @@
                 contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--danger-color); padding: 20px;"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el panel.</div>';
             }
         }
-
-        // 5. ACCIÓN DE REDIRECCIÓN EN MODO EDICIÓN
-        function editar(idRegistro) {
-            if (!idRegistro) return;
-            // Redirige al formulario inyectando las variables requeridas en la URL
+// 5. ACCIÓN DE REDIRECCIÓN EN MODO EDICIÓN (Forzado Global)
+        window.editar = function(idRegistro) {
+            if (!idRegistro || idRegistro === "undefined" || idRegistro === "null") {
+                alert("Error: Este registro no tiene un ID válido.");
+                return;
+            }
             window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
-        }
+        };
+  
     </script>
 </body>
 </html>
