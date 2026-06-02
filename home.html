@@ -5,7 +5,253 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Principal - Registros</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <link rel="stylesheet" href="home.css">
+    
+    <style>
+        :root {
+            --bg-color: #0b141d;
+            --card-color: #14212d;
+            --accent-color: #003366;
+            --success-color: #27ae60;
+            --danger-color: #e74c3c;
+            --text-color: #ffffff;
+            --muted-text: #a0aec0;
+            --border-color: #2c3e50;
+            
+            /* Colores para el efecto iluminado estilo Maniobras */
+            --blue-active: #3b82f6; 
+            --blue-hover: #2b6cb0;
+        }
+
+        body { 
+            font-family: 'Segoe UI', Arial, sans-serif; 
+            background-color: var(--bg-color); 
+            color: var(--text-color); 
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+        }
+        
+        header { 
+            background-color: var(--card-color); 
+            padding: 10px 20px; 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            border-bottom: 1px solid var(--border-color); 
+        }
+        
+        .container { 
+            max-width: 1400px; 
+            margin: 30px auto; 
+            padding: 20px; 
+            background: var(--card-color); 
+            border-radius: 8px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.3); 
+        }
+        
+        .header-panel { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 15px; 
+            flex-wrap: wrap; 
+            margin-bottom: 20px; 
+        }
+
+        .info-item {
+            font-size: 14px;
+            color: var(--text-color);
+        }
+
+        .info-item span {
+            color: var(--blue-active);
+            font-weight: bold;
+        }
+
+        /* --- ESTILEO DE BOTONES DE ACCIÓN --- */
+        .btn-nueva {
+            background-color: var(--blue-active);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-nueva:hover {
+            background-color: var(--blue-hover);
+        }
+
+        .btn-logout {
+            background-color: transparent;
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-logout:hover {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        /* --- BOTONES DE FILTRO ESTILO PILL (MANIOBRAS) --- */
+        .filtros-flex {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-filtro {
+            background-color: #1a2a3a;
+            color: var(--muted-text);
+            border: 1px solid var(--border-color);
+            padding: 8px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-filtro:hover {
+            border-color: var(--blue-active);
+            color: white;
+        }
+
+        .btn-filtro.activo {
+            background-color: var(--blue-active);
+            color: white;
+            border-color: var(--blue-active);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .filtros-contenedor {
+            color: var(--muted-text);
+            font-size: 14px;
+        }
+
+        .input-filtro {
+            background-color: #16222f;
+            color: white;
+            border: 1px solid var(--border-color);
+            padding: 6px 12px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        /* =========================================
+           DISEÑO DE TARJETAS PARA CELULAR
+        ========================================= */
+        .registros-grid {
+            display: grid;
+            grid-template-columns: 1fr; /* 1 columna por defecto en móvil */
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        /* Responsividad en pantallas más grandes */
+        @media (min-width: 768px) {
+            .registros-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (min-width: 1024px) {
+            .registros-grid { grid-template-columns: repeat(3, 1fr); }
+        }
+
+        .registro-card {
+            background-color: #1a2a3a;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        .registro-card:hover {
+            border-color: var(--blue-active);
+            transform: translateY(-2px);
+        }
+
+        .registro-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+        }
+
+        .registro-id {
+            font-weight: bold;
+            color: var(--text-color);
+            font-size: 16px;
+        }
+
+        .registro-body p {
+            margin: 6px 0;
+            font-size: 14px;
+            color: var(--muted-text);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .registro-body i {
+            color: var(--blue-active);
+            width: 16px;
+            text-align: center;
+        }
+
+        .registro-footer {
+            margin-top: 5px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .btn-editar {
+            background-color: transparent;
+            color: var(--blue-active);
+            border: 1px solid var(--blue-active);
+            padding: 6px 14px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-editar:hover {
+            background-color: var(--blue-active);
+            color: white;
+            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
+        }
+
+        /* Badges de estado dinámicos */
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-transform: capitalize;
+        }
+        .badge-pendiente { background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid #e74c3c; }
+        .badge-completado { background-color: rgba(39, 174, 96, 0.15); color: #27ae60; border: 1px solid #27ae60; }
+        .badge-generado { background-color: rgba(52, 152, 219, 0.15); color: #3498db; border: 1px solid #3498db; }
+        .badge-revisado { background-color: rgba(155, 89, 182, 0.15); color: #9b59b6; border: 1px solid #9b59b6; }
+    </style>
 </head>
 <body>
 
@@ -14,13 +260,13 @@
             <div style="background: white; padding: 5px 10px; border-radius: 4px; display: flex;">
                 <img src="https://raw.githubusercontent.com/zelaya27/IMAGENES_AZ/main/UTCD%20Vertical.png" height="30" alt="Logo UTCD">
             </div>
-            <h2 style="margin: 0; color: #ffffff; font-size: 20px; font-weight: bold;">PANEL PRINCIPAL - REGISTROS</h2>
+            <h2 style="margin: 0; color: #ffffff; font-size: 18px; font-weight: bold;">PANEL PRINCIPAL - REGISTROS</h2>
         </div>
-        <div class="user-info" style="display: flex; gap: 15px; align-items: center;">
+        <div class="user-info" style="display: flex; gap: 15px; align-items: center; flex-wrap: wrap;">
             <span class="info-item"><i class="fas fa-user-circle"></i> <span id="nombre-usuario">Usuario</span></span>
-            <span>|</span>
+            <span style="color: var(--border-color);">|</span>
             <span class="info-item"><i class="fas fa-map-marker-alt"></i> <span id="nombre-sector">Sector</span></span>
-            <button class="btn-logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+            <button class="btn-logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Salir</button>
         </div>
     </header>
 
@@ -30,8 +276,8 @@
                 <i class="fas fa-plus"></i> NUEVO REGISTRO
             </button>
             
-            <div class="filtros-container">
-                <button class="btn-filtro activo" onclick="filtrar('Todos')">
+            <div class="filtros-flex">
+                <button class="btn-filtro activo">
                     <i class="fas fa-list"></i> Todos
                 </button>
                 <button class="btn-filtro" onclick="filtrar('Pendiente')">
@@ -44,8 +290,8 @@
 
             <div class="filtros-contenedor" style="display: flex; gap: 10px; align-items: center;">
                 <div class="filtros-grupo">
-                    <label>Mostrar:</label>
-                    <select id="limitSelector" class="input-filtro">
+                    <label>Mostrar: </label>
+                    <select id=\"limitSelector\" class="input-filtro">
                         <option value="10">Últimos 10</option>
                         <option value="ALL">Todos</option>
                     </select>
@@ -53,23 +299,132 @@
             </div>
         </div>
 
-       <div id="contenedor-registros" class="registros-grid">
-            <table>
-                <thead>
-                    <tr>
-                       <th style="width: 15%;">ID</th>
-                        <th style="width: 15%;">FECHA</th>
-                        <th style="width: 15%;">ESTADO</th>
-                        <th style="width: 15%;">ACCIONES</th>
-                    </tr>
-                </thead>
-                <tbody id="tabla-body">
-                    </tbody>
-            </table>
-        </div>
+        <div id="contenedor-registros" class="registros-grid">
+            </div>
     </div>
 
     <script src="config.js"></script>
-    <script src="home.js"></script>
+
+    <script>
+        // 1. CARGA INICIAL Y CONTROL DE SESIÓN
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = sessionStorage.getItem("usuario");
+            const sector = sessionStorage.getItem("sector");
+
+            if (!user) {
+                window.location.href = "index.html";
+            } else {
+                document.getElementById("nombre-usuario").textContent = user;
+                document.getElementById("nombre-sector").textContent = sector;
+                // Llamamos a la función principal para pintar los registros
+                cargarRegistros();
+            }
+
+            // --- ESTÉTICA: ILUMINACIÓN DINÁMICA DE BOTONES DE FILTRO ---
+            const botonesFiltro = document.querySelectorAll('.btn-filtro');
+            botonesFiltro.forEach(boton => {
+                boton.addEventListener('click', function() {
+                    botonesFiltro.forEach(btn => btn.classList.remove('activo'));
+                    this.classList.add('activo');
+                });
+            });
+        });
+
+        // 2. FUNCIÓN CERRAR SESIÓN
+        function cerrarSesion() {
+            sessionStorage.clear();
+            window.location.href = "index.html";
+        }
+
+        // 3. NUEVO REGISTRO 
+        async function nuevoRegistro() {
+            const btn = document.querySelector('.btn-nueva');
+            if (btn && btn.disabled) return;
+            // Redirección simple para un registro en blanco
+            window.location.href = "checklist.html";
+        }
+
+        // 4. CARGAR REGISTROS CON FORMATO DE TARJETAS DE CELULAR
+        async function cargarRegistros() {
+            const contenedor = document.getElementById("contenedor-registros");
+            if (!contenedor) return;
+            
+            // Animación/Aviso de carga estructurado para el Grid
+            contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; padding: 30px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--blue-active)"></i><p style="margin-top:10px;">Cargando datos...</p></div>';
+
+            try {
+                // GET limpio apuntando al Script definido en config.js
+                const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`;
+                
+                const res = await fetch(urlFinal);
+                const data = await res.json();
+                
+                contenedor.innerHTML = "";
+                
+                if (data.error) throw new Error(data.error);
+
+                if (data.length === 0) {
+                    contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text); padding: 20px;">No hay registros aún.</div>';
+                    return;
+                }
+
+                data.forEach(row => {
+                    // --- TU CONSERVADA CORRECCIÓN DE FORMATO DE FECHA (Evita brincos de zona horaria) ---
+                    let fechaOriginal = row.FECHA;
+                    let fechaFormateada = "";
+                    
+                    if (fechaOriginal) {
+                        let d = new Date(fechaOriginal);
+                        if (!isNaN(d.getTime())) {
+                            let dia = String(d.getUTCDate()).padStart(2, '0');
+                            let mes = String(d.getUTCMonth() + 1).padStart(2, '0');
+                            let anio = d.getUTCFullYear();
+                            
+                            fechaFormateada = `${dia}/${mes}/${anio}`; 
+                        } else {
+                            fechaFormateada = fechaOriginal; // Si no es ISO válida, la pasa cruda
+                        }
+                    } else {
+                        fechaFormateada = "Sin fecha";
+                    }
+
+                    // Limpieza del estado para empatar las clases CSS de los badges (.badge-pendiente, etc.)
+                    const estadoTexto = row.ESTADO || "Pendiente";
+                    const estadoClase = estadoTexto.toLowerCase().trim();
+
+                    // --- INYECCIÓN DIRECTA DE LA COMPOSICIÓN DE TARJETA MÓVIL ---
+                    const card = document.createElement("div");
+                    card.className = "registro-card";
+                    card.innerHTML = `
+                        <div class="registro-header">
+                            <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.ID || "N/A"}</span>
+                            <span class="badge badge-${estadoClase}">${estadoTexto}</span>
+                        </div>
+                        <div class="registro-body">
+                            <p><i class="far fa-calendar-alt"></i> <b>Fecha:</b> ${fechaFormateada}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.SECTOR || "N/A"}</p>
+                            <p><i class="fas fa-user-hard-hat"></i> <b>Inspector:</b> ${row.USUARIO || "N/A"}</p>
+                        </div>
+                        <div class="registro-footer">
+                            <button class="btn-editar" onclick="editar('${row.ID}')">
+                                <i class="fas fa-pen"></i> Editar
+                            </button>
+                        </div>
+                    `;
+                    contenedor.appendChild(card);
+                });
+            } catch (error) {
+                console.error("Error al cargar registros:", error);
+                contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--danger-color); padding: 20px;"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el panel.</div>';
+            }
+        }
+
+        // 5. ACCIÓN DE REDIRECCIÓN EN MODO EDICIÓN
+        function editar(idRegistro) {
+            if (!idRegistro) return;
+            // Redirige al formulario inyectando las variables requeridas en la URL
+            window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
+        }
+    </script>
 </body>
 </html>
