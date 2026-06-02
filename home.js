@@ -81,10 +81,12 @@ async function nuevoRegistro() {
 
 // 3. CARGAR REGISTROS (GET)
 async function cargarRegistros() {
-    const tbody = document.getElementById("tabla-body");
-    if (!tbody) return;
+    // NOTA: Asegúrate de que en tu home.html ya reemplazaste el <table> por el <div id="contenedor-registros">
+    const contenedor = document.getElementById("contenedor-registros");
+    if (!contenedor) return;
     
-    tbody.innerHTML = '<tr><td colspan="5">Cargando datos...</td></tr>';
+    // Estado de carga adaptado al nuevo diseño
+    contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; padding: 20px;"><i class="fas fa-spinner fa-spin fa-2x"></i><p>Cargando datos...</p></div>';
 
     try {
         // GET simple idéntico al de Maniobras
@@ -93,17 +95,17 @@ async function cargarRegistros() {
         const res = await fetch(urlFinal);
         const data = await res.json();
         
-        tbody.innerHTML = "";
+        contenedor.innerHTML = "";
         
         if (data.error) throw new Error(data.error);
 
         if (data.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5">No hay registros aún.</td></tr>';
+            contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text);">No hay registros aún.</div>';
             return;
         }
 
         data.forEach(row => {
-            // --- CORRECCIÓN DE FORMATO DE FECHA (De ISO a dd/mm/aaaa) ---
+            // --- TU CORRECCIÓN DE FORMATO DE FECHA (CONSERVADA INTACTA) ---
             let fechaOriginal = row.FECHA;
             let fechaFormateada = "";
             
@@ -120,24 +122,43 @@ async function cargarRegistros() {
                 } else {
                     fechaFormateada = fechaOriginal; // Si viene texto normal, se deja igual
                 }
+            } else {
+                fechaFormateada = "Sin fecha";
             }
 
-            const tr = document.createElement("tr");
-            tr.innerHTML = `
-                <td>${row.ID || ""}</td>
-                <td>${fechaFormateada}</td>
-                <td>${row.ESTADO || ""}</td>
-                <td>N/A</td> 
-                <td>
+            // Normalizar el estado para los colores (ej: "pendiente", "aprobado")
+            const estadoClase = (row.ESTADO || 'pendiente').toLowerCase().trim();
+
+            // --- CREACIÓN DE LA TARJETA MÓVIL EN LUGAR DE LA FILA (TR) ---
+            const card = document.createElement("div");
+            card.className = "registro-card";
+            card.innerHTML = `
+                <div class="registro-header">
+                    <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.ID || ""}</span>
+                    <span class="badge badge-${estadoClase}">${row.ESTADO || "Sin estado"}</span>
+                </div>
+                <div class="registro-body">
+                    <p><i class="far fa-calendar-alt"></i> ${fechaFormateada}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${row.SECTOR || "N/A"}</p>
+                    <p><i class="fas fa-user-hard-hat"></i> ${row.USUARIO || "N/A"}</p>
+                </div>
+                <div class="registro-footer">
                     <button class="btn-editar" onclick="editar('${row.ID}')">
                         <i class="fas fa-pen"></i> Editar
                     </button>
-                </td>
+                </div>
             `;
-            tbody.appendChild(tr);
+            contenedor.appendChild(card);
         });
     } catch (error) {
         console.error("Error al cargar:", error);
-        tbody.innerHTML = '<tr><td colspan="5">Error de conexión.</td></tr>';
+        contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: #e74c3c;">Error de conexión.</div>';
     }
+}
+
+// --- FUNCIÓN EDITAR ---
+// Agrega esto justo debajo de cargarRegistros() para que el botón funcione
+function editar(idRegistro) {
+    // No abre archivos, simplemente redirige a la pantalla de checklist enviando el ID para consultarlo/editarlo
+    window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
 }
