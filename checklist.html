@@ -1121,37 +1121,40 @@ async function enviarFormulario() {
     btn.disabled = true;
     btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
 
-    // 1. Recolectar los 66 campos automáticamente
-    const datosChecklist = {};
-    for (let i = 0; i <= 66; i++) {
-        let el = document.getElementById(`col_${i}`);
-        if (el) {
-            datosChecklist[`col_${i}`] = el.value;
+    try { // <-- AQUÍ FALTABA EL TRY
+        // 1. Recolectar los 66 campos automáticamente
+        const datosChecklist = {};
+        for (let i = 0; i <= 66; i++) {
+            // Nota: Buscamos col_1 o col1 porque en tu HTML algunos no tienen guion bajo (ej. col28)
+            let el = document.getElementById(`col_${i}`) || document.getElementById(`col${i}`);
+            
+            if (el) {
+                // Si es un checkbox o radio, su valor se maneja distinto (Opcional según tu lógica, 
+                // pero si usas inputs de texto o select, el.value está perfecto)
+                datosChecklist[`col_${i}`] = el.value;
+            }
         }
-    }
 
-    // 2. Construir el objeto de envío (Payload)
-    const payload = {
-        action: "guardarRespuestasChecklist",
-        checklist: datosChecklist,
-        personal: obtenerDatosPersonal() // Obtenemos el arreglo (sin stringify aquí)
-    };
+        // 2. Construir el objeto de envío (Payload)
+        const payload = {
+            action: "guardarRespuestasChecklist",
+            checklist: datosChecklist,
+            personal: obtenerDatosPersonal() // Obtenemos el arreglo
+        };
 
-    // 3. Enviar al servidor
- const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+        // 3. Enviar al servidor
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
             mode: 'cors',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(datosJSON)
+            body: JSON.stringify(payload) // <-- CAMBIADO: Antes decía datosJSON (que no existía)
         });
-    }
 
-        // NOTA: Con 'no-cors', la respuesta suele ser opaca. 
-        // Si necesitas confirmar, lo ideal es manejar la lógica de éxito en el cliente.
+        // 4. Confirmación
         alert("¡Registro enviado correctamente!");
         window.location.href = "home.html";
 
-    } catch (error) {
+    } catch (error) { // <-- EL CATCH AHORA SÍ TIENE SENTIDO
         console.error("Error:", error);
         btn.disabled = false;
         btn.innerHTML = '<i class="fas fa-save"></i> Guardar';
