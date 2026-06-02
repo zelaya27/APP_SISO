@@ -5,6 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>SISO - Nueva Lista de Chequeo</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+     <script src="config.js"></script>
+    <script>
+    // Usamos una función para asegurar que CONFIG existe antes de usarlo
+    function getUrlApp() {
+        if (typeof CONFIG !== 'undefined' && CONFIG.URL_APPS_SCRIPT) {
+            return CONFIG.URL_APPS_SCRIPT;
+        } else {
+            console.error("Error: config.js no cargado o URL_APPS_SCRIPT faltante.");
+            return ""; // O pon aquí la URL directa como respaldo temporal
+        }
+    }
+    const URL_APPS_SCRIPT = getUrlApp();
+</script>  
+    
     <style>
         /* =========================================
            VARIABLES Y BASE (DARK MODE)
@@ -1069,10 +1084,8 @@
                 </button>
             </div>
         </form>
-    </div>
-
-<script src="config.js"></script>
-   
+    </div>     
+ 
     <script>
 let pasoActual = 1;
 const totalPasos = 6;
