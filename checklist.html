@@ -1109,51 +1109,129 @@ let pasoActual = 1;
    // Asegúrate de tener tu configuración al inicio de tu archivo .js
 
 
-async function enviarFormulario() {
-    const btn = document.getElementById('btnGuardar');
-    btn.disabled = true;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
+<script>
+    // 1. AL CARGAR LA PÁGINA: VERIFICAR SI VAMOS A EDITAR O CREAR
+    document.addEventListener("DOMContentLoaded", () => {
+        const urlParams = new URLSearchParams(window.location.search);
+        const modo = urlParams.get('modo');
+        const idRegistro = urlParams.get('id');
 
-    try { // <-- AQUÍ FALTABA EL TRY
-        // 1. Recolectar los 66 campos automáticamente
-        const datosChecklist = {};
-        for (let i = 0; i <= 66; i++) {
-            // Nota: Buscamos col_1 o col1 porque en tu HTML algunos no tienen guion bajo (ej. col28)
-            let el = document.getElementById(`col_${i}`) || document.getElementById(`col${i}`);
-            
-            if (el) {
-                // Si es un checkbox o radio, su valor se maneja distinto (Opcional según tu lógica, 
-                // pero si usas inputs de texto o select, el.value está perfecto)
-                datosChecklist[`col_${i}`] = el.value;
+        if (modo === 'editar' && idRegistro) {
+            // Modo Edición: Cargar datos desde Google
+            document.body.style.cursor = "wait"; // Cambiar cursor a "cargando"
+            cargarRegistroParaEditar(idRegistro);
+        } else {
+            // Modo Nuevo: Lógica normal (agregar primer integrante, etc.)
+            if (typeof agregarIntegrante === "function") {
+                agregarIntegrante();
             }
         }
+    });
 
-        // 2. Construir el objeto de envío (Payload)
-        const payload = {
-            action: "guardarRespuestasChecklist",
-            checklist: datosChecklist,
-            personal: obtenerDatosPersonal() // Obtenemos el arreglo
-        };
+    // 2. FUNCIÓN PARA DESCARGAR Y AUTOCOMPLETAR EL REGISTRO (MODO EDITAR)
+    async function cargarRegistroParaEditar(id) {
+        try {
+            const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistro&id=${id}`;
+            const res = await fetch(urlFinal);
+            const data = await res.json();
+            
+            document.body.style.cursor = "default";
 
-        // 3. Enviar al servidor
-        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
-            method: 'POST',
-            mode: 'cors',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload) // <-- CAMBIADO: Antes decía datosJSON (que no existía)
-        });
+            if (data.error) {
+                alert("No se pudo cargar el registro: " + data.error);
+                return;
+            }
 
-        // 4. Confirmación
-        alert("¡Registro enviado correctamente!");
-        window.location.href = "home.html";
+            // Recorrer los datos que manda Google e inyectarlos en cada input/select
+            Object.keys(data).forEach(columnaName => {
+                const inputElement = document.getElementById(columnaName);
+                
+                if (inputElement) {
+                    if (inputElement.type === "checkbox" || inputElement.type === "radio") {
+                         inputElement.checked = (data[columnaName] === inputElement.value || data[columnaName] === true || data[columnaName] === "TRUE");
+                    } else if (inputElement.type === "date" && data[columnaName]) {
+                         let d = new Date(data[columnaName]);
+                         if (!isNaN(d.getTime())) {
+                             inputElement.value = d.toISOString().split('T')[0];
+                         }
+                     } else {
+                         inputElement.value = data[columnaName];
+                     }
+                }
+            });
 
-    } catch (error) { // <-- EL CATCH AHORA SÍ TIENE SENTIDO
-        console.error("Error:", error);
-        btn.disabled = false;
-        btn.innerHTML = '<i class="fas fa-save"></i> Guardar';
-        alert("Error al guardar: " + error.message);
+            // Cambiar el texto del botón final
+            const btnGuardar = document.querySelector(".btn-guardar-principal") || document.getElementById("btnGuardar");
+            if (btnGuardar) {
+                btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Registro';
+            }
+
+        } catch (error) {
+            console.error("Error cargando edición:", error);
+            alert("Error de conexión al intentar cargar los datos guardados.");
+            document.body.style.cursor = "default";
+        }
     }
-}
+
+    // 3. LA FUNCIÓN DE GUARDAR CORREGIDA (EMPAQUETA COMO ESPERA GOOGLE)
+    async function enviarFormulario() {
+        const btnGuardar = document.querySelector(".btn-guardar-principal") || document.getElementById("btnGuardar");
+        if (btnGuardar) btnGuardar.disabled = true; // Evitar doble clic
+
+        try {
+            // A. Recolectar todas las 66 columnas dinámicamente
+            let datosChecklist = {};
+            for (let i = 0; i <= 66; i++) {
+                let inputId = `col_${i}`;
+                let elemento = document.getElementById(inputId);
+                
+                if (elemento) {
+                    if (elemento.type === "checkbox" || elemento.type === "radio") {
+                        datosChecklist[inputId] = elemento.checked;
+                    } else {
+                        datosChecklist[inputId] = elemento.value;
+                    }
+                } else {
+                    datosChecklist[inputId] = ""; // Si no existe en HTML, mandar vacío
+                }
+            }
+
+            // B. Recolectar datos de personal (si existe la función)
+            let personalData = [];
+            if (typeof obtenerDatosPersonal === "function") {
+                personalData = JSON.parse(obtenerDatosPersonal()); // Convertir a objeto para empaquetarlo
+            }
+
+            // C. EL PASO CLAVE: Crear el "Paquete" exacto que Apps Script está esperando
+            const paqueteFinal = {
+                action: "guardarRespuestasChecklist",
+                checklist: datosChecklist,     // <--- Aquí van las 66 columnas anidadas
+                personal: personalData         // <--- Aquí van las firmas
+            };
+
+            // D. Enviar a Google
+            const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+                method: 'POST',
+                body: JSON.stringify(paqueteFinal) 
+                // Nota: Usamos fetch directo, asumiendo que ya configuraste CORS como vimos antes
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'Éxito' || result.success) {
+                alert("Registro guardado/actualizado correctamente");
+                window.location.href = "home.html"; // Volver al inicio
+            } else {
+                throw new Error(result.message || result.error || "Error desconocido");
+            }
+
+        } catch (error) {
+            console.error("Error al guardar:", error);
+            alert("Hubo un error al guardar: " + error.message);
+            if (btnGuardar) btnGuardar.disabled = false;
+        }
+    }
+
 
 function obtenerDatosPersonal() {
     const idChecklist = document.getElementById('col_0').value; 
