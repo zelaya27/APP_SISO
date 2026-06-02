@@ -1088,15 +1088,16 @@
  
     <script>
 
-
 // ==========================================
-// 2. FUNCIÓN PARA GENERAR ID ÚNICO
+// 2. FUNCIÓN PARA GENERAR ID ÚNICO (6 CARACTERES ALFANUMÉRICOS)
 // ==========================================
 function generarIDUnico() {
-    const fecha = new Date();
-    const timestamp = fecha.getTime();
-    const aleatorio = Math.floor(Math.random() * 1000);
-    return "SISO-" + timestamp + "-" + aleatorio;
+    const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let id = '';
+    for (let i = 0; i < 6; i++) {
+        id += caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+    }
+    return id;
 }
 
 // ==========================================
