@@ -365,9 +365,9 @@
                     return;
                 }
 
-                data.forEach(row => {
-                    // --- TU CONSERVADA CORRECCIÓN DE FORMATO DE FECHA (Evita brincos de zona horaria) ---
-                    let fechaOriginal = row.FECHA;
+data.forEach(row => {
+                    // --- CORRECCIÓN: AHORA USAMOS LAS COLUMNAS col_X ---
+                    let fechaOriginal = row.col_3; // Antes row.FECHA
                     let fechaFormateada = "";
                     
                     if (fechaOriginal) {
@@ -379,14 +379,14 @@
                             
                             fechaFormateada = `${dia}/${mes}/${anio}`; 
                         } else {
-                            fechaFormateada = fechaOriginal; // Si no es ISO válida, la pasa cruda
+                            fechaFormateada = fechaOriginal;
                         }
                     } else {
                         fechaFormateada = "Sin fecha";
                     }
 
-                    // Limpieza del estado para empatar las clases CSS de los badges (.badge-pendiente, etc.)
-                    const estadoTexto = row.ESTADO || "Pendiente";
+                    // Limpieza del estado usando col_4 (Antes ESTADO)
+                    const estadoTexto = row.col_4 || "Pendiente"; 
                     const estadoClase = estadoTexto.toLowerCase().trim();
 
                     // --- INYECCIÓN DIRECTA DE LA COMPOSICIÓN DE TARJETA MÓVIL ---
@@ -394,27 +394,26 @@
                     card.className = "registro-card";
                     card.innerHTML = `
                         <div class="registro-header">
-                            <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.ID || "N/A"}</span>
+                            <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.col_0 || "N/A"}</span>
                             <span class="badge badge-${estadoClase}">${estadoTexto}</span>
                         </div>
                         <div class="registro-body">
                             <p><i class="far fa-calendar-alt"></i> <b>Fecha:</b> ${fechaFormateada}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.SECTOR || "N/A"}</p>
-                            <p><i class="fas fa-user-hard-hat"></i> <b>Usuario:</b> ${row.USUARIO || "N/A"}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.col_2 || "N/A"}</p>
+                            <p><i class="fas fa-user-hard-hat"></i> <b>Usuario:</b> ${row.col_1 || "N/A"}</p>
                         </div>
                         <div class="registro-footer">
-                            <button class="btn-editar" onclick="editar('${row.ID}')">
+                            <button class="btn-editar" onclick="editar('${row.col_0}')">
                                 <i class="fas fa-pen"></i> Editar
                             </button>
                         </div>
                     `;
                     contenedor.appendChild(card);
                 });
-            } catch (error) {
-                console.error("Error al cargar registros:", error);
-                contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--danger-color); padding: 20px;"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el panel.</div>';
+
+
             }
-        }
+                
 // 5. ACCIÓN DE REDIRECCIÓN EN MODO EDICIÓN (Forzado Global)
         window.editar = function(idRegistro) {
             if (!idRegistro || idRegistro === "undefined" || idRegistro === "null") {
