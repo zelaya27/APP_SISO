@@ -1223,7 +1223,7 @@ async function cargarRegistroParaEditar(id) {
 }
 
 // ==========================================
-// 6. GUARDAR FORMULARIO
+// 6. GUARDAR FORMULARIO (CORREGIDO)
 // ==========================================
 async function enviarFormulario() {
     const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
@@ -1231,18 +1231,32 @@ async function enviarFormulario() {
 
     try {
         let datosChecklist = {};
+        
         for (let i = 0; i <= 66; i++) {
-            let inputId = `col_${i}`;
-            let elemento = document.getElementById(inputId);
+            // 1. Manejar Checkboxes múltiples (Ej. Paso 3: Riesgos -> name="col_26")
+            let checkboxes = document.querySelectorAll(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
+            if (checkboxes.length > 0 && checkboxes[0].type === 'checkbox') {
+                datosChecklist[`col_${i}`] = Array.from(checkboxes).map(cb => cb.value).join(', ');
+                continue;
+            }
+
+            // 2. Manejar Radio Buttons (Ej. Paso 5: Seguridad SÍ/NO/NA -> name="col31")
+            let radioSeleccionado = document.querySelector(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
+            if (radioSeleccionado && radioSeleccionado.type === 'radio') {
+                datosChecklist[`col_${i}`] = radioSeleccionado.value;
+                continue;
+            }
+
+            // 3. Manejar Inputs normales, Textareas, Selects (Soportando 'col_1' o 'col28')
+            let inputIdConGuion = `col_${i}`;
+            let inputIdSinGuion = `col${i}`;
+            let elemento = document.getElementById(inputIdConGuion) || document.getElementById(inputIdSinGuion);
             
             if (elemento) {
-                if (elemento.type === "checkbox" || elemento.type === "radio") {
-                    datosChecklist[inputId] = elemento.checked;
-                } else {
-                    datosChecklist[inputId] = elemento.value;
-                }
+                datosChecklist[`col_${i}`] = elemento.value;
             } else {
-                datosChecklist[inputId] = "";
+                // Si el campo realmente no existe o está vacío, se envía string vacío
+                datosChecklist[`col_${i}`] = "";
             }
         }
 
@@ -1259,6 +1273,9 @@ async function enviarFormulario() {
 
         const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
+            // TIP: A veces Apps Script rechaza el 'application/json' por temas de CORS. 
+            // Si el problema persiste, descomenta la siguiente línea:
+            // headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(paqueteFinal) 
         });
 
@@ -1268,7 +1285,7 @@ async function enviarFormulario() {
             alert("Registro guardado correctamente");
             window.location.href = "home.html";
         } else {
-            throw new Error(result.message || result.error || "Error desconocido");
+            throw new Error(result.message || result.error || "Error desconocido devuelto por el servidor");
         }
 
     } catch (error) {
