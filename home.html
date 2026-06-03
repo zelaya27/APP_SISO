@@ -335,13 +335,8 @@
             sessionStorage.clear();
             window.location.href = "index.html";
         }
-
-    
-    // 3. NUEVO REGISTRO (Forzado Global)
-        window.nuevoRegistro = function() {
-            window.location.href = "checklist.html";
-        };
-        // 4. CARGAR REGISTROS CON FORMATO DE TARJETAS DE CELULAR
+        
+// 4. CARGAR REGISTROS CON FORMATO DE TARJETAS DE CELULAR
         async function cargarRegistros() {
             const contenedor = document.getElementById("contenedor-registros");
             if (!contenedor) return;
@@ -349,7 +344,7 @@
             // Animación/Aviso de carga estructurado para el Grid
             contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; padding: 30px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--blue-active)"></i><p style="margin-top:10px;">Cargando datos...</p></div>';
 
-            try {
+            try { // <--- AQUÍ EMPIEZA EL TRY
                 // GET limpio apuntando al Script definido en config.js
                 const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`;
                 
@@ -365,7 +360,7 @@
                     return;
                 }
 
-data.forEach(row => {
+                data.forEach(row => {
                     // --- CORRECCIÓN: AHORA USAMOS LAS COLUMNAS col_X ---
                     let fechaOriginal = row.col_3; // Antes row.FECHA
                     let fechaFormateada = "";
@@ -411,9 +406,17 @@ data.forEach(row => {
                     contenedor.appendChild(card);
                 });
 
-
+            } catch (error) { // <--- ESTO ES LO QUE FALTABA
+                console.error("Error al cargar registros:", error);
+                contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--danger-color); padding: 20px;"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el panel.</div>';
             }
-                
+        }
+    
+    // 3. NUEVO REGISTRO (Forzado Global)
+        window.nuevoRegistro = function() {
+            window.location.href = "checklist.html";
+        };
+       
 // 5. ACCIÓN DE REDIRECCIÓN EN MODO EDICIÓN (Forzado Global)
         window.editar = function(idRegistro) {
             if (!idRegistro || idRegistro === "undefined" || idRegistro === "null") {
