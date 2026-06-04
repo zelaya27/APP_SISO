@@ -528,18 +528,20 @@
                         <select id="col_6"><option value="">Seleccione...</option><option value="DISTRIBUCION">Distribución</option><option value="SERVICIO TECNICO">Servicio Técnico</option><option value="CONTROL DE ENERGIA">Control de Energía</option></select>
                     </div>
                     
-                    <div class="form-group">
-                        <label>Tipo de Actividad</label>
-                        <select id="col_7" onchange="verificarActividad()">
-                            <option value="">Seleccione...</option>
-                            <option value="LÍNEA ENERGIZADA">Línea Energizada</option>
-                            <option value="LÍNEA DESENERGIZADA">Línea Desenergizada</option>
-                            <option value="TRABAJO EN ALTURA">Trabajo en Altura</option>
-                            <option value="IZAJE DE CARGAS">Izaje de Cargas</option>
-                            <option value="TRANSPORTE DE CARGA">Transporte de Carga</option>
-                            <option value="OTRO">Otro</option>
-                        </select>
-                    </div>
+                  <div class="form-group">
+    <label>Tipo de Actividad (Selección múltiple)</label>
+    
+    <input type="hidden" id="col_7" name="col_7" class="campo-dato">
+
+    <div id="container_col_7" style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
+        <label><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="sincronizarCheckboxes()"> Línea Energizada</label><br>
+        <label><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="sincronizarCheckboxes()"> Línea Desenergizada</label><br>
+        <label><input type="checkbox" value="TRABAJO EN ALTURA" onchange="sincronizarCheckboxes()"> Trabajo en Altura</label><br>
+        <label><input type="checkbox" value="IZAJE DE CARGAS" onchange="sincronizarCheckboxes()"> Izaje de Cargas</label><br>
+        <label><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="sincronizarCheckboxes()"> Transporte de Carga</label><br>
+        <label><input type="checkbox" value="OTRO" onchange="sincronizarCheckboxes()"> Otro</label>
+    </div>
+</div>
                     <div class="form-group hidden-field" id="grupo_col_8"><label style="color: var(--blue-active);">Especifique (Otro)</label><input type="text" id="col_8"></div>
                     
                     <div class="form-group"><label>Circuito</label><input type="text" id="col_9"></div>
@@ -1108,6 +1110,18 @@ function verificarRiesgosOtros() {
         contenedor.style.display = 'none';
         // Opcional: Limpiar el campo si lo desmarcan
         document.getElementById('col_27').value = ''; 
+    }
+}
+    function sincronizarCheckboxes() {
+    const checkboxes = document.querySelectorAll('#container_col_7 input[type="checkbox"]:checked');
+    const valores = Array.from(checkboxes).map(cb => cb.value);
+    
+    // Actualiza el campo oculto
+    document.getElementById('col_7').value = valores.join(', ');
+    
+    // Si tenías una función "verificarActividad()", llámala aquí también
+    if (typeof verificarActividad === 'function') {
+        verificarActividad();
     }
 }
 // 5. CARGAR REGISTRO PARA EDITAR
