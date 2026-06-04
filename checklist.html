@@ -1179,7 +1179,7 @@ function actualizarBotones() {
     if (btnGuardar) btnGuardar.style.display = esUltimo ? "flex" : "none";
 }
 // ==========================================
-// 5. CARGAR REGISTRO PARA EDITAR
+// 5. CARGAR REGISTRO PARA EDITAR (SÚPER PARCHE)
 // ==========================================
 async function cargarRegistroParaEditar(id) {
     try {
@@ -1194,56 +1194,73 @@ async function cargarRegistroParaEditar(id) {
             return;
         }
 
-        // Iterar sobre todas las propiedades del objeto data (Las columnas de tu hoja)
+        // Recorrer todas las columnas recibidas
         Object.keys(data).forEach(columnaName => {
             let valorGuardado = data[columnaName];
-            if (valorGuardado === null || valorGuardado === undefined) return; // Saltar si está vacío
+            if (valorGuardado === null || valorGuardado === undefined || valorGuardado === "") return;
 
-            // 1. Buscar elementos agrupados por el atributo "name" (Radios y Checkboxes)
-            const opciones = document.querySelectorAll(`input[name="${columnaName}"]`);
+            // TRUCO 1: Normalizar el nombre (si viene col_31, también buscar col31)
+            let nombreSinGuion = columnaName.replace('_', '');
+
+            // 1. Checkboxes y Radios (Paso 3 y Paso 5)
+            // Busca tanto con guión como sin guión
+            const opciones = document.querySelectorAll(`input[name="${columnaName}"], input[name="${nombreSinGuion}"]`);
             
             if (opciones.length > 0) {
-                // Si es un grupo de Radio Buttons (SÍ / NO / N/A del Paso 5)
                 if (opciones[0].type === "radio") {
                     opciones.forEach(radio => {
-                        if (radio.value === valorGuardado) {
+                        // Compara asegurando mayúsculas y quitando espacios
+                        if (radio.value.trim().toUpperCase() === valorGuardado.toString().trim().toUpperCase()) {
                             radio.checked = true;
                         }
                     });
                 } 
-                // Si es un grupo de Checkboxes (Riesgos del Paso 3)
                 else if (opciones[0].type === "checkbox") {
-                    // Convertimos la cadena de texto separada por comas a un Arreglo (Array)
                     let valoresArray = valorGuardado.toString().split(',').map(s => s.trim());
-                    
                     opciones.forEach(cb => {
                         if (valoresArray.includes(cb.value)) {
                             cb.checked = true;
                         }
                     });
-                    
-                    // Si el Checkbox "Otros" se marcó, disparamos la función que muestra la caja de texto
                     if (document.getElementById('chk_otros') && document.getElementById('chk_otros').checked) {
                         if (typeof verificarRiesgosOtros === "function") verificarRiesgosOtros();
                     }
                 }
             } else {
-                // 2. Si no es radio ni checkbox, buscamos por ID normal (Inputs, Selects, Textareas)
-                const inputElement = document.getElementById(columnaName);
+                // 2. Elementos normales (Inputs, Selects, Textareas)
+                const inputElement = document.getElementById(columnaName) || document.getElementById(nombreSinGuion);
                 if (inputElement) {
-                    // Formatear fechas correctamente si aplica
-                    if (inputElement.type === "date" && valorGuardado) {
-                        let d = new Date(valorGuardado);
-                        if (!isNaN(d.getTime())) {
-                            inputElement.value = d.toISOString().split('T')[0];
+                    
+                    // TRUCO 2: Formato de Fechas (Paso 1 - col_3)
+                    if (columnaName === "col_3" || nombreSinGuion === "col3") {
+                        if (valorGuardado.toString().includes("T")) {
+                            // De '2026-05-30T06:00...' saca la fecha y la formatea DD/MM/AAAA
+                            let fechaPartes = valorGuardado.split("T")[0].split("-");
+                            if(fechaPartes.length === 3) {
+                                inputElement.value = `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}`;
+                            }
+                        } else {
+                            inputElement.value = valorGuardado;
                         }
-                    } else {
+                    }
+                    // TRUCO 3: Formato de Horas (Paso 2 - col_17, col_18)
+                    else if (inputElement.type === "time") {
+                        if (valorGuardado.toString().includes("T")) {
+                            // Extrae solo la hora '06:00' del texto de Google
+                            inputElement.value = valorGuardado.split("T")[1].substring(0, 5);
+                        } else {
+                            inputElement.value = valorGuardado;
+                        }
+                    } 
+                    // Campos de texto y select genéricos
+                    else {
                         inputElement.value = valorGuardado;
                     }
 
-                    // 3. Previsualización de Firmas (Paso 6)
-                    if ((columnaName === "col62" || columnaName === "col66") && valorGuardado.toString().startsWith("data:image")) {
-                        const imgPreview = document.getElementById("img_" + columnaName);
+                    // TRUCO 4: Previsualización de Firmas (Paso 6)
+                    // Busca img_col62 o img_col_62
+                    if ((nombreSinGuion === "col62" || nombreSinGuion === "col66") && valorGuardado.toString().startsWith("data:image")) {
+                        const imgPreview = document.getElementById("img_" + nombreSinGuion) || document.getElementById("img_" + columnaName);
                         if (imgPreview) {
                             imgPreview.src = valorGuardado;
                             imgPreview.style.display = "block";
@@ -1253,14 +1270,16 @@ async function cargarRegistroParaEditar(id) {
             }
         });
 
-        // 4. (Opcional) Si tu Backend envía el arreglo de "Personal" guardado, cargar la tabla dinámica (Paso 7)
+// ==========================================
+// CARGA DE PERSONAL (Paso 7)
+// ==========================================
         if (data.personal && Array.isArray(data.personal)) {
             const tbody = document.getElementById('tbodyPersonal');
-            if (tbody) tbody.innerHTML = ""; // Limpiar tabla por defecto
+            if (tbody) tbody.innerHTML = ""; // Limpiar antes de cargar
             window.contadorPersonal = 0;
 
             data.personal.forEach(persona => {
-                window.agregarIntegrante(); // Llama a tu función para crear una fila nueva
+                window.agregarIntegrante(); 
                 const tr = document.getElementById(`fila_per_${window.contadorPersonal}`);
                 if (tr) {
                     const inputs = tr.querySelectorAll('input');
@@ -1270,7 +1289,7 @@ async function cargarRegistroParaEditar(id) {
                         inputs[2].value = persona.identidad || "";
                         inputs[3].value = persona.firma || "";
 
-                        // Previsualizar la firma del integrante si existe
+                        // Previsualizar la firma pequeña de la tabla
                         if (persona.firma && persona.firma.startsWith("data:image")) {
                             const imgFirma = document.getElementById(`img_firma_per_${window.contadorPersonal}`);
                             if (imgFirma) {
@@ -1283,12 +1302,12 @@ async function cargarRegistroParaEditar(id) {
             });
         }
 
-        // 5. Ejecutar verificadores visuales para que se abran los campos de "Otros" si aplican
+        // Ejecutar funciones de visibilidad si se marcaron "OTROS" o se llenaron horas
         if (typeof verificarActividad === "function") verificarActividad();
         if (typeof verificarEmpresa === "function") verificarEmpresa();
         if (typeof verificarOtroEquipo === "function") verificarOtroEquipo();
+        if (typeof calcularTiempoEstimado === "function") calcularTiempoEstimado();
 
-        // Actualizar diseño de Botón Final
         const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
         if (btnGuardar) {
             btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Registro';
