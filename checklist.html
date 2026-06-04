@@ -459,20 +459,23 @@
 }
 
    /* seleccion multiple col_7 */     
-.custom-dropdown { position: relative; width: 100%; }
-.dropdown-header { 
-    background: white; border: 1px solid #ccc; padding: 12px; border-radius: 8px;
-    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+.multi-select-box {
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    padding: 10px;
+    background-color: #fff;
+    max-height: 200px;
+    overflow-y: auto;
 }
-.dropdown-options { 
-    display: none; position: absolute; top: 100%; left: 0; right: 0;
-    background: white; border: 1px solid #ccc; border-top: none; 
-    z-index: 100; max-height: 200px; overflow-y: auto; padding: 10px;
+.checkbox-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #f1f1f1;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
 }
-.dropdown-options label { 
-    display: block; padding: 10px 0; border-bottom: 1px solid #eee; cursor: pointer;
-}
-.dropdown-options label:last-child { border-bottom: none; }
+.checkbox-item input { margin-right: 10px; }
+.checkbox-item:last-child { border-bottom: none; }
         
     </style>
 </head>
@@ -545,23 +548,18 @@
                         <select id="col_6"><option value="">Seleccione...</option><option value="DISTRIBUCION">Distribución</option><option value="SERVICIO TECNICO">Servicio Técnico</option><option value="CONTROL DE ENERGIA">Control de Energía</option></select>
                     </div>
                     
-               <div class="form-group">
+  <div class="form-group" id="group_col_7">
     <label>Tipo de Actividad</label>
     
     <input type="hidden" id="col_7" name="col_7" class="campo-dato">
 
-    <div class="custom-dropdown">
-        <div id="dropdown-display" onclick="toggleDropdown()" class="dropdown-header">
-            Seleccionar actividades...
-        </div>
-        <div id="dropdown-options" class="dropdown-options">
-            <label><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="updateSelection()"> Línea Energizada</label>
-            <label><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="updateSelection()"> Línea Desenergizada</label>
-            <label><input type="checkbox" value="TRABAJO EN ALTURA" onchange="updateSelection()"> Trabajo en Altura</label>
-            <label><input type="checkbox" value="IZAJE DE CARGAS" onchange="updateSelection()"> Izaje de Cargas</label>
-            <label><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="updateSelection()"> Transporte de Carga</label>
-            <label><input type="checkbox" value="OTRO" onchange="updateSelection()"> Otro</label>
-        </div>
+    <div id="container_col_7" class="multi-select-box">
+        <div class="checkbox-item"><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="actualizarCol7()"> Línea Energizada</div>
+        <div class="checkbox-item"><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="actualizarCol7()"> Línea Desenergizada</div>
+        <div class="checkbox-item"><input type="checkbox" value="TRABAJO EN ALTURA" onchange="actualizarCol7()"> Trabajo en Altura</div>
+        <div class="checkbox-item"><input type="checkbox" value="IZAJE DE CARGAS" onchange="actualizarCol7()"> Izaje de Cargas</div>
+        <div class="checkbox-item"><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="actualizarCol7()"> Transporte de Carga</div>
+        <div class="checkbox-item"><input type="checkbox" value="OTRO" onchange="actualizarCol7()"> Otro</div>
     </div>
 </div>
  
@@ -1123,34 +1121,37 @@ window.calcularTiempoEstimado = function() {
 };
 
      // CAMPO DE STEP 1 tipo actividad
-    // Abrir/Cerrar menú
-function toggleDropdown() {
-    const options = document.getElementById('dropdown-options');
-    options.style.display = (options.style.display === 'block') ? 'none' : 'block';
-}
-
+    /
 // Actualizar texto visual y el campo oculto
-function updateSelection() {
-    const checkboxes = document.querySelectorAll('#dropdown-options input[type="checkbox"]:checked');
-    const display = document.getElementById('dropdown-display');
-    const hiddenInput = document.getElementById('col_7');
+function actualizarCol7() {
+    // 1. Buscamos todos los checkboxes marcados dentro del contenedor
+    const checkboxes = document.querySelectorAll('#container_col_7 input[type="checkbox"]:checked');
     
+    // 2. Extraemos los valores
     const valores = Array.from(checkboxes).map(cb => cb.value);
     
-    // Actualizar el texto del cuadro
-    display.innerText = valores.length > 0 ? valores.join(', ') : 'Seleccionar actividades...';
-    
-    // Actualizar el valor para tu backend
-    hiddenInput.value = valores.join(', ');
+    // 3. Guardamos en el campo oculto (que es el que lee tu función enviarFormulario)
+    document.getElementById('col_7').value = valores.join(', ');
 }
-
-// Cerrar al hacer clic fuera (opcional, pero recomendado)
-document.addEventListener('click', function(e) {
-    const dropdown = document.querySelector('.custom-dropdown');
-    if (!dropdown.contains(e.target)) {
-        document.getElementById('dropdown-options').style.display = 'none';
-    }
-});
+    function cargarDatosCheckboxes(valorGuardado) {
+    if (!valorGuardado) return;
+    
+    // Limpiamos todo primero
+    document.querySelectorAll('#container_col_7 input[type="checkbox"]').forEach(cb => cb.checked = false);
+    
+    // Separamos el string guardado
+    const valoresArray = valorGuardado.split(', ');
+    
+    // Marcamos los checkboxes
+    document.querySelectorAll('#container_col_7 input[type="checkbox"]').forEach(cb => {
+        if (valoresArray.includes(cb.value)) {
+            cb.checked = true;
+        }
+    });
+    
+    // Sincronizamos el hidden input
+    document.getElementById('col_7').value = valorGuardado;
+}
  // CAMPO DE STEP 3 
 function verificarRiesgosOtros() {
     const checkbox = document.getElementById('chk_otros');
@@ -1165,18 +1166,7 @@ function verificarRiesgosOtros() {
         document.getElementById('col_27').value = ''; 
     }
 }
-    function sincronizarCheckboxes() {
-    const checkboxes = document.querySelectorAll('#container_col_7 input[type="checkbox"]:checked');
-    const valores = Array.from(checkboxes).map(cb => cb.value);
-    
-    // Actualiza el campo oculto
-    document.getElementById('col_7').value = valores.join(', ');
-    
-    // Si tenías una función "verificarActividad()", llámala aquí también
-    if (typeof verificarActividad === 'function') {
-        verificarActividad();
-    }
-}
+ 
 // 5. CARGAR REGISTRO PARA EDITAR
 async function cargarRegistroParaEditar(id) {
     try {
