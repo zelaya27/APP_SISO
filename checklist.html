@@ -453,7 +453,10 @@
             align-items: flex-start;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-
+/* Oculta el contenedor de 'Otro' por defecto */
+#grupo_col_27 {
+    display: none;
+}
     </style>
 </head>
 <body>
@@ -1093,7 +1096,20 @@ window.calcularTiempoEstimado = function() {
         output.value = "";
     }
 };
-
+ // CAMPO DE STEP 3 
+function verificarRiesgosOtros() {
+    const checkbox = document.getElementById('chk_otros');
+    const contenedor = document.getElementById('grupo_col_27');
+    
+    // Si está marcado, lo mostramos; si no, lo ocultamos
+    if (checkbox.checked) {
+        contenedor.style.display = 'block'; // O 'flex' si prefieres
+    } else {
+        contenedor.style.display = 'none';
+        // Opcional: Limpiar el campo si lo desmarcan
+        document.getElementById('col_27').value = ''; 
+    }
+}
 // 5. CARGAR REGISTRO PARA EDITAR
 async function cargarRegistroParaEditar(id) {
     try {
