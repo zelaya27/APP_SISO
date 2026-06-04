@@ -457,6 +457,23 @@
 #grupo_col_27 {
     display: none;
 }
+
+   /* seleccion multiple col_7 */     
+.custom-dropdown { position: relative; width: 100%; }
+.dropdown-header { 
+    background: white; border: 1px solid #ccc; padding: 12px; border-radius: 8px;
+    cursor: pointer; display: flex; align-items: center; justify-content: space-between;
+}
+.dropdown-options { 
+    display: none; position: absolute; top: 100%; left: 0; right: 0;
+    background: white; border: 1px solid #ccc; border-top: none; 
+    z-index: 100; max-height: 200px; overflow-y: auto; padding: 10px;
+}
+.dropdown-options label { 
+    display: block; padding: 10px 0; border-bottom: 1px solid #eee; cursor: pointer;
+}
+.dropdown-options label:last-child { border-bottom: none; }
+        
     </style>
 </head>
 <body>
@@ -528,20 +545,26 @@
                         <select id="col_6"><option value="">Seleccione...</option><option value="DISTRIBUCION">Distribución</option><option value="SERVICIO TECNICO">Servicio Técnico</option><option value="CONTROL DE ENERGIA">Control de Energía</option></select>
                     </div>
                     
-                  <div class="form-group">
-    <label>Tipo de Actividad (Selección múltiple)</label>
+               <div class="form-group">
+    <label>Tipo de Actividad</label>
     
     <input type="hidden" id="col_7" name="col_7" class="campo-dato">
 
-    <div id="container_col_7" style="border: 1px solid #ddd; padding: 10px; border-radius: 5px;">
-        <label><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="sincronizarCheckboxes()"> Línea Energizada</label><br>
-        <label><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="sincronizarCheckboxes()"> Línea Desenergizada</label><br>
-        <label><input type="checkbox" value="TRABAJO EN ALTURA" onchange="sincronizarCheckboxes()"> Trabajo en Altura</label><br>
-        <label><input type="checkbox" value="IZAJE DE CARGAS" onchange="sincronizarCheckboxes()"> Izaje de Cargas</label><br>
-        <label><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="sincronizarCheckboxes()"> Transporte de Carga</label><br>
-        <label><input type="checkbox" value="OTRO" onchange="sincronizarCheckboxes()"> Otro</label>
+    <div class="custom-dropdown">
+        <div id="dropdown-display" onclick="toggleDropdown()" class="dropdown-header">
+            Seleccionar actividades...
+        </div>
+        <div id="dropdown-options" class="dropdown-options">
+            <label><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="updateSelection()"> Línea Energizada</label>
+            <label><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="updateSelection()"> Línea Desenergizada</label>
+            <label><input type="checkbox" value="TRABAJO EN ALTURA" onchange="updateSelection()"> Trabajo en Altura</label>
+            <label><input type="checkbox" value="IZAJE DE CARGAS" onchange="updateSelection()"> Izaje de Cargas</label>
+            <label><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="updateSelection()"> Transporte de Carga</label>
+            <label><input type="checkbox" value="OTRO" onchange="updateSelection()"> Otro</label>
+        </div>
     </div>
 </div>
+ 
                     <div class="form-group hidden-field" id="grupo_col_8"><label style="color: var(--blue-active);">Especifique (Otro)</label><input type="text" id="col_8"></div>
                     
                     <div class="form-group"><label>Circuito</label><input type="text" id="col_9"></div>
@@ -1098,6 +1121,36 @@ window.calcularTiempoEstimado = function() {
         output.value = "";
     }
 };
+
+     // CAMPO DE STEP 1 tipo actividad
+    // Abrir/Cerrar menú
+function toggleDropdown() {
+    const options = document.getElementById('dropdown-options');
+    options.style.display = (options.style.display === 'block') ? 'none' : 'block';
+}
+
+// Actualizar texto visual y el campo oculto
+function updateSelection() {
+    const checkboxes = document.querySelectorAll('#dropdown-options input[type="checkbox"]:checked');
+    const display = document.getElementById('dropdown-display');
+    const hiddenInput = document.getElementById('col_7');
+    
+    const valores = Array.from(checkboxes).map(cb => cb.value);
+    
+    // Actualizar el texto del cuadro
+    display.innerText = valores.length > 0 ? valores.join(', ') : 'Seleccionar actividades...';
+    
+    // Actualizar el valor para tu backend
+    hiddenInput.value = valores.join(', ');
+}
+
+// Cerrar al hacer clic fuera (opcional, pero recomendado)
+document.addEventListener('click', function(e) {
+    const dropdown = document.querySelector('.custom-dropdown');
+    if (!dropdown.contains(e.target)) {
+        document.getElementById('dropdown-options').style.display = 'none';
+    }
+});
  // CAMPO DE STEP 3 
 function verificarRiesgosOtros() {
     const checkbox = document.getElementById('chk_otros');
