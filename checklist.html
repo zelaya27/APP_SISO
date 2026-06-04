@@ -8,13 +8,12 @@
     
      <script src="config.js"></script>
     <script>
-    // Usamos una función para asegurar que CONFIG existe antes de usarlo
     function getUrlApp() {
         if (typeof CONFIG !== 'undefined' && CONFIG.URL_APPS_SCRIPT) {
             return CONFIG.URL_APPS_SCRIPT;
         } else {
             console.error("Error: config.js no cargado o URL_APPS_SCRIPT faltante.");
-            return ""; // O pon aquí la URL directa como respaldo temporal
+            return ""; 
         }
     }
     const URL_APPS_SCRIPT = getUrlApp();
@@ -37,7 +36,6 @@
             --blue-hover: #2b6cb0;
         }
 
-        /* Bloquear scroll horizontal en móviles */
         body, html {
             font-family: 'Segoe UI', Arial, sans-serif;
             background-color: var(--bg-color);
@@ -65,7 +63,7 @@
         header h2 {
             margin: 0;
             color: #ffffff;
-            font-size: 16px; /* Más pequeño para celular */
+            font-size: 16px; 
             font-weight: bold;
             white-space: nowrap;
             overflow: hidden;
@@ -76,7 +74,7 @@
             max-width: 100%;
             margin: 0 auto;
             padding: 15px;
-            background: var(--bg-color); /* Fondo oscuro natural en móvil */
+            background: var(--bg-color); 
         }
 
         /* =========================================
@@ -84,7 +82,7 @@
         ========================================= */
         .steps-container {
             display: flex;
-            justify-content: space-between; /* Espaciado uniforme */
+            justify-content: space-between; 
             align-items: center;
             margin-bottom: 25px;
             position: relative;
@@ -135,7 +133,6 @@
             z-index: 1;
         }
 
-        /* Estados de Pasos */
         .step-indicator.active .step-circle {
             border-color: var(--blue-active);
             color: var(--text-color);
@@ -145,56 +142,36 @@
         .step-indicator.active .step-label { color: var(--blue-active); }
         .step-indicator.completed .step-circle { border-color: var(--success-color); background-color: var(--success-color); color: white; }
         .step-indicator.completed + .step-line { background-color: var(--success-color); }
-/* =========================================
-   AJUSTES EXCLUSIVOS PARA CELULAR (MÓVIL)
-========================================= */
-@media (max-width: 768px) {
-    
-    /* 1. Achicar los botones de Anterior, Siguiente y Guardar */
-    .btn-anterior, 
-    .btn-siguiente, 
-    .btn-guardar-principal,
-    .botones-wizard button,
-    button[onclick*="Paso"] {
-        font-size: 13px !important;       /* Letra más pequeña */
-        padding: 8px 12px !important;     /* Botón menos ancho y alto */
-        border-radius: 15px !important;
-    }
 
-    /* 2. Achicar los contenedores de los pasos (Steps) para que quepan los 6 */
-    .wizard-header,
-    .steps-container,
-    .stepper {
-        padding: 10px 5px !important;
-        gap: 5px !important;             /* Menos espacio entre los círculos */
-        overflow-x: auto !important;     /* Permite deslizar si la pantalla es muy angosta */
-    }
+        @media (max-width: 768px) {
+            .btn-anterior, .btn-siguiente, .btn-guardar-principal, .botones-wizard button, button[onclick*="Paso"] {
+                font-size: 13px !important;       
+                padding: 8px 12px !important;     
+                border-radius: 15px !important;
+            }
+            .wizard-header, .steps-container, .stepper {
+                padding: 10px 5px !important;
+                gap: 5px !important;             
+                overflow-x: auto !important;     
+            }
+            .step-circle, .circle {
+                width: 26px !important;
+                height: 26px !important;
+                font-size: 12px !important;
+                line-height: 26px !important;
+            }
+            .step-text, .step-title, .step p {
+                font-size: 10px !important;
+                margin-top: 4px !important;
+                text-align: center;
+            }
+            .step:not(.active) .step-text {
+                display: none !important; 
+            }
+        }
 
-    /* 3. Reducir el tamaño de los círculos y los números */
-    .step-circle, 
-    .circle {
-        width: 26px !important;
-        height: 26px !important;
-        font-size: 12px !important;
-        line-height: 26px !important;
-    }
-
-    /* 4. Reducir la letra del texto debajo del círculo (si aplica) */
-    .step-text,
-    .step-title,
-    .step p {
-        font-size: 10px !important;
-        margin-top: 4px !important;
-        text-align: center;
-    }
-
-    /* Opcional: Ocultar los textos de los pasos inactivos para ahorrar espacio */
-    .step:not(.active) .step-text {
-        display: none !important; 
-    }
-}
         /* =========================================
-           FORMULARIO MÓVIL (Zonas Táctiles Amplias)
+           FORMULARIO MÓVIL
         ========================================= */
         .step-content { display: none; }
         .step-content.activo { 
@@ -208,10 +185,7 @@
 
         h3 { border-bottom: 1px solid var(--border-color); padding-bottom: 8px; color: var(--blue-active); font-size: 16px; margin-top: 0; margin-bottom: 20px; }
 
-        /* Mobile First Grid: 1 Columna por defecto */
         .form-grid { display: grid; grid-template-columns: 1fr; gap: 18px; }
-
-        /* Media Query para Tablets o PC (Más de 600px) */
         @media (min-width: 600px) { .form-grid { grid-template-columns: repeat(2, 1fr); } }
 
         .form-group { display: flex; flex-direction: column; gap: 6px; }
@@ -219,7 +193,6 @@
         
         label { font-size: 13px; color: var(--muted-text); font-weight: 600; }
         
-        /* Ajuste clave para móvil: 16px previene el zoom en iOS, padding amplio facilita el tacto */
         input, select, textarea { 
             background-color: var(--bg-color); 
             color: var(--text-color); 
@@ -230,10 +203,9 @@
             outline: none; 
             width: 100%;
             box-sizing: border-box;
-            appearance: none; /* Limpia estilos nativos molestos */
+            appearance: none;
         }
         
-        /* Restaurar flechita en selects tras appearance:none */
         select { background-image: url('data:image/svg+xml;utf8,<svg fill="%23a0aec0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>'); background-repeat: no-repeat; background-position-x: 95%; background-position-y: 50%; }
 
         input:focus, select:focus, textarea:focus { border-color: var(--blue-active); }
@@ -258,7 +230,6 @@
             box-shadow: 0 -4px 10px rgba(0,0,0,0.4);
         }
 
-        /* Espacio final para que el footer no tape el último input */
         .espacio-footer { height: 80px; width: 100%; }
 
         .btn-wizard { 
@@ -278,271 +249,215 @@
         .btn-back-header { background-color: transparent; color: var(--muted-text); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 5px; cursor: pointer; }
         .btn-back { background-color: #2c3e50; color: white; }
         .btn-next { background-color: var(--blue-active); color: white; }
-        .btn-save { background-color: var(--success-color); color: white; }
-        /* =========================================
-   ESTÉTICA PASO 3: SELECCIÓN MÚLTIPLE (MÓVIL)
-========================================= */
-.riesgos-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* 1 columna en móvil para mejor lectura */
-    gap: 12px;
-    margin-bottom: 20px;
-}
-
-@media (min-width: 600px) {
-    .riesgos-grid { grid-template-columns: repeat(2, 1fr); } /* 2 en tablet/PC */
-}
-
-.riesgo-item {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    background-color: var(--bg-color);
-    border: 2px solid var(--border-color);
-    padding: 14px 16px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    -webkit-tap-highlight-color: transparent; /* Quita el destello azul feo en móviles */
-}
-
-/* Ocultar el checkbox nativo y usar CSS */
-.riesgo-item input[type="checkbox"] {
-    width: 24px;
-    height: 24px;
-    accent-color: var(--blue-active);
-    margin: 0;
-    cursor: pointer;
-    flex-shrink: 0; /* Evita que el checkbox se encoja con textos largos */
-}
-
-.riesgo-text {
-    font-size: 14px;
-    color: var(--text-color);
-    line-height: 1.3;
-    font-weight: 500;
-}
-
-/* Efecto cuando la tarjeta está seleccionada (Usando la pseudo-clase :has de CSS moderno) */
-.riesgo-item:has(input:checked) {
-    border-color: var(--blue-active);
-    background-color: rgba(59, 130, 246, 0.1); /* Fondo azul translúcido */
-}
-        
- /* Estilos para la tabla del Step 5 */
-.tabla-sino {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-    color: #fff; /* Ajusta si tu app es clara u oscura */
-}
-.tabla-sino th {
-    background-color: #222;
-    padding: 12px;
-    text-align: center;
-}
-.tabla-sino td {
-    padding: 12px 8px;
-    border-bottom: 1px solid #444;
-    vertical-align: middle;
-}
-.tabla-sino td:first-child {
-    text-align: left;
-    width: 55%; /* Le da más espacio a la pregunta */
-}
-.td-center {
-    text-align: center;
-}
-
-/* Ocultar el radio button original */
-.btn-radio {
-    display: none;
-}
-
-/* Diseño del botón (Píldora) */
-.btn-label {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    background-color: #333;
-    color: #ccc;
-    cursor: pointer;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    border: 1px solid #555;
-    margin: 2px;
-}
-
-/* Colores cuando están seleccionados */
-.btn-radio:checked + .btn-label.si { background-color: #28a745; color: white; border-color: #28a745; }
-.btn-radio:checked + .btn-label.no { background-color: #dc3545; color: white; border-color: #dc3545; }
-.btn-radio:checked + .btn-label.na { background-color: #6c757d; color: white; border-color: #6c757d; }       
+        .btn-save { background-color: var(--success-color); color: white; transition: 0.3s; }
+        .btn-save:disabled { background-color: #2c3e50; cursor: not-allowed; opacity: 0.8;}
 
         /* =========================================
-   ESTILOS STEP 6 Y MODAL DE FIRMAS
-========================================= */
-.tabla-firmas {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: var(--card-color, #14212d);
-    border: 1px solid var(--border-color, #2c3e50);
-}
-.tabla-firmas th {
-    background-color: #003366;
-    color: white;
-    padding: 12px;
-    text-align: center;
-    border: 1px solid var(--border-color, #2c3e50);
-    font-size: 14px;
-}
-.tabla-firmas td {
-    padding: 15px;
-    border: 1px solid var(--border-color, #2c3e50);
-    vertical-align: top;
-}
-.label-firma {
-    display: block;
-    margin-bottom: 5px;
-    font-size: 13px;
-    color: #a0aec0;
-}
-.btn-abrir-firma {
-    background-color: #3b82f6;
-    color: white;
-    border: none;
-    padding: 10px 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    width: 100%;
-    transition: 0.3s;
-}
-.btn-abrir-firma:hover {
-    background-color: #2b6cb0;
-}
-.preview-firma {
-    width: 100%;
-    max-width: 200px;
-    height: auto;
-    background-color: white;
-    border: 2px dashed #ccc;
-    margin-top: 10px;
-    border-radius: 5px;
-}
+           ESTÉTICA PASO 3 y CHECKBOX
+        ========================================= */
+        .riesgos-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
 
-/* Modal Emergente */
-.modal-firma-container {
-    position: fixed;
-    top: 0; left: 0; width: 100%; height: 100%;
-    background-color: rgba(0, 0, 0, 0.8);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999;
-}
-.modal-firma-content {
-    background-color: #1a202c;
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    border: 1px solid #4a5568;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-}
-#pizarraFirma {
-    background-color: white;
-    border: 2px solid #a0aec0;
-    border-radius: 5px;
-    cursor: crosshair;
-    touch-action: none; /* Evita que la pantalla se mueva al firmar en móvil */
-}
-.modal-botones {
-    margin-top: 15px;
-    display: flex;
-    justify-content: space-between;
-    gap: 10px;
-}
-.modal-botones button {
-    padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; flex: 1;
-}
-.btn-firma-limpiar { background-color: #f6ad55; color: #1a202c; }
-.btn-firma-cancelar { background-color: #e53e3e; color: white; }
-.btn-firma-guardar { background-color: #48bb78; color: white; }
+        @media (min-width: 600px) {
+            .riesgos-grid { grid-template-columns: repeat(2, 1fr); } 
+        }
 
-/* Responsividad para móviles: Convertir la tabla en bloques si la pantalla es pequeña */
-@media (max-width: 600px) {
-    .tabla-firmas thead { display: none; }
-    .tabla-firmas td { display: block; width: 100%; box-sizing: border-box; }
-    .tabla-firmas td:first-child { border-bottom: 4px solid #003366; }
-}
+        .riesgo-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: var(--bg-color);
+            border: 2px solid var(--border-color);
+            padding: 14px 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            -webkit-tap-highlight-color: transparent; 
+        }
 
-/* Estilos para Tabla Dinámica (Paso 7) */
-.tabla-dinamica {
-    width: 100%;
-    border-collapse: collapse;
-    background-color: var(--card-color, #14212d);
-    border: 1px solid var(--border-color, #2c3e50);
-    margin-bottom: 15px;
-}
-.tabla-dinamica th {
-    background-color: #1a202c;
-    color: #a0aec0;
-    padding: 10px;
-    text-align: center;
-    font-size: 13px;
-    border: 1px solid var(--border-color, #2c3e50);
-}
-.tabla-dinamica td {
-    padding: 8px;
-    border: 1px solid var(--border-color, #2c3e50);
-    vertical-align: middle;
-}
-.tabla-dinamica input {
-    width: 100%;
-    box-sizing: border-box;
-    padding: 8px;
-    border-radius: 4px;
-    background-color: #2d3748;
-    color: white;
-    border: 1px solid #4a5568;
-}
-.btn-agregar-fila {
-    background-color: #48bb78;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    display: inline-block;
-    transition: 0.3s;
-}
-.btn-agregar-fila:hover { background-color: #38a169; }
+        .riesgo-item input[type="checkbox"] {
+            width: 24px;
+            height: 24px;
+            accent-color: var(--blue-active);
+            margin: 0;
+            cursor: pointer;
+            flex-shrink: 0; 
+        }
 
-.btn-eliminar-fila {
-    background-color: #e53e3e;
-    color: white;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 5px;
-    cursor: pointer;
-    width: 100%;
-}
-.btn-eliminar-fila:hover { background-color: #c53030; }
+        .riesgo-text {
+            font-size: 14px;
+            color: var(--text-color);
+            line-height: 1.3;
+            font-weight: 500;
+        }
 
-.btn-firma-pequeno {
-    background-color: #3b82f6;
-    color: white; border: none; padding: 6px; width: 100%; border-radius: 5px; cursor: pointer; font-size: 12px;
-}
-
-
-
+        .riesgo-item:has(input:checked) {
+            border-color: var(--blue-active);
+            background-color: rgba(59, 130, 246, 0.1); 
+        }
         
-    
+        /* =========================================
+           ESTILOS TABLAS Y BOTONES RADIO
+        ========================================= */
+        .tabla-sino {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            color: #fff; 
+        }
+        .tabla-sino th {
+            background-color: #222;
+            padding: 12px;
+            text-align: center;
+        }
+        .tabla-sino td {
+            padding: 12px 8px;
+            border-bottom: 1px solid #444;
+            vertical-align: middle;
+        }
+        .tabla-sino td:first-child {
+            text-align: left;
+            width: 55%; 
+        }
+        .td-center {
+            text-align: center;
+        }
+
+        .btn-radio {
+            display: none;
+        }
+
+        .btn-label {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            background-color: #333;
+            color: #ccc;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            border: 1px solid #555;
+            margin: 2px;
+        }
+
+        .btn-radio:checked + .btn-label.si { background-color: #28a745; color: white; border-color: #28a745; }
+        .btn-radio:checked + .btn-label.no { background-color: #dc3545; color: white; border-color: #dc3545; }
+        .btn-radio:checked + .btn-label.na { background-color: #6c757d; color: white; border-color: #6c757d; }        
+
+        /* =========================================
+           ESTILOS FIRMAS Y TARJETAS
+        ========================================= */
+        .label-firma {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 13px;
+            color: #a0aec0;
+        }
+        .btn-abrir-firma {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: 0.3s;
+        }
+        .btn-abrir-firma:hover {
+            background-color: #2b6cb0;
+        }
+        .preview-firma {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+            background-color: white;
+            border: 2px dashed #ccc;
+            margin-top: 10px;
+            border-radius: 5px;
+        }
+
+        .modal-firma-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-firma-content {
+            background-color: #1a202c;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #4a5568;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+        }
+        #pizarraFirma {
+            background-color: white;
+            border: 2px solid #a0aec0;
+            border-radius: 5px;
+            cursor: crosshair;
+            touch-action: none; 
+        }
+        .modal-botones {
+            margin-top: 15px;
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+        .modal-botones button {
+            padding: 10px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; flex: 1;
+        }
+        .btn-firma-limpiar { background-color: #f6ad55; color: #1a202c; }
+        .btn-firma-cancelar { background-color: #e53e3e; color: white; }
+        .btn-firma-guardar { background-color: #48bb78; color: white; }
+
+        .btn-agregar-fila {
+            background-color: #48bb78;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            display: inline-block;
+            transition: 0.3s;
+        }
+        .btn-agregar-fila:hover { background-color: #38a169; }
+
+        .btn-eliminar-fila {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border: 1px solid #e74c3c;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        .btn-eliminar-fila:hover { background-color: #e74c3c; color: white; }
+        
+        /* Estilos Tarjetas Móviles (Paso 7) */
+        .tarjeta-personal {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--blue-active);
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
     </style>
 </head>
 <body>
 
-    <!-- CABECERA FIJA -->
     <header>
         <button class="btn-back-header" onclick="location.href='home.html'">
             <i class="fas fa-arrow-left"></i>
@@ -551,7 +466,6 @@
     </header>
 
     <div class="container">
-        <!-- INDICADORES WIZARD -->
         <div class="steps-container">
             <div class="step-indicator active" id="ind-1">
                 <div class="step-circle">1</div>
@@ -590,18 +504,11 @@
 </div>
         </div>
 
-
-
-    
         <form id="checklistForm">
-            <!-- ==========================================
-                 STEP 1: COLUMNAS 0 A 16
-                 ========================================== -->
             <div class="step-content activo" id="step-1">
                 <h3><i class="fas fa-clipboard-list"></i> Paso 1: Información del Trabajo</h3>
                 
                 <div class="form-grid">
-                    <!-- Columnas Autollenadas (Visualmente más discretas) -->
                     <div class="form-group"><label>ID</label><input type="text" id="col_0" readonly></div>
                     <div class="form-group"><label>Usuario</label><input type="text" id="col_1" readonly></div>
                     <div class="form-group"><label>Sector</label><input type="text" id="col_2" readonly></div>
@@ -609,7 +516,7 @@
                     
                     <div class="form-group">
                         <label>Estado</label>
-                        <select id="col_4"><option value="Pendiente">Pendiente</option><option value="Revisado">Revisado</option><option value="Revisado">Revisado</option></select>
+                        <select id="col_4"><option value="Pendiente">Pendiente</option><option value="Revisado">Revisado</option></select>
                     </div>
                     <div class="form-group"><label>Ciudad/Municipio</label><input type="text" id="col_5" placeholder="Ej: La Ceiba"></div>
                     
@@ -655,48 +562,54 @@
                 </div>
             </div>
 
-            <!-- ==========================================
-                 STEP 2: COLUMNAS 17 A 25
-                 ========================================== -->
             <div class="step-content" id="step-2">
                 <h3><i class="fas fa-users"></i> Paso 2: Tiempos y Cuadrillas</h3>
                 
                 <div class="form-grid">
-                    <div class="form-group"><label>Hora Inicio</label><input type="time" id="col_17" onchange="calcularTiempoEstimado()"></div>
-                    <div class="form-group"><label>Hora Fin Estimada</label><input type="time" id="col_18" onchange="calcularTiempoEstimado()"></div>
-                    <div class="form-group"><label>Total Horas</label><input type="text" id="col_19" readonly style="color: var(--blue-active); font-weight: bold;"></div>
+                    <div class="form-group"><label>Hora Inicio</label><input type="time" id="col_17" name="col_17" onchange="calcularTiempoEstimado()"></div>
+                    <div class="form-group"><label>Hora Fin Estimada</label><input type="time" id="col_18" name="col_18" onchange="calcularTiempoEstimado()"></div>
+                    <div class="form-group"><label>Total Horas</label><input type="text" id="col_19" name="col_19" readonly style="color: var(--blue-active); font-weight: bold; background-color: rgba(59, 130, 246, 0.1);"></div>
                     
-                    <div class="form-group"><label>No. o Nombre Cuadrilla</label><input type="text" id="col_20"></div>
-                    <div class="form-group"><label>Total Personas</label><input type="number" id="col_21" inputmode="numeric"></div>
+                    <div class="form-group"><label>No. o Nombre Cuadrilla</label><input type="text" id="col_20" name="col_20"></div>
+                    <div class="form-group"><label>Total Personas</label><input type="number" id="col_21" name="col_21" inputmode="numeric"></div>
                     
                     <div class="form-group">
                         <label>¿Más cuadrillas en circuito?</label>
-                        <select id="col_22"><option value="">Seleccione...</option><option value="SI">SÍ</option><option value="NO">NO</option></select>
+                        <div style="display:flex; gap:10px;">
+                            <input type="radio" id="col22_si" name="col_22" value="SI" class="btn-radio"><label for="col22_si" class="btn-label si">SÍ</label>
+                            <input type="radio" id="col22_no" name="col_22" value="NO" class="btn-radio"><label for="col22_no" class="btn-label no">NO</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>¿Tienen áreas asignadas?</label>
-                        <select id="col_23"><option value="">Seleccione...</option><option value="SI">SÍ</option><option value="NO">NO</option></select>
+                        <div style="display:flex; gap:10px;">
+                            <input type="radio" id="col23_si" name="col_23" value="SI" class="btn-radio"><label for="col23_si" class="btn-label si">SÍ</label>
+                            <input type="radio" id="col23_no" name="col_23" value="NO" class="btn-radio"><label for="col23_no" class="btn-label no">NO</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>¿Saben que están en circuito?</label>
-                        <select id="col_24"><option value="">Seleccione...</option><option value="SI">SÍ</option><option value="NO">NO</option></select>
+                        <div style="display:flex; gap:10px;">
+                            <input type="radio" id="col24_si" name="col_24" value="SI" class="btn-radio"><label for="col24_si" class="btn-label si">SÍ</label>
+                            <input type="radio" id="col24_no" name="col_24" value="NO" class="btn-radio"><label for="col24_no" class="btn-label no">NO</label>
+                        </div>
                     </div>
                     <div class="form-group">
                         <label>¿Conocen el área?</label>
-                        <select id="col_25"><option value="">Seleccione...</option><option value="SI">SÍ</option><option value="NO">NO</option></select>
+                        <div style="display:flex; gap:10px;">
+                            <input type="radio" id="col25_si" name="col_25" value="SI" class="btn-radio"><label for="col25_si" class="btn-label si">SÍ</label>
+                            <input type="radio" id="col25_no" name="col_25" value="NO" class="btn-radio"><label for="col25_no" class="btn-label no">NO</label>
+                        </div>
                     </div>
                 </div>
             </div>
-<!-- ==========================================
-     STEP 3: COLUMNAS 26 A 27 (RIESGOS)
-     ========================================== -->
+
 <div class="step-content" id="step-3">
     <h3><i class="fas fa-exclamation-triangle"></i> Paso 3: Riesgos Potenciales</h3>
     <p style="font-size: 13px; color: var(--muted-text); margin-bottom: 20px;">
         Seleccione todos los riesgos identificados en la planificación del trabajo:
     </p>
 
-    <!-- Col 26 -->
     <div class="riesgos-grid">
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ruido Continuo"> <span class="riesgo-text">Ruido Continuo</span></label>
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Posturas Inadecuadas y Manipulación de Cargas"> <span class="riesgo-text">Posturas Inadecuadas y Manipulación de Cargas</span></label>
@@ -718,20 +631,18 @@
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Material Particulado"> <span class="riesgo-text">Material Particulado</span></label>
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picadura de Ofidios (Serpientes)"> <span class="riesgo-text">Picadura de Ofidios (Serpientes)</span></label>
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picaduras de Insectos"> <span class="riesgo-text">Picaduras de Insectos</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ataque de Animales (Bovinos, Porcinos, Equinos, etc)"> <span class="riesgo-text">Ataque de Animales</span></label>
+        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ataque de Animales"> <span class="riesgo-text">Ataque de Animales</span></label>
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Derrame de Sustancias Químicas"> <span class="riesgo-text">Derrame de Sustancias Químicas</span></label>
         <label class="riesgo-item"><input type="checkbox" name="col_26" value="Gases o Vapores"> <span class="riesgo-text">Gases o Vapores</span></label>
         
-        <!-- Opción OTROS con el evento onchange -->
-        <label class="riesgo-item" style="border-color: var(--warning-color);">
-            <input type="checkbox" id="chk_otros" name="col_26" value="Otros" onchange="verificarRiesgosOtros()"> 
-            <span class="riesgo-text" style="color: var(--warning-color); font-weight: bold;">Otros</span>
+        <label class="riesgo-item" style="border-color: var(--warning-color, #f6ad55);">
+            <input type="checkbox" id="chk_otros" name="col_26" value="Otros" onchange="if(typeof verificarRiesgosOtros==='function')verificarRiesgosOtros()"> 
+            <span class="riesgo-text" style="color: var(--warning-color, #f6ad55); font-weight: bold;">Otros</span>
         </label>
     </div>
 
-    <!-- Col 27 (CONDICIONAL) -->
     <div class="form-group hidden-field" id="grupo_col_27">
-        <label style="color: var(--warning-color); font-size: 14px;">Especifique otros riesgos:</label>
+        <label style="color: var(--warning-color, #f6ad55); font-size: 14px;">Especifique otros riesgos:</label>
         <textarea id="col_27" rows="2" placeholder="Describa el riesgo detectado..."></textarea>
     </div>
 </div>
@@ -739,7 +650,7 @@
                <div class="step-content" id="step-4">
 <div class="form-group">
     <label>28. EQUIPO PARA ASCENSO Y DESCENSO EN ALTURA</label>
-    <select id="col28" name="col28" class="form-control" onchange="verificarOtroEquipo()">
+    <select id="col28" name="col28" class="form-control" onchange="if(typeof verificarOtroEquipo==='function')verificarOtroEquipo()">
         <option value="">Seleccione...</option>
         <option value="Carro canasta">Carro canasta</option>
         <option value="Escalera">Escalera</option>
@@ -780,184 +691,158 @@
                 <td class="td-center"><input type="radio" id="col31_no" name="col31" value="NO" class="btn-radio"><label for="col31_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col31_na" name="col31" value="N/A" class="btn-radio"><label for="col31_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>32. ¿Todo el personal cuenta con los elementos de protección personal y dotación?</td>
                 <td class="td-center"><input type="radio" id="col32_si" name="col32" value="SI" class="btn-radio"><label for="col32_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col32_no" name="col32" value="NO" class="btn-radio"><label for="col32_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col32_na" name="col32" value="N/A" class="btn-radio"><label for="col32_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>33. ¿Han recibido capacitación de trabajo en altura?</td>
                 <td class="td-center"><input type="radio" id="col33_si" name="col33" value="SI" class="btn-radio"><label for="col33_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col33_no" name="col33" value="NO" class="btn-radio"><label for="col33_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col33_na" name="col33" value="N/A" class="btn-radio"><label for="col33_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>34. ¿Todo el sistema de Protección contra caídas se encuentra en buen estado para ser utilizado?</td>
                 <td class="td-center"><input type="radio" id="col34_si" name="col34" value="SI" class="btn-radio"><label for="col34_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col34_no" name="col34" value="NO" class="btn-radio"><label for="col34_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col34_na" name="col34" value="N/A" class="btn-radio"><label for="col34_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>35. ¿Ha sido capacitado sobre el trabajo a realizar?</td>
                 <td class="td-center"><input type="radio" id="col35_si" name="col35" value="SI" class="btn-radio"><label for="col35_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col35_no" name="col35" value="NO" class="btn-radio"><label for="col35_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col35_na" name="col35" value="N/A" class="btn-radio"><label for="col35_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>36. ¿Es claro el procedimiento de trabajo?</td>
                 <td class="td-center"><input type="radio" id="col36_si" name="col36" value="SI" class="btn-radio"><label for="col36_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col36_no" name="col36" value="NO" class="btn-radio"><label for="col36_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col36_na" name="col36" value="N/A" class="btn-radio"><label for="col36_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>37. ¿Conoce los riesgos y métodos de control de los peligros a los que esta expuesto?</td>
                 <td class="td-center"><input type="radio" id="col37_si" name="col37" value="SI" class="btn-radio"><label for="col37_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col37_no" name="col37" value="NO" class="btn-radio"><label for="col37_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col37_na" name="col37" value="N/A" class="btn-radio"><label for="col37_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>38. ¿Conoce el ATS (Análisis de Trabajo Seguro) para las labores a ejecutar?</td>
                 <td class="td-center"><input type="radio" id="col38_si" name="col38" value="SI" class="btn-radio"><label for="col38_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col38_no" name="col38" value="NO" class="btn-radio"><label for="col38_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col38_na" name="col38" value="N/A" class="btn-radio"><label for="col38_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>39. ¿El área de trabajo ha sido inspeccionada para asegurar que esta libre de riesgo no planificados o esperados?</td>
                 <td class="td-center"><input type="radio" id="col39_si" name="col39" value="SI" class="btn-radio"><label for="col39_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col39_no" name="col39" value="NO" class="btn-radio"><label for="col39_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col39_na" name="col39" value="N/A" class="btn-radio"><label for="col39_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>40. ¿Se han tomado las precauciones necesarias para asegurar que NO se estén realizando otras actividades simultáneas que puedan generar accidentes en el área de trabajo?</td>
                 <td class="td-center"><input type="radio" id="col40_si" name="col40" value="SI" class="btn-radio"><label for="col40_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col40_no" name="col40" value="NO" class="btn-radio"><label for="col40_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col40_na" name="col40" value="N/A" class="btn-radio"><label for="col40_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>41. ¿Existe un encargado supervisor o ingeniero durante la actividad?</td>
                 <td class="td-center"><input type="radio" id="col41_si" name="col41" value="SI" class="btn-radio"><label for="col41_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col41_no" name="col41" value="NO" class="btn-radio"><label for="col41_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col41_na" name="col41" value="N/A" class="btn-radio"><label for="col41_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>42. ¿El poste o estructura donde va a trabajar se encuentra en buen estado?</td>
                 <td class="td-center"><input type="radio" id="col42_si" name="col42" value="SI" class="btn-radio"><label for="col42_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col42_no" name="col42" value="NO" class="btn-radio"><label for="col42_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col42_na" name="col42" value="N/A" class="btn-radio"><label for="col42_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>43. ¿Ha verificado que NO haya presencia de abejas en la zona de trabajo?</td>
                 <td class="td-center"><input type="radio" id="col43_si" name="col43" value="SI" class="btn-radio"><label for="col43_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col43_no" name="col43" value="NO" class="btn-radio"><label for="col43_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col43_na" name="col43" value="N/A" class="btn-radio"><label for="col43_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
-                <td>44. ¿En caso de haber abejas, que controles implementó para ejecutar el trabajo?__________________</td>
+                <td>44. ¿En caso de haber abejas, que controles implementó para ejecutar el trabajo?</td>
                 <td class="td-center"><input type="radio" id="col44_si" name="col44" value="SI" class="btn-radio"><label for="col44_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col44_no" name="col44" value="NO" class="btn-radio"><label for="col44_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col44_na" name="col44" value="N/A" class="btn-radio"><label for="col44_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>45. ¿Ha identificado que dispositivo alimenta el suministro de energía en la zona de trabajo?</td>
                 <td class="td-center"><input type="radio" id="col45_si" name="col45" value="SI" class="btn-radio"><label for="col45_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col45_no" name="col45" value="NO" class="btn-radio"><label for="col45_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col45_na" name="col45" value="N/A" class="btn-radio"><label for="col45_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
-                <td>46. ¿Es necesario solicitar apertura de línea al COD? Cual circuito__________________</td>
+                <td>46. ¿Es necesario solicitar apertura de línea al COD? Cual circuito</td>
                 <td class="td-center"><input type="radio" id="col46_si" name="col46" value="SI" class="btn-radio"><label for="col46_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col46_no" name="col46" value="NO" class="btn-radio"><label for="col46_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col46_na" name="col46" value="N/A" class="btn-radio"><label for="col46_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>47. ¿Se realizó despeje o apertura de línea con el COD?</td>
                 <td class="td-center"><input type="radio" id="col47_si" name="col47" value="SI" class="btn-radio"><label for="col47_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col47_no" name="col47" value="NO" class="btn-radio"><label for="col47_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col47_na" name="col47" value="N/A" class="btn-radio"><label for="col47_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>48. ¿Se realizó la apertura manual de los Re-conectadores, transformadores o cortacircuitos?</td>
                 <td class="td-center"><input type="radio" id="col48_si" name="col48" value="SI" class="btn-radio"><label for="col48_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col48_no" name="col48" value="NO" class="btn-radio"><label for="col48_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col48_na" name="col48" value="N/A" class="btn-radio"><label for="col48_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>49. ¿Una vez abiertas las cuchillas cortacircuitos se retiraron los portafusibles de las mismas?</td>
                 <td class="td-center"><input type="radio" id="col49_si" name="col49" value="SI" class="btn-radio"><label for="col49_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col49_no" name="col49" value="NO" class="btn-radio"><label for="col49_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col49_na" name="col49" value="N/A" class="btn-radio"><label for="col49_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>50. ¿Es necesario realizar el bloqueo mecánico, e instalar tarjeta de protección que indique que personal está trabajando en la zona?</td>
                 <td class="td-center"><input type="radio" id="col50_si" name="col50" value="SI" class="btn-radio"><label for="col50_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col50_no" name="col50" value="NO" class="btn-radio"><label for="col50_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col50_na" name="col50" value="N/A" class="btn-radio"><label for="col50_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>51. ¿Se verificó la ausencia de tensión?</td>
                 <td class="td-center"><input type="radio" id="col51_si" name="col51" value="SI" class="btn-radio"><label for="col51_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col51_no" name="col51" value="NO" class="btn-radio"><label for="col51_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col51_na" name="col51" value="N/A" class="btn-radio"><label for="col51_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>52. ¿Se aseguró el área de trabajo aterrizando? (puestas a tierra)</td>
                 <td class="td-center"><input type="radio" id="col52_si" name="col52" value="SI" class="btn-radio"><label for="col52_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col52_no" name="col52" value="NO" class="btn-radio"><label for="col52_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col52_na" name="col52" value="N/A" class="btn-radio"><label for="col52_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>53. ¿El área de trabajo se encuentra señalizada?</td>
                 <td class="td-center"><input type="radio" id="col53_si" name="col53" value="SI" class="btn-radio"><label for="col53_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col53_no" name="col53" value="NO" class="btn-radio"><label for="col53_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col53_na" name="col53" value="N/A" class="btn-radio"><label for="col53_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>54. ¿Se cumple con las 5 Reglas de Oro para trabajos eléctricos en línea desenergizada o muerta?</td>
                 <td class="td-center"><input type="radio" id="col54_si" name="col54" value="SI" class="btn-radio"><label for="col54_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col54_no" name="col54" value="NO" class="btn-radio"><label for="col54_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col54_na" name="col54" value="N/A" class="btn-radio"><label for="col54_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
-                <td>55. ¿Ha verificado la fuente de las líneas secundarias (en caso de haber dos o más secundarios en el mismo poste)? (Si evidencia la existencia de mas de una fuente debe proceder a bloquear cada una de ellas)</td>
+                <td>55. ¿Ha verificado la fuente de las líneas secundarias (en caso de haber dos o más secundarios en el mismo poste)?</td>
                 <td class="td-center"><input type="radio" id="col55_si" name="col55" value="SI" class="btn-radio"><label for="col55_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col55_no" name="col55" value="NO" class="btn-radio"><label for="col55_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col55_na" name="col55" value="N/A" class="btn-radio"><label for="col55_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
                 <td>56. ¿Es viable realizar el trabajo con el equipo, las herramientas y el personal que dispone para la tarea?</td>
                 <td class="td-center"><input type="radio" id="col56_si" name="col56" value="SI" class="btn-radio"><label for="col56_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col56_no" name="col56" value="NO" class="btn-radio"><label for="col56_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col56_na" name="col56" value="N/A" class="btn-radio"><label for="col56_na" class="btn-label na">N/A</label></td>
             </tr>
-
             <tr>
-                <td>57. ¿Algún trabajador del equipo de trabajo se encuentra actualmente bajo la influencia de sustancias psicoactivas, por ejemplo alcohol o drogas? En caso de ser afirmativa la respuesta, por favor reportarlo.</td>
+                <td>57. ¿Algún trabajador del equipo de trabajo se encuentra actualmente bajo la influencia de sustancias psicoactivas?</td>
                 <td class="td-center"><input type="radio" id="col57_si" name="col57" value="SI" class="btn-radio"><label for="col57_si" class="btn-label si">SI</label></td>
                 <td class="td-center"><input type="radio" id="col57_no" name="col57" value="NO" class="btn-radio"><label for="col57_no" class="btn-label no">NO</label></td>
                 <td class="td-center"><input type="radio" id="col57_na" name="col57" value="N/A" class="btn-radio"><label for="col57_na" class="btn-label na">N/A</label></td>
@@ -1038,40 +923,19 @@
     <h3 class="titulo-seccion">Paso 7: PERSONAL QUE PARTICIPA EN LA ACTIVIDAD</h3>
     
     <div class="alert-info" style="margin-bottom: 15px; font-size: 0.9em; color: #a0aec0;">
-        <i class="fas fa-info-circle"></i> Agregue a todos los integrantes que participan en la labor. Firme cada uno en su fila correspondiente.
+        <i class="fas fa-info-circle"></i> Agregue a todos los integrantes que participan en la labor. Firme cada uno en su ficha correspondiente.
     </div>
 
-    <div class="table-responsive">
-        <table class="tabla-dinamica" id="tablaPersonal">
-            <thead>
-                <tr>
-                    <th style="width: 5%;">N°</th>
-                    <th style="width: 25%;">NOMBRE TRABAJADOR</th>
-                    <th style="width: 20%;">EMPRESA</th>
-                    <th style="width: 20%;">IDENTIDAD</th>
-                    <th style="width: 20%;">FIRMA</th>
-                    <th style="width: 10%;">QUITAR</th>
-                </tr>
-            </thead>
-            <tbody id="tbodyPersonal">
-                </tbody>
-        </table>
-    </div>
+    <div id="contenedorPersonal" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+        </div>
     
-    <button type="button" class="btn-agregar-fila" onclick="agregarIntegrante()">
-        <i class="fas fa-plus-circle"></i> Agregar Integrante
+    <button type="button" class="btn-agregar-fila" onclick="abrirModalIntegrante()" style="width: 100%;">
+        <i class="fas fa-user-plus"></i> Agregar Integrante
     </button>
-    
-
-
-    
 </div>
             
-            
-        
             <div class="espacio-footer"></div>
 
-            <!-- BOTONES FIJOS EN LA PARTE INFERIOR (STICKY) -->
             <div class="form-actions">
                 <button type="button" class="btn-wizard btn-back" id="btnAnterior" style="display: none;" onclick="cambiarPaso(-1)">
                     <i class="fas fa-chevron-left"></i> Atrás
@@ -1086,11 +950,51 @@
         </form>
     </div>     
  
-    <script>
+<div id="modalNuevoIntegrante" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9998; justify-content: center; align-items: center;">
+    <div class="modal-firma-content" style="background: var(--card-color); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; color: var(--text-color); text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+        <h4 style="margin-top: 0; color: var(--blue-active); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;"><i class="fas fa-user-plus"></i> Nuevo Integrante</h4>
+        
+        <div class="form-group" style="margin-bottom: 12px;">
+            <label style="font-size: 13px; color: var(--muted-text);">Nombres y Apellidos:</label>
+            <input type="text" id="temp_nombre" placeholder="Nombre completo">
+        </div>
+        <div class="form-group" style="margin-bottom: 12px;">
+            <label style="font-size: 13px; color: var(--muted-text);">Empresa:</label>
+            <input type="text" id="temp_empresa" placeholder="Ej. UTCD">
+        </div>
+        <div class="form-group" style="margin-bottom: 15px;">
+            <label style="font-size: 13px; color: var(--muted-text);">N° Identidad:</label>
+            <input type="text" id="temp_identidad" placeholder="Ej. 0000-0000-00000">
+        </div>
+        <div class="form-group" style="text-align: center; border-top: 1px dashed var(--border-color); padding-top: 15px;">
+            <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('temp_firma')">
+                <i class="fas fa-pen-nib"></i> Firmar en pantalla
+            </button>
+            <img id="img_temp_firma" class="preview-firma" style="display: none; margin: 10px auto 0;" />
+            <input type="hidden" id="temp_firma">
+        </div>
+        <div class="modal-botones" style="margin-top: 20px;">
+            <button type="button" class="btn-firma-cancelar" onclick="cerrarModalIntegrante()">Cancelar</button>
+            <button type="button" class="btn-firma-guardar" onclick="guardarNuevoIntegrante()">Agregar a Lista</button>
+        </div>
+    </div>
+</div>
 
-// ==========================================
-// 2. FUNCIÓN PARA GENERAR ID ÚNICO (6 CARACTERES ALFANUMÉRICOS)
-// ==========================================
+<div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+    <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
+        <h4>Firma Digital</h4>
+        <canvas id="pizarraFirma" width="320" height="200" style="border: 1px solid #ccc; background: #fff;"></canvas>
+        <div class="modal-botones" style="margin-top: 10px;">
+            <button type="button" onclick="limpiarPizarra()">Limpiar</button>
+            <button type="button" onclick="cerrarModalFirma()">Cancelar</button>
+            <button type="button" onclick="guardarFirma()">Aceptar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+
+// 2. FUNCIÓN PARA GENERAR ID ÚNICO
 function generarIDUnico() {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let id = '';
@@ -1100,9 +1004,7 @@ function generarIDUnico() {
     return id;
 }
 
-// ==========================================
 // 3. INICIO DE LA PÁGINA (NUEVO O EDICIÓN)
-// ==========================================
 document.addEventListener("DOMContentLoaded", () => {
     inicializarPizarra();
 
@@ -1116,36 +1018,25 @@ document.addEventListener("DOMContentLoaded", () => {
     } else {
         const nuevoId = generarIDUnico();
         const campoId = document.getElementById("col_0");
-        
-        if (campoId) {
-            campoId.value = nuevoId;
-        }
-
-        if (typeof window.agregarIntegrante === "function") {
-            window.agregarIntegrante();
-        }
+        if (campoId) campoId.value = nuevoId;
     }
 });
 
-// ==========================================
 // 4. NAVEGACIÓN DEL WIZARD (PASOS)
-// ==========================================
 let pasoActual = 1;
-const totalPasos = 7; // <- ¡Aquí definimos los 7 pasos una sola vez!
+const totalPasos = 7;
 window.contadorPersonal = 0;
 let canvas, ctx;
 let dibujando = false;
 window.campoDestino = "";
-// Función centralizada para manejar la transición visual
+
 function cambiarVisibilidadPaso(numeroPaso, mostrar) {
-    // Corregimos los nombres para que coincidan con tu HTML (step- y ind-)
     const paso = document.getElementById(`step-${numeroPaso}`);
     const indicador = document.getElementById(`ind-${numeroPaso}`);
-    
     if (paso) {
         if(mostrar) {
             paso.style.display = "block";
-            paso.classList.add("activo"); // Activa la animación CSS que creaste
+            paso.classList.add("activo");
         } else {
             paso.style.display = "none";
             paso.classList.remove("activo");
@@ -1156,18 +1047,16 @@ function cambiarVisibilidadPaso(numeroPaso, mostrar) {
     }
 }
 
-// Esta es la función exacta que llaman tus botones en el HTML
 window.cambiarPaso = function(direccion) {
     if ((direccion === 1 && pasoActual < totalPasos) || (direccion === -1 && pasoActual > 1)) {
-        cambiarVisibilidadPaso(pasoActual, false); // Ocultar actual
-        pasoActual += direccion;                   // Avanzar o retroceder
-        cambiarVisibilidadPaso(pasoActual, true);  // Mostrar nuevo
+        cambiarVisibilidadPaso(pasoActual, false);
+        pasoActual += direccion;                   
+        cambiarVisibilidadPaso(pasoActual, true);  
         actualizarBotones();
     }
 };
 
 function actualizarBotones() {
-    // Corregido el nombre a btnAnterior
     const btnAtras = document.getElementById("btnAnterior");
     const btnSiguiente = document.getElementById("btnSiguiente");
     const btnGuardar = document.getElementById("btnGuardar");
@@ -1178,9 +1067,34 @@ function actualizarBotones() {
     if (btnSiguiente) btnSiguiente.style.display = esUltimo ? "none" : "flex";
     if (btnGuardar) btnGuardar.style.display = esUltimo ? "flex" : "none";
 }
-// ==========================================
-// 5. CARGAR REGISTRO PARA EDITAR (BÚSQUEDA TOTAL)
-// ==========================================
+
+// LÓGICA SOLICITADA PARA EL STEP 2: CÁLCULO DE TIEMPO ESTIMADO
+window.calcularTiempoEstimado = function() {
+    const t1 = document.getElementById('col_17').value;
+    const t2 = document.getElementById('col_18').value;
+    const output = document.getElementById('col_19');
+    
+    if(t1 && t2) {
+        let [h1, m1] = t1.split(':').map(Number);
+        let [h2, m2] = t2.split(':').map(Number);
+        
+        let totalMin1 = h1 * 60 + m1;
+        let totalMin2 = h2 * 60 + m2;
+        
+        // Si la hora final es menor a la inicial, significa que cruza la medianoche
+        if(totalMin2 < totalMin1) totalMin2 += 24 * 60;
+        
+        let diff = totalMin2 - totalMin1;
+        let hDiff = Math.floor(diff / 60);
+        let mDiff = diff % 60;
+        
+        output.value = `${hDiff} h ${mDiff} min`;
+    } else {
+        output.value = "";
+    }
+};
+
+// 5. CARGAR REGISTRO PARA EDITAR
 async function cargarRegistroParaEditar(id) {
     try {
         const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistro&id=${id}`;
@@ -1194,25 +1108,19 @@ async function cargarRegistroParaEditar(id) {
             return;
         }
 
-        // Recorrer todas las columnas recibidas
         Object.keys(data).forEach(columnaName => {
             let valorGuardado = data[columnaName];
             if (valorGuardado === null || valorGuardado === undefined || valorGuardado === "") return;
 
-            // Mantenemos el nombre original (col_59) y también creamos uno sin guion (col59) por si acaso
             let nombreSinGuion = columnaName.replace('_', '');
-
-            // Buscar si tienen el atributo "name"
             const opciones = document.querySelectorAll(`[name="${columnaName}"], [name="${nombreSinGuion}"]`);
             
-            // VERIFICACIÓN CLAVE: ¿Es de verdad un radio button o un checkbox?
             let esRadioOCheck = false;
             if (opciones.length > 0 && (opciones[0].type === "radio" || opciones[0].type === "checkbox")) {
                 esRadioOCheck = true;
             }
 
             if (esRadioOCheck) {
-                // Manejo de Radio
                 if (opciones[0].type === "radio") {
                     opciones.forEach(radio => {
                         if (radio.value.trim().toUpperCase() === valorGuardado.toString().trim().toUpperCase()) {
@@ -1220,40 +1128,30 @@ async function cargarRegistroParaEditar(id) {
                         }
                     });
                 } 
-                // Manejo de Checkboxes múltiples
                 else if (opciones[0].type === "checkbox") {
                     let valoresArray = valorGuardado.toString().split(',').map(s => s.trim());
                     opciones.forEach(cb => {
-                        if (valoresArray.includes(cb.value)) {
-                            cb.checked = true;
-                        }
+                        if (valoresArray.includes(cb.value)) cb.checked = true;
                     });
                     if (document.getElementById('chk_otros') && document.getElementById('chk_otros').checked) {
                         if (typeof verificarRiesgosOtros === "function") verificarRiesgosOtros();
                     }
                 }
             } else {
-                // 🔴 AQUÍ ESTÁ LA MAGIA PARA EL STEP 6 (col_59, col_60, etc.)
-                // Busca por ID. ¡Si no lo encuentra, lo busca por NAME!
                 const inputElement = document.getElementById(columnaName) || 
                                      document.getElementById(nombreSinGuion) || 
                                      document.querySelector(`[name="${columnaName}"]`) || 
                                      document.querySelector(`[name="${nombreSinGuion}"]`);
                                      
                 if (inputElement) {
-                    
-                    // Fechas
                     if (columnaName === "col_3" || nombreSinGuion === "col3") {
                         if (valorGuardado.toString().includes("T")) {
                             let fechaPartes = valorGuardado.split("T")[0].split("-");
-                            if(fechaPartes.length === 3) {
-                                inputElement.value = `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}`;
-                            }
+                            if(fechaPartes.length === 3) inputElement.value = `${fechaPartes[2]}/${fechaPartes[1]}/${fechaPartes[0]}`;
                         } else {
                             inputElement.value = valorGuardado;
                         }
                     }
-                    // Horas
                     else if (inputElement.type === "time") {
                         if (valorGuardado.toString().includes("T")) {
                             inputElement.value = valorGuardado.split("T")[1].substring(0, 5);
@@ -1261,14 +1159,11 @@ async function cargarRegistroParaEditar(id) {
                             inputElement.value = valorGuardado;
                         }
                     } 
-                    // Lo demás (Tus campos de col_59, col_60, col_61)
                     else {
                         inputElement.value = valorGuardado;
                     }
 
-                    // Previsualización de Firmas del Paso 6 (col_62 y col_66)
                     if ((columnaName === "col_62" || columnaName === "col_66" || nombreSinGuion === "col62" || nombreSinGuion === "col66") && valorGuardado.toString().startsWith("data:image")) {
-                        // Busca img_col_62 o img_col62
                         const imgPreview = document.getElementById("img_" + columnaName) || document.getElementById("img_" + nombreSinGuion);
                         if (imgPreview) {
                             imgPreview.src = valorGuardado;
@@ -1279,42 +1174,17 @@ async function cargarRegistroParaEditar(id) {
             }
         });
 
-        // ==========================================
-        // CARGA DE PERSONAL (Paso 7)
-        // ==========================================
+        // CARGA DE PERSONAL EN FORMA DE TARJETAS (Paso 7)
         if (data.personal && Array.isArray(data.personal)) {
-            const tbody = document.getElementById('tbodyPersonal');
-            if (tbody) tbody.innerHTML = ""; 
+            const contenedor = document.getElementById('contenedorPersonal');
+            if (contenedor) contenedor.innerHTML = ""; 
             window.contadorPersonal = 0;
 
             data.personal.forEach(persona => {
-                window.agregarIntegrante(); 
-                const tr = document.getElementById(`fila_per_${window.contadorPersonal}`);
-                if (tr) {
-                    const inputs = tr.querySelectorAll('input');
-                    if (inputs.length >= 4) {
-                        inputs[0].value = persona.nombre || "";
-                        inputs[1].value = persona.empresa || "";
-                        inputs[2].value = persona.identidad || "";
-                        inputs[3].value = persona.firma || "";
-
-                        // Previsualizar la firma pequeña de la tabla
-                        if (persona.firma && persona.firma.startsWith("data:image")) {
-                            const imgFirma = document.getElementById(`img_firma_per_${window.contadorPersonal}`);
-                            if (imgFirma) {
-                                imgFirma.src = persona.firma;
-                                imgFirma.style.display = "block";
-                            }
-                        }
-                    }
-                }
+                window.agregarTarjetaIntegrante(persona.nombre, persona.empresa, persona.identidad, persona.firma);
             });
         }
 
-        // Ejecutar validadores visuales
-        if (typeof verificarActividad === "function") verificarActividad();
-        if (typeof verificarEmpresa === "function") verificarEmpresa();
-        if (typeof verificarOtroEquipo === "function") verificarOtroEquipo();
         if (typeof calcularTiempoEstimado === "function") calcularTiempoEstimado();
 
         const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
@@ -1329,32 +1199,31 @@ async function cargarRegistroParaEditar(id) {
     }
 }
 
-// ==========================================
-// 6. GUARDAR FORMULARIO (CORREGIDO)
-// ==========================================
+// 6. GUARDAR FORMULARIO (ESTÉTICA DE CARGANDO APLICADA)
 async function enviarFormulario() {
     const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
-    if (btnGuardar) btnGuardar.disabled = true;
+    let textoOriginal = "";
+    if (btnGuardar) {
+        textoOriginal = btnGuardar.innerHTML;
+        btnGuardar.disabled = true;
+        btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+    }
 
     try {
         let datosChecklist = {};
-        
         for (let i = 0; i <= 66; i++) {
-            // 1. Manejar Checkboxes múltiples (Ej. Paso 3: Riesgos -> name="col_26")
             let checkboxes = document.querySelectorAll(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
             if (checkboxes.length > 0 && checkboxes[0].type === 'checkbox') {
                 datosChecklist[`col_${i}`] = Array.from(checkboxes).map(cb => cb.value).join(', ');
                 continue;
             }
 
-            // 2. Manejar Radio Buttons (Ej. Paso 5: Seguridad SÍ/NO/NA -> name="col31")
             let radioSeleccionado = document.querySelector(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
             if (radioSeleccionado && radioSeleccionado.type === 'radio') {
                 datosChecklist[`col_${i}`] = radioSeleccionado.value;
                 continue;
             }
 
-            // 3. Manejar Inputs normales, Textareas, Selects (Soportando 'col_1' o 'col28')
             let inputIdConGuion = `col_${i}`;
             let inputIdSinGuion = `col${i}`;
             let elemento = document.getElementById(inputIdConGuion) || document.getElementById(inputIdSinGuion);
@@ -1362,7 +1231,6 @@ async function enviarFormulario() {
             if (elemento) {
                 datosChecklist[`col_${i}`] = elemento.value;
             } else {
-                // Si el campo realmente no existe o está vacío, se envía string vacío
                 datosChecklist[`col_${i}`] = "";
             }
         }
@@ -1380,9 +1248,6 @@ async function enviarFormulario() {
 
         const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
-            // TIP: A veces Apps Script rechaza el 'application/json' por temas de CORS. 
-            // Si el problema persiste, descomenta la siguiente línea:
-            // headers: { 'Content-Type': 'text/plain;charset=utf-8' },
             body: JSON.stringify(paqueteFinal) 
         });
 
@@ -1398,85 +1263,108 @@ async function enviarFormulario() {
     } catch (error) {
         console.error("Error al guardar:", error);
         alert("Hubo un error al guardar: " + error.message);
-        if (btnGuardar) btnGuardar.disabled = false;
+        // Si hay error, regresamos el botón a la normalidad
+        if (btnGuardar) {
+            btnGuardar.disabled = false;
+            btnGuardar.innerHTML = textoOriginal;
+        }
     }
 }
 
 // ==========================================
-// 7. LÓGICA DE PERSONAL Y FIRMAS
+// 7. LÓGICA DE PERSONAL Y FIRMAS (MODAL MÓVIL)
 // ==========================================
+
+// Abrir el modal para nuevo integrante
+window.abrirModalIntegrante = function() {
+    document.getElementById('temp_nombre').value = '';
+    document.getElementById('temp_empresa').value = '';
+    document.getElementById('temp_identidad').value = '';
+    document.getElementById('temp_firma').value = '';
+    const img = document.getElementById('img_temp_firma');
+    if(img) { img.src = ''; img.style.display = 'none'; }
+    document.getElementById('modalNuevoIntegrante').style.display = 'flex';
+};
+
+// Cerrar el modal
+window.cerrarModalIntegrante = function() {
+    document.getElementById('modalNuevoIntegrante').style.display = 'none';
+};
+
+// Pasar del modal a la lista de tarjetas
+window.guardarNuevoIntegrante = function() {
+    const nombre = document.getElementById('temp_nombre').value;
+    const empresa = document.getElementById('temp_empresa').value;
+    const identidad = document.getElementById('temp_identidad').value;
+    const firma = document.getElementById('temp_firma').value;
+
+    if(!nombre.trim()) { alert("El nombre completo es obligatorio."); return; }
+
+    window.agregarTarjetaIntegrante(nombre, empresa, identidad, firma);
+    window.cerrarModalIntegrante();
+};
+
+// Crear la tarjeta estéticamente
+window.agregarTarjetaIntegrante = function(nombre, empresa, identidad, firma) {
+    window.contadorPersonal = (window.contadorPersonal || 0) + 1;
+    const idContenedor = `tarjeta_per_${window.contadorPersonal}`;
+    
+    const contenedor = document.getElementById('contenedorPersonal');
+    const card = document.createElement('div');
+    card.className = "tarjeta-personal";
+    card.id = idContenedor;
+
+    let imgHTML = firma ? `<img src="${firma}" style="max-height: 40px; background: white; border-radius: 4px; padding: 2px;">` : `<span style="color:var(--danger-color); font-size:12px;">Sin firma</span>`;
+
+    card.innerHTML = `
+        <div style="width: 100%;">
+            <div style="display:flex; justify-content: space-between; align-items: flex-start; margin-bottom: 5px;">
+                <h4 style="margin:0; color: var(--blue-active); font-size: 15px;"><i class="fas fa-user"></i> ${nombre}</h4>
+                <button type="button" class="btn-eliminar-fila" onclick="eliminarIntegranteTarjeta('${idContenedor}')">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+            <p style="margin: 2px 0; font-size: 13px; color: var(--muted-text);"><i class="fas fa-building"></i> ${empresa || 'N/A'}</p>
+            <p style="margin: 2px 0; font-size: 13px; color: var(--muted-text);"><i class="fas fa-id-card"></i> ${identidad || 'N/A'}</p>
+            <div style="margin-top: 8px;">${imgHTML}</div>
+        </div>
+        <input type="hidden" class="per-nombre" value="${nombre}">
+        <input type="hidden" class="per-empresa" value="${empresa}">
+        <input type="hidden" class="per-identidad" value="${identidad}">
+        <input type="hidden" class="per-firma" value="${firma}">
+    `;
+    contenedor.appendChild(card);
+};
+
+window.eliminarIntegranteTarjeta = function(idFila) {
+    const fila = document.getElementById(idFila);
+    if (fila) fila.remove();
+};
+
+// Nueva forma de extraer la información de las tarjetas
 window.obtenerDatosPersonal = function() {
     const idChecklist = document.getElementById('col_0') ? document.getElementById('col_0').value : ""; 
-    const filas = document.querySelectorAll('#tbodyPersonal tr');
+    const tarjetas = document.querySelectorAll('#contenedorPersonal .tarjeta-personal');
     const arregloPersonal = [];
 
-    filas.forEach((fila, index) => {
-        const inputs = fila.querySelectorAll('input');
-        if (inputs.length >= 4) {
-            const nombre = inputs[0].value;
-            const empresa = inputs[1].value;
-            const identidad = inputs[2].value;
-            const firma = inputs[3].value; 
+    tarjetas.forEach((tarjeta, index) => {
+        const nombre = tarjeta.querySelector('.per-nombre').value;
+        const empresa = tarjeta.querySelector('.per-empresa').value;
+        const identidad = tarjeta.querySelector('.per-identidad').value;
+        const firma = tarjeta.querySelector('.per-firma').value;
 
-            if (nombre.trim() !== "") {
-                arregloPersonal.push({
-                    id_checklist: idChecklist,
-                    n: index + 1,
-                    nombre: nombre,
-                    empresa: empresa,
-                    identidad: identidad,
-                    firma: firma
-                });
-            }
+        if (nombre.trim() !== "") {
+            arregloPersonal.push({
+                id_checklist: idChecklist,
+                n: index + 1,
+                nombre: nombre,
+                empresa: empresa,
+                identidad: identidad,
+                firma: firma
+            });
         }
     });
     return arregloPersonal; 
-};
-
-window.eliminarIntegrante = function(idFila) {
-    const fila = document.getElementById(idFila);
-    if (fila) {
-        fila.remove();
-        window.actualizarCorrelativos();
-    }
-};
-
-window.actualizarCorrelativos = function() {
-    const filas = document.querySelectorAll('#tbodyPersonal tr');
-    filas.forEach((fila, index) => {
-        const numCol = fila.querySelector('.num-fila');
-        if(numCol) numCol.innerText = index + 1;
-    });
-};
-
-window.agregarIntegrante = function() {
-    window.contadorPersonal++;
-    const tbody = document.getElementById('tbodyPersonal');
-    if(!tbody) return; 
-
-    const tr = document.createElement('tr');
-    tr.id = `fila_per_${window.contadorPersonal}`;
-
-    tr.innerHTML = `
-        <td style="text-align: center; color: #a0aec0;" class="num-fila">${window.contadorPersonal}</td>
-        <td><input type="text" id="nombre_per_${window.contadorPersonal}" placeholder="Nombres y Apellidos"></td>
-        <td><input type="text" id="empresa_per_${window.contadorPersonal}" placeholder="Empresa"></td>
-        <td><input type="text" id="identidad_per_${window.contadorPersonal}" placeholder="N° Identidad"></td>
-        <td style="text-align: center;">
-            <button type="button" class="btn-firma-pequeno" onclick="window.abrirModalFirma('firma_per_${window.contadorPersonal}')">
-                <i class="fas fa-pen-nib"></i> Firmar
-            </button>
-            <img id="img_firma_per_${window.contadorPersonal}" class="preview-firma" style="display: none; max-width: 100px; max-height: 50px; margin-top: 5px;" />
-            <input type="hidden" id="firma_per_${window.contadorPersonal}">
-        </td>
-        <td>
-            <button type="button" class="btn-eliminar-fila" onclick="window.eliminarIntegrante('${tr.id}')">
-                <i class="fas fa-trash"></i>
-            </button>
-        </td>
-    `;
-    tbody.appendChild(tr);
-    window.actualizarCorrelativos();
 };
 
 function inicializarPizarra() {
@@ -1545,17 +1433,5 @@ window.guardarFirma = function() {
     window.cerrarModalFirma();
 };        
 </script>            
-    <div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
-    <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
-        <h4>Firma Digital</h4>
-        <canvas id="pizarraFirma" width="320" height="200" style="border: 1px solid #ccc; background: #fff;"></canvas>
-        <div class="modal-botones" style="margin-top: 10px;">
-            <button type="button" onclick="limpiarPizarra()">Limpiar</button>
-            <button type="button" onclick="cerrarModalFirma()">Cancelar</button>
-            <button type="button" onclick="guardarFirma()">Aceptar</button>
-        </div>
-    </div>
-</div>
-   
 </body>
 </html>
