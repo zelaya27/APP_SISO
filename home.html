@@ -355,10 +355,13 @@
         <div id="contenedor-registros" class="registros-grid">
             </div>
     </div>
-
-    <script src="config.js"></script>
+<script src="config.js"></script>
 
     <script>
+        // VARIABLES GLOBALES (Necesarias para que los filtros funcionen al instante)
+        let registrosGlobales = [];
+        let filtroEstadoActual = 'Todos';
+
         // 1. CARGA INICIAL Y CONTROL DE SESIÓN
         document.addEventListener('DOMContentLoaded', () => {
             const user = sessionStorage.getItem("usuario");
@@ -381,6 +384,12 @@
                     this.classList.add('activo');
                 });
             });
+
+            // Listener para el selector de "Mostrar 10, 20 o Todos"
+            const limitSelector = document.getElementById("limitSelector");
+            if (limitSelector) {
+                limitSelector.addEventListener("change", renderizarTarjetas);
+            }
         });
 
         // 2. FUNCIÓN CERRAR SESIÓN
@@ -389,7 +398,7 @@
             window.location.href = "index.html";
         }
         
-        // 4. CARGAR REGISTROS CON FORMATO DE TARJETAS DE CELULAR
+        // 4. CARGAR REGISTROS (Y FILTRADO POR SECTOR COL_2)
         async function cargarRegistros() {
             const contenedor = document.getElementById("contenedor-registros");
             if (!contenedor) return;
@@ -404,64 +413,115 @@
                 const res = await fetch(urlFinal);
                 const data = await res.json();
                 
-                contenedor.innerHTML = "";
-                
                 if (data.error) throw new Error(data.error);
 
-                if (data.length === 0) {
-                    contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text); padding: 20px;">No hay registros aún.</div>';
-                    return;
-                }
-
-                data.forEach(row => {
-                    let fechaOriginal = row.col_3; 
-                    let fechaFormateada = "";
-                    
-                    if (fechaOriginal) {
-                        let d = new Date(fechaOriginal);
-                        if (!isNaN(d.getTime())) {
-                            let dia = String(d.getUTCDate()).padStart(2, '0');
-                            let mes = String(d.getUTCMonth() + 1).padStart(2, '0');
-                            let anio = d.getUTCFullYear();
-                            
-                            fechaFormateada = `${dia}/${mes}/${anio}`; 
-                        } else {
-                            fechaFormateada = fechaOriginal;
-                        }
-                    } else {
-                        fechaFormateada = "Sin fecha";
-                    }
-
-                    // Limpieza del estado usando col_4 (Antes ESTADO)
-                    const estadoTexto = row.col_4 || "Pendiente"; 
-                    const estadoClase = estadoTexto.toLowerCase().trim();
-
-                    // --- INYECCIÓN DIRECTA DE LA COMPOSICIÓN DE TARJETA MÓVIL ---
-                    const card = document.createElement("div");
-                    card.className = "registro-card";
-                    card.innerHTML = `
-                        <div class="registro-header">
-                            <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.col_0 || "N/A"}</span>
-                            <span class="badge badge-${estadoClase}">${estadoTexto}</span>
-                        </div>
-                        <div class="registro-body">
-                            <p><i class="far fa-calendar-alt"></i> <b>Fecha:</b> ${fechaFormateada}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.col_2 || "N/A"}</p>
-                            <p><i class="fas fa-user-hard-hat"></i> <b>Usuario:</b> ${row.col_1 || "N/A"}</p>
-                        </div>
-                        <div class="registro-footer">
-                            <button class="btn-editar" onclick="editar('${row.col_0}')">
-                                <i class="fas fa-pen"></i> Editar
-                            </button>
-                        </div>
-                    `;
-                    contenedor.appendChild(card);
+                // --- SOLUCIÓN PUNTO 2: FILTRAR POR SECTOR (COL_2) ---
+                const sectorUsuario = sessionStorage.getItem("sector") || "";
+                registrosGlobales = data.filter(row => {
+                    if (!row.col_2) return false;
+                    // (Opcional) Si es perfil "General" permitimos ver todos
+                    if (sectorUsuario.toUpperCase() === "GENERAL") return true; 
+                    // Comparar el sector de la fila con el sector del usuario logueado
+                    return String(row.col_2).trim().toUpperCase() === String(sectorUsuario).trim().toUpperCase();
                 });
+
+                // Mandamos a dibujar las tarjetas
+                renderizarTarjetas();
 
             } catch (error) {
                 console.error("Error al cargar registros:", error);
                 contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--danger-color); padding: 20px;"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el panel.</div>';
             }
+        }
+
+        // --- SOLUCIÓN PUNTO 1: FUNCIONES DE FILTRO DINÁMICO ---
+        window.filtrar = function(estado) {
+            filtroEstadoActual = estado;
+            renderizarTarjetas();
+        };
+
+        // MOTOR DE DIBUJADO DE TARJETAS (Separado para que los filtros funcionen)
+        function renderizarTarjetas() {
+            const contenedor = document.getElementById("contenedor-registros");
+            contenedor.innerHTML = "";
+            
+            if (registrosGlobales.length === 0) {
+                contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text); padding: 20px;">No hay registros en tu sector aún.</div>';
+                return;
+            }
+
+            // 1. Aplicamos Filtro de Estado (Todos, Pendientes, Revisados)
+            let datosAMostrar = registrosGlobales;
+            if (filtroEstadoActual !== 'Todos') {
+                datosAMostrar = registrosGlobales.filter(row => {
+                    const estado = String(row.col_4 || "Pendiente").trim().toLowerCase();
+                    return estado === filtroEstadoActual.toLowerCase();
+                });
+            }
+
+            // Invertimos para que los últimos aparezcan arriba
+            datosAMostrar = [...datosAMostrar].reverse();
+
+            // 2. Aplicamos Filtro de Cantidad (10, 20 o Todos)
+            const limitSelector = document.getElementById("limitSelector");
+            if (limitSelector) {
+                const limiteText = limitSelector.value;
+                if (limiteText !== 'ALL') {
+                    const limiteNum = parseInt(limiteText, 10);
+                    datosAMostrar = datosAMostrar.slice(0, limiteNum);
+                }
+            }
+
+            if (datosAMostrar.length === 0) {
+                contenedor.innerHTML = `<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text); padding: 20px;">No hay registros con estado "${filtroEstadoActual}".</div>`;
+                return;
+            }
+
+            // 3. Dibujamos las tarjetas finales
+            datosAMostrar.forEach(row => {
+                let fechaOriginal = row.col_3; 
+                let fechaFormateada = "";
+                
+                if (fechaOriginal) {
+                    let d = new Date(fechaOriginal);
+                    if (!isNaN(d.getTime())) {
+                        let dia = String(d.getUTCDate()).padStart(2, '0');
+                        let mes = String(d.getUTCMonth() + 1).padStart(2, '0');
+                        let anio = d.getUTCFullYear();
+                        
+                        fechaFormateada = `${dia}/${mes}/${anio}`; 
+                    } else {
+                        fechaFormateada = fechaOriginal;
+                    }
+                } else {
+                    fechaFormateada = "Sin fecha";
+                }
+
+                // Limpieza del estado usando col_4 (Antes ESTADO)
+                const estadoTexto = row.col_4 || "Pendiente"; 
+                const estadoClase = estadoTexto.toLowerCase().trim();
+
+                // --- INYECCIÓN DIRECTA DE LA COMPOSICIÓN DE TARJETA MÓVIL ---
+                const card = document.createElement("div");
+                card.className = "registro-card";
+                card.innerHTML = `
+                    <div class="registro-header">
+                        <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.col_0 || "N/A"}</span>
+                        <span class="badge badge-${estadoClase}">${estadoTexto}</span>
+                    </div>
+                    <div class="registro-body">
+                        <p><i class="far fa-calendar-alt"></i> <b>Fecha:</b> ${fechaFormateada}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.col_2 || "N/A"}</p>
+                        <p><i class="fas fa-user"></i> <b>Responsable:</b> ${row.col_59 || "N/A"}</p>
+                    </div>
+                    <div class="registro-footer">
+                        <button class="btn-editar" onclick="editar('${row.col_0}')">
+                            <i class="fas fa-pen"></i> Editar
+                        </button>
+                    </div>
+                `;
+                contenedor.appendChild(card);
+            });
         }
     
         // 3. NUEVO REGISTRO (Forzado Global)
