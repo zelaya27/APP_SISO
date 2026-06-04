@@ -1194,22 +1194,101 @@ async function cargarRegistroParaEditar(id) {
             return;
         }
 
+        // Iterar sobre todas las propiedades del objeto data (Las columnas de tu hoja)
         Object.keys(data).forEach(columnaName => {
-            const inputElement = document.getElementById(columnaName);
-            if (inputElement) {
-                if (inputElement.type === "checkbox" || inputElement.type === "radio") {
-                    inputElement.checked = (data[columnaName] === inputElement.value || data[columnaName] === true || data[columnaName] === "TRUE");
-                } else if (inputElement.type === "date" && data[columnaName]) {
-                    let d = new Date(data[columnaName]);
-                    if (!isNaN(d.getTime())) {
-                        inputElement.value = d.toISOString().split('T')[0];
+            let valorGuardado = data[columnaName];
+            if (valorGuardado === null || valorGuardado === undefined) return; // Saltar si está vacío
+
+            // 1. Buscar elementos agrupados por el atributo "name" (Radios y Checkboxes)
+            const opciones = document.querySelectorAll(`input[name="${columnaName}"]`);
+            
+            if (opciones.length > 0) {
+                // Si es un grupo de Radio Buttons (SÍ / NO / N/A del Paso 5)
+                if (opciones[0].type === "radio") {
+                    opciones.forEach(radio => {
+                        if (radio.value === valorGuardado) {
+                            radio.checked = true;
+                        }
+                    });
+                } 
+                // Si es un grupo de Checkboxes (Riesgos del Paso 3)
+                else if (opciones[0].type === "checkbox") {
+                    // Convertimos la cadena de texto separada por comas a un Arreglo (Array)
+                    let valoresArray = valorGuardado.toString().split(',').map(s => s.trim());
+                    
+                    opciones.forEach(cb => {
+                        if (valoresArray.includes(cb.value)) {
+                            cb.checked = true;
+                        }
+                    });
+                    
+                    // Si el Checkbox "Otros" se marcó, disparamos la función que muestra la caja de texto
+                    if (document.getElementById('chk_otros') && document.getElementById('chk_otros').checked) {
+                        if (typeof verificarRiesgosOtros === "function") verificarRiesgosOtros();
                     }
-                } else {
-                    inputElement.value = data[columnaName];
+                }
+            } else {
+                // 2. Si no es radio ni checkbox, buscamos por ID normal (Inputs, Selects, Textareas)
+                const inputElement = document.getElementById(columnaName);
+                if (inputElement) {
+                    // Formatear fechas correctamente si aplica
+                    if (inputElement.type === "date" && valorGuardado) {
+                        let d = new Date(valorGuardado);
+                        if (!isNaN(d.getTime())) {
+                            inputElement.value = d.toISOString().split('T')[0];
+                        }
+                    } else {
+                        inputElement.value = valorGuardado;
+                    }
+
+                    // 3. Previsualización de Firmas (Paso 6)
+                    if ((columnaName === "col62" || columnaName === "col66") && valorGuardado.toString().startsWith("data:image")) {
+                        const imgPreview = document.getElementById("img_" + columnaName);
+                        if (imgPreview) {
+                            imgPreview.src = valorGuardado;
+                            imgPreview.style.display = "block";
+                        }
+                    }
                 }
             }
         });
 
+        // 4. (Opcional) Si tu Backend envía el arreglo de "Personal" guardado, cargar la tabla dinámica (Paso 7)
+        if (data.personal && Array.isArray(data.personal)) {
+            const tbody = document.getElementById('tbodyPersonal');
+            if (tbody) tbody.innerHTML = ""; // Limpiar tabla por defecto
+            window.contadorPersonal = 0;
+
+            data.personal.forEach(persona => {
+                window.agregarIntegrante(); // Llama a tu función para crear una fila nueva
+                const tr = document.getElementById(`fila_per_${window.contadorPersonal}`);
+                if (tr) {
+                    const inputs = tr.querySelectorAll('input');
+                    if (inputs.length >= 4) {
+                        inputs[0].value = persona.nombre || "";
+                        inputs[1].value = persona.empresa || "";
+                        inputs[2].value = persona.identidad || "";
+                        inputs[3].value = persona.firma || "";
+
+                        // Previsualizar la firma del integrante si existe
+                        if (persona.firma && persona.firma.startsWith("data:image")) {
+                            const imgFirma = document.getElementById(`img_firma_per_${window.contadorPersonal}`);
+                            if (imgFirma) {
+                                imgFirma.src = persona.firma;
+                                imgFirma.style.display = "block";
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // 5. Ejecutar verificadores visuales para que se abran los campos de "Otros" si aplican
+        if (typeof verificarActividad === "function") verificarActividad();
+        if (typeof verificarEmpresa === "function") verificarEmpresa();
+        if (typeof verificarOtroEquipo === "function") verificarOtroEquipo();
+
+        // Actualizar diseño de Botón Final
         const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
         if (btnGuardar) {
             btnGuardar.innerHTML = '<i class="fas fa-save"></i> Actualizar Registro';
