@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>SISO - Nueva Lista de Chequeo</title>
+    <title>CHECKLIST</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
      <script src="config.js"></script>
@@ -145,14 +145,14 @@
 
         @media (max-width: 768px) {
             .btn-anterior, .btn-siguiente, .btn-guardar-principal, .botones-wizard button, button[onclick*="Paso"] {
-                font-size: 13px !important;       
-                padding: 8px 12px !important;     
+                font-size: 13px !important;        
+                padding: 8px 12px !important;      
                 border-radius: 15px !important;
             }
             .wizard-header, .steps-container, .stepper {
                 padding: 10px 5px !important;
-                gap: 5px !important;             
-                overflow-x: auto !important;     
+                gap: 5px !important;              
+                overflow-x: auto !important;      
             }
             .step-circle, .circle {
                 width: 26px !important;
@@ -441,7 +441,6 @@
         }
         .btn-eliminar-fila:hover { background-color: #e74c3c; color: white; }
         
-        /* Estilos Tarjetas Móviles (Paso 7) */
         .tarjeta-personal {
             background-color: var(--bg-color);
             border: 1px solid var(--border-color);
@@ -453,29 +452,60 @@
             align-items: flex-start;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-/* Oculta el contenedor de 'Otro' por defecto */
-#grupo_col_27 {
-    display: none;
-}
+        #grupo_col_27 { display: none; }
 
-   /* seleccion multiple col_7 */     
-.multi-select-box {
-    border: 1px solid #ced4da;
-    border-radius: 6px;
-    padding: 10px;
-    background-color: #fff;
-    max-height: 200px;
-    overflow-y: auto;
-}
-.checkbox-item {
-    padding: 8px 0;
-    border-bottom: 1px solid #f1f1f1;
-    display: flex;
-    align-items: center;
-    font-size: 14px;
-}
-.checkbox-item input { margin-right: 10px; }
-.checkbox-item:last-child { border-bottom: none; }
+        /* =========================================
+           NUEVO MULTI-SELECT ESTILO NATIVO (Col 7)
+        ========================================= */
+        .custom-multi-select { position: relative; width: 100%; user-select: none; }
+        .select-box {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 12px 15px;
+            color: var(--text-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        .select-box:active { border-color: var(--blue-active); }
+        .select-box .arrow { font-size: 14px; transition: transform 0.3s ease; color: var(--muted-text); }
+        .select-box.open .arrow { transform: rotate(180deg); }
+        
+        .options-container {
+            position: absolute;
+            top: 100%; left: 0; right: 0;
+            background-color: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-top: 6px;
+            z-index: 105;
+            max-height: 250px;
+            overflow-y: auto;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            display: none;
+        }
+        .options-container.show { display: block; animation: fadeIn 0.2s ease; }
+        .option-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            cursor: pointer;
+            color: var(--text-color);
+            font-size: 15px;
+        }
+        .option-item:last-child { border-bottom: none; }
+        .option-item:hover { background-color: rgba(59, 130, 246, 0.1); }
+        .option-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--blue-active);
+            cursor: pointer;
+        }
         
     </style>
 </head>
@@ -490,41 +520,19 @@
 
     <div class="container">
         <div class="steps-container">
-            <div class="step-indicator active" id="ind-1">
-                <div class="step-circle">1</div>
-                <div class="step-label"></div>
-            </div>
+            <div class="step-indicator active" id="ind-1"><div class="step-circle">1</div><div class="step-label"></div></div>
             <div class="step-line"></div>
-            <div class="step-indicator" id="ind-2">
-                <div class="step-circle">2</div>
-                <div class="step-label"></div>
-            </div>
-    <div class="step-line"></div>
-    <div class="step-indicator" id="ind-3">
-        <div class="step-circle">3</div>
-        <div class="step-label"></div>
-          </div> 
-        <div class="step-line"></div>
-    <div class="step-indicator" id="ind-4">
-        <div class="step-circle">4</div>
-        <div class="step-label"></div>
-      </div> 
-             <div class="step-line"></div>
-            <div class="step-indicator" id="ind-5">
-        <div class="step-circle">5</div>
-        <div class="step-label"></div>
-    </div>
-                  <div class="step-line"></div>
-    <div class="step-indicator" id="ind-6">
-        <div class="step-circle">6</div>
-        <div class="step-label"></div>
-      </div> 
-             <div class="step-line"></div>
-            <div class="step-indicator" id="ind-7">
-        <div class="step-circle">7</div>
-        <div class="step-label"></div>
-    </div>
-</div>
+            <div class="step-indicator" id="ind-2"><div class="step-circle">2</div><div class="step-label"></div></div>
+            <div class="step-line"></div>
+            <div class="step-indicator" id="ind-3"><div class="step-circle">3</div><div class="step-label"></div></div> 
+            <div class="step-line"></div>
+            <div class="step-indicator" id="ind-4"><div class="step-circle">4</div><div class="step-label"></div></div> 
+            <div class="step-line"></div>
+            <div class="step-indicator" id="ind-5"><div class="step-circle">5</div><div class="step-label"></div></div>
+            <div class="step-line"></div>
+            <div class="step-indicator" id="ind-6"><div class="step-circle">6</div><div class="step-label"></div></div> 
+            <div class="step-line"></div>
+            <div class="step-indicator" id="ind-7"><div class="step-circle">7</div><div class="step-label"></div></div>
         </div>
 
         <form id="checklistForm">
@@ -548,23 +556,26 @@
                         <select id="col_6"><option value="">Seleccione...</option><option value="DISTRIBUCION">Distribución</option><option value="SERVICIO TECNICO">Servicio Técnico</option><option value="CONTROL DE ENERGIA">Control de Energía</option></select>
                     </div>
                     
-  <div class="form-group" id="group_col_7">
-    <label>Tipo de Actividad</label>
-    
-    <input type="hidden" id="col_7" name="col_7" class="campo-dato">
-
-    <div id="container_col_7" class="multi-select-box">
-        <div class="checkbox-item"><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="actualizarCol7()"> Línea Energizada</div>
-        <div class="checkbox-item"><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="actualizarCol7()"> Línea Desenergizada</div>
-        <div class="checkbox-item"><input type="checkbox" value="TRABAJO EN ALTURA" onchange="actualizarCol7()"> Trabajo en Altura</div>
-        <div class="checkbox-item"><input type="checkbox" value="IZAJE DE CARGAS" onchange="actualizarCol7()"> Izaje de Cargas</div>
-        <div class="checkbox-item"><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="actualizarCol7()"> Transporte de Carga</div>
-        <div class="checkbox-item"><input type="checkbox" value="OTRO" onchange="actualizarCol7()"> Otro</div>
-    </div>
-</div>
+                    <div class="form-group" id="group_col_7">
+                        <label>Tipo de Actividad</label>
+                        <input type="hidden" id="col_7" name="col_7" class="campo-dato">
+                        <div class="custom-multi-select" id="multiSelectCol7">
+                            <div class="select-box" onclick="toggleMultiSelect(event)">
+                                <div class="selected-options" id="display_col_7">Seleccione...</div>
+                                <div class="arrow"><i class="fas fa-chevron-down"></i></div>
+                            </div>
+                            <div class="options-container" id="opciones_col_7">
+                                <label class="option-item"><input type="checkbox" value="LÍNEA ENERGIZADA" onchange="actualizarCol7()"> Línea Energizada</label>
+                                <label class="option-item"><input type="checkbox" value="LÍNEA DESENERGIZADA" onchange="actualizarCol7()"> Línea Desenergizada</label>
+                                <label class="option-item"><input type="checkbox" value="TRABAJO EN ALTURA" onchange="actualizarCol7()"> Trabajo en Altura</label>
+                                <label class="option-item"><input type="checkbox" value="IZAJE DE CARGAS" onchange="actualizarCol7()"> Izaje de Cargas</label>
+                                <label class="option-item"><input type="checkbox" value="TRANSPORTE DE CARGA" onchange="actualizarCol7()"> Transporte de Carga</label>
+                                <label class="option-item"><input type="checkbox" value="OTRO" onchange="actualizarCol7()"> Otro</label>
+                            </div>
+                        </div>
+                    </div>
  
                     <div class="form-group hidden-field" id="grupo_col_8"><label style="color: var(--blue-active);">Especifique (Otro)</label><input type="text" id="col_8"></div>
-                    
                     <div class="form-group"><label>Circuito</label><input type="text" id="col_9"></div>
                     <div class="form-group"><label>Equipo</label><input type="text" id="col_10"></div>
                     <div class="form-group"><label>Otro (Especificación)</label><input type="text" id="col_11"></div>
@@ -590,12 +601,10 @@
 
             <div class="step-content" id="step-2">
                 <h3><i class="fas fa-users"></i> Paso 2: Tiempos y Cuadrillas</h3>
-                
                 <div class="form-grid">
                     <div class="form-group"><label>Hora Inicio</label><input type="time" id="col_17" name="col_17" onchange="calcularTiempoEstimado()"></div>
                     <div class="form-group"><label>Hora Fin Estimada</label><input type="time" id="col_18" name="col_18" onchange="calcularTiempoEstimado()"></div>
                     <div class="form-group"><label>Total Horas</label><input type="text" id="col_19" name="col_19" readonly style="color: var(--blue-active); font-weight: bold; background-color: rgba(59, 130, 246, 0.1);"></div>
-                    
                     <div class="form-group"><label>No. o Nombre Cuadrilla</label><input type="text" id="col_20" name="col_20"></div>
                     <div class="form-group"><label>Total Personas</label><input type="number" id="col_21" name="col_21" inputmode="numeric"></div>
                     
@@ -630,335 +639,320 @@
                 </div>
             </div>
 
-<div class="step-content" id="step-3">
-    <h3><i class="fas fa-exclamation-triangle"></i> Paso 3: Riesgos Potenciales</h3>
-    <p style="font-size: 13px; color: var(--muted-text); margin-bottom: 20px;">
-        Seleccione todos los riesgos identificados en la planificación del trabajo:
-    </p>
+            <div class="step-content" id="step-3">
+                <h3><i class="fas fa-exclamation-triangle"></i> Paso 3: Riesgos Potenciales</h3>
+                <p style="font-size: 13px; color: var(--muted-text); margin-bottom: 20px;">
+                    Seleccione todos los riesgos identificados en la planificación del trabajo:
+                </p>
+                <div class="riesgos-grid">
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ruido Continuo"> <span class="riesgo-text">Ruido Continuo</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Posturas Inadecuadas y Manipulación de Cargas"> <span class="riesgo-text">Posturas Inadecuadas y Manipulación de Cargas</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Trabajo en Altura"> <span class="riesgo-text">Trabajo en Altura</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Espacios Confinados"> <span class="riesgo-text">Espacios Confinados</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Caídas de Objetos"> <span class="riesgo-text">Caídas de Objetos</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Maquinaria en Movimiento"> <span class="riesgo-text">Maquinaria en Movimiento</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Exposición a Radiaciones Solares"> <span class="riesgo-text">Exposición a Radiaciones Solares</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Superficies Calientes"> <span class="riesgo-text">Superficies Calientes</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Descargas Atmosféricas"> <span class="riesgo-text">Descargas Atmosféricas</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Descargas Eléctricas Naturales (Rayos)"> <span class="riesgo-text">Descargas Eléctricas Naturales (Rayos)</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Vibraciones"> <span class="riesgo-text">Vibraciones</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Orden público (atraco, robo, atentados)"> <span class="riesgo-text">Orden público (atraco, robo, atentados)</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Precipitaciones (Lluvia)"> <span class="riesgo-text">Precipitaciones (Lluvia)</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Tráfico Vehicular"> <span class="riesgo-text">Tráfico Vehicular</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Contacto Eléctrico Indirecto"> <span class="riesgo-text">Contacto Eléctrico Indirecto</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Contacto Eléctrico Directo"> <span class="riesgo-text">Contacto Eléctrico Directo</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Caídas a Distinto Nivel"> <span class="riesgo-text">Caídas a Distinto Nivel</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Material Particulado"> <span class="riesgo-text">Material Particulado</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picadura de Ofidios (Serpientes)"> <span class="riesgo-text">Picadura de Ofidios (Serpientes)</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picaduras de Insectos"> <span class="riesgo-text">Picaduras de Insectos</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ataque de Animales"> <span class="riesgo-text">Ataque de Animales</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Derrame de Sustancias Químicas"> <span class="riesgo-text">Derrame de Sustancias Químicas</span></label>
+                    <label class="riesgo-item"><input type="checkbox" name="col_26" value="Gases o Vapores"> <span class="riesgo-text">Gases o Vapores</span></label>
+                    
+                    <label class="riesgo-item" style="border-color: var(--warning-color, #f6ad55);">
+                        <input type="checkbox" id="chk_otros" name="col_26" value="Otros" onchange="if(typeof verificarRiesgosOtros==='function')verificarRiesgosOtros()"> 
+                        <span class="riesgo-text" style="color: var(--warning-color, #f6ad55); font-weight: bold;">Otros</span>
+                    </label>
+                </div>
 
-    <div class="riesgos-grid">
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ruido Continuo"> <span class="riesgo-text">Ruido Continuo</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Posturas Inadecuadas y Manipulación de Cargas"> <span class="riesgo-text">Posturas Inadecuadas y Manipulación de Cargas</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Trabajo en Altura"> <span class="riesgo-text">Trabajo en Altura</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Espacios Confinados"> <span class="riesgo-text">Espacios Confinados</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Caídas de Objetos"> <span class="riesgo-text">Caídas de Objetos</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Maquinaria en Movimiento"> <span class="riesgo-text">Maquinaria en Movimiento</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Exposición a Radiaciones Solares"> <span class="riesgo-text">Exposición a Radiaciones Solares</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Superficies Calientes"> <span class="riesgo-text">Superficies Calientes</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Descargas Atmosféricas"> <span class="riesgo-text">Descargas Atmosféricas</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Descargas Eléctricas Naturales (Rayos)"> <span class="riesgo-text">Descargas Eléctricas Naturales (Rayos)</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Vibraciones"> <span class="riesgo-text">Vibraciones</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Orden público (atraco, robo, atentados)"> <span class="riesgo-text">Orden público (atraco, robo, atentados)</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Precipitaciones (Lluvia)"> <span class="riesgo-text">Precipitaciones (Lluvia)</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Tráfico Vehicular"> <span class="riesgo-text">Tráfico Vehicular</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Contacto Eléctrico Indirecto"> <span class="riesgo-text">Contacto Eléctrico Indirecto</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Contacto Eléctrico Directo"> <span class="riesgo-text">Contacto Eléctrico Directo</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Caídas a Distinto Nivel"> <span class="riesgo-text">Caídas a Distinto Nivel</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Material Particulado"> <span class="riesgo-text">Material Particulado</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picadura de Ofidios (Serpientes)"> <span class="riesgo-text">Picadura de Ofidios (Serpientes)</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Picaduras de Insectos"> <span class="riesgo-text">Picaduras de Insectos</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Ataque de Animales"> <span class="riesgo-text">Ataque de Animales</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Derrame de Sustancias Químicas"> <span class="riesgo-text">Derrame de Sustancias Químicas</span></label>
-        <label class="riesgo-item"><input type="checkbox" name="col_26" value="Gases o Vapores"> <span class="riesgo-text">Gases o Vapores</span></label>
-        
-        <label class="riesgo-item" style="border-color: var(--warning-color, #f6ad55);">
-            <input type="checkbox" id="chk_otros" name="col_26" value="Otros" onchange="if(typeof verificarRiesgosOtros==='function')verificarRiesgosOtros()"> 
-            <span class="riesgo-text" style="color: var(--warning-color, #f6ad55); font-weight: bold;">Otros</span>
-        </label>
-    </div>
+                <div class="form-group hidden-field" id="grupo_col_27">
+                    <label style="color: var(--warning-color, #f6ad55); font-size: 14px;">Especifique otros riesgos:</label>
+                    <textarea id="col_27" rows="2" placeholder="Describa el riesgo detectado..."></textarea>
+                </div>
+            </div>
 
-    <div class="form-group hidden-field" id="grupo_col_27">
-        <label style="color: var(--warning-color, #f6ad55); font-size: 14px;">Especifique otros riesgos:</label>
-        <textarea id="col_27" rows="2" placeholder="Describa el riesgo detectado..."></textarea>
-    </div>
-</div>
+            <div class="step-content" id="step-4">
+                <div class="form-group">
+                    <label>28. EQUIPO PARA ASCENSO Y DESCENSO EN ALTURA</label>
+                    <select id="col28" name="col28" class="form-control" onchange="if(typeof verificarOtroEquipo==='function')verificarOtroEquipo()">
+                        <option value="">Seleccione...</option>
+                        <option value="Carro canasta">Carro canasta</option>
+                        <option value="Escalera">Escalera</option>
+                        <option value="Arnés">Arnés</option>
+                        <option value="Pretales">Pretales</option>
+                        <option value="Otro">Otro</option>
+                    </select>
+                </div>
 
-               <div class="step-content" id="step-4">
-<div class="form-group">
-    <label>28. EQUIPO PARA ASCENSO Y DESCENSO EN ALTURA</label>
-    <select id="col28" name="col28" class="form-control" onchange="if(typeof verificarOtroEquipo==='function')verificarOtroEquipo()">
-        <option value="">Seleccione...</option>
-        <option value="Carro canasta">Carro canasta</option>
-        <option value="Escalera">Escalera</option>
-        <option value="Arnés">Arnés</option>
-        <option value="Pretales">Pretales</option>
-        <option value="Otro">Otro</option>
-    </select>
-</div>
+                <div class="form-group" id="divCol29" style="display: none;">
+                    <label>29. OTRO EQUIPO ¿Cuál?</label>
+                    <input type="text" id="col29" name="col29" class="form-control" placeholder="Especifique el equipo...">
+                </div>
 
-<div class="form-group" id="divCol29" style="display: none;">
-    <label>29. OTRO EQUIPO ¿Cuál?</label>
-    <input type="text" id="col29" name="col29" class="form-control" placeholder="Especifique el equipo...">
-</div>
-
-<div class="form-group">
-    <label>30. Altura de trabajo (m)</label>
-    <input type="number" id="col30" name="col30" class="form-control" step="0.1" placeholder="Ej: 5.5">
-</div>
-   </div>      
+                <div class="form-group">
+                    <label>30. Altura de trabajo (m)</label>
+                    <input type="number" id="col30" name="col30" class="form-control" step="0.1" placeholder="Ej: 5.5">
+                </div>
+            </div>      
             
-<div class="step-content" id="step-5">
-     <h3 class="titulo-seccion">Paso 5: SEGURIDAD EN EL AREA DE TRABAJO </h3>
+            <div class="step-content" id="step-5">
+                 <h3 class="titulo-seccion">Paso 5: SEGURIDAD EN EL AREA DE TRABAJO </h3>
+                <div class="table-responsive">
+                    <table class="tabla-sino">
+                        <thead><tr><th>Pregunta de Validación</th><th>SI</th><th>NO</th><th>N/A</th></tr></thead>
+                        <tbody>
+                            <tr>
+                                <td>31. ¿Han inspeccionado sus herramientas y se encuentran en estado funcional?</td>
+                                <td class="td-center"><input type="radio" id="col31_si" name="col31" value="SI" class="btn-radio"><label for="col31_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col31_no" name="col31" value="NO" class="btn-radio"><label for="col31_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col31_na" name="col31" value="N/A" class="btn-radio"><label for="col31_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>32. ¿Todo el personal cuenta con los elementos de protección personal y dotación?</td>
+                                <td class="td-center"><input type="radio" id="col32_si" name="col32" value="SI" class="btn-radio"><label for="col32_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col32_no" name="col32" value="NO" class="btn-radio"><label for="col32_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col32_na" name="col32" value="N/A" class="btn-radio"><label for="col32_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>33. ¿Han recibido capacitación de trabajo en altura?</td>
+                                <td class="td-center"><input type="radio" id="col33_si" name="col33" value="SI" class="btn-radio"><label for="col33_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col33_no" name="col33" value="NO" class="btn-radio"><label for="col33_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col33_na" name="col33" value="N/A" class="btn-radio"><label for="col33_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>34. ¿Todo el sistema de Protección contra caídas se encuentra en buen estado para ser utilizado?</td>
+                                <td class="td-center"><input type="radio" id="col34_si" name="col34" value="SI" class="btn-radio"><label for="col34_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col34_no" name="col34" value="NO" class="btn-radio"><label for="col34_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col34_na" name="col34" value="N/A" class="btn-radio"><label for="col34_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>35. ¿Ha sido capacitado sobre el trabajo a realizar?</td>
+                                <td class="td-center"><input type="radio" id="col35_si" name="col35" value="SI" class="btn-radio"><label for="col35_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col35_no" name="col35" value="NO" class="btn-radio"><label for="col35_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col35_na" name="col35" value="N/A" class="btn-radio"><label for="col35_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>36. ¿Es claro el procedimiento de trabajo?</td>
+                                <td class="td-center"><input type="radio" id="col36_si" name="col36" value="SI" class="btn-radio"><label for="col36_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col36_no" name="col36" value="NO" class="btn-radio"><label for="col36_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col36_na" name="col36" value="N/A" class="btn-radio"><label for="col36_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>37. ¿Conoce los riesgos y métodos de control de los peligros a los que esta expuesto?</td>
+                                <td class="td-center"><input type="radio" id="col37_si" name="col37" value="SI" class="btn-radio"><label for="col37_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col37_no" name="col37" value="NO" class="btn-radio"><label for="col37_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col37_na" name="col37" value="N/A" class="btn-radio"><label for="col37_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>38. ¿Conoce el ATS (Análisis de Trabajo Seguro) para las labores a ejecutar?</td>
+                                <td class="td-center"><input type="radio" id="col38_si" name="col38" value="SI" class="btn-radio"><label for="col38_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col38_no" name="col38" value="NO" class="btn-radio"><label for="col38_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col38_na" name="col38" value="N/A" class="btn-radio"><label for="col38_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>39. ¿El área de trabajo ha sido inspeccionada para asegurar que esta libre de riesgo no planificados o esperados?</td>
+                                <td class="td-center"><input type="radio" id="col39_si" name="col39" value="SI" class="btn-radio"><label for="col39_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col39_no" name="col39" value="NO" class="btn-radio"><label for="col39_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col39_na" name="col39" value="N/A" class="btn-radio"><label for="col39_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>40. ¿Se han tomado las precauciones necesarias para asegurar que NO se estén realizando otras actividades simultáneas que puedan generar accidentes en el área de trabajo?</td>
+                                <td class="td-center"><input type="radio" id="col40_si" name="col40" value="SI" class="btn-radio"><label for="col40_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col40_no" name="col40" value="NO" class="btn-radio"><label for="col40_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col40_na" name="col40" value="N/A" class="btn-radio"><label for="col40_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>41. ¿Existe un encargado supervisor o ingeniero durante la actividad?</td>
+                                <td class="td-center"><input type="radio" id="col41_si" name="col41" value="SI" class="btn-radio"><label for="col41_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col41_no" name="col41" value="NO" class="btn-radio"><label for="col41_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col41_na" name="col41" value="N/A" class="btn-radio"><label for="col41_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>42. ¿El poste o estructura donde va a trabajar se encuentra en buen estado?</td>
+                                <td class="td-center"><input type="radio" id="col42_si" name="col42" value="SI" class="btn-radio"><label for="col42_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col42_no" name="col42" value="NO" class="btn-radio"><label for="col42_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col42_na" name="col42" value="N/A" class="btn-radio"><label for="col42_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>43. ¿Ha verificado que NO haya presencia de abejas en la zona de trabajo?</td>
+                                <td class="td-center"><input type="radio" id="col43_si" name="col43" value="SI" class="btn-radio"><label for="col43_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col43_no" name="col43" value="NO" class="btn-radio"><label for="col43_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col43_na" name="col43" value="N/A" class="btn-radio"><label for="col43_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>44. ¿En caso de haber abejas, que controles implementó para ejecutar el trabajo?</td>
+                                <td class="td-center"><input type="radio" id="col44_si" name="col44" value="SI" class="btn-radio"><label for="col44_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col44_no" name="col44" value="NO" class="btn-radio"><label for="col44_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col44_na" name="col44" value="N/A" class="btn-radio"><label for="col44_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>45. ¿Ha identificado que dispositivo alimenta el suministro de energía en la zona de trabajo?</td>
+                                <td class="td-center"><input type="radio" id="col45_si" name="col45" value="SI" class="btn-radio"><label for="col45_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col45_no" name="col45" value="NO" class="btn-radio"><label for="col45_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col45_na" name="col45" value="N/A" class="btn-radio"><label for="col45_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>46. ¿Es necesario solicitar apertura de línea al COD? Cual circuito</td>
+                                <td class="td-center"><input type="radio" id="col46_si" name="col46" value="SI" class="btn-radio"><label for="col46_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col46_no" name="col46" value="NO" class="btn-radio"><label for="col46_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col46_na" name="col46" value="N/A" class="btn-radio"><label for="col46_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>47. ¿Se realizó despeje o apertura de línea con el COD?</td>
+                                <td class="td-center"><input type="radio" id="col47_si" name="col47" value="SI" class="btn-radio"><label for="col47_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col47_no" name="col47" value="NO" class="btn-radio"><label for="col47_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col47_na" name="col47" value="N/A" class="btn-radio"><label for="col47_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>48. ¿Se realizó la apertura manual de los Re-conectadores, transformadores o cortacircuitos?</td>
+                                <td class="td-center"><input type="radio" id="col48_si" name="col48" value="SI" class="btn-radio"><label for="col48_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col48_no" name="col48" value="NO" class="btn-radio"><label for="col48_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col48_na" name="col48" value="N/A" class="btn-radio"><label for="col48_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>49. ¿Una vez abiertas las cuchillas cortacircuitos se retiraron los portafusibles de las mismas?</td>
+                                <td class="td-center"><input type="radio" id="col49_si" name="col49" value="SI" class="btn-radio"><label for="col49_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col49_no" name="col49" value="NO" class="btn-radio"><label for="col49_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col49_na" name="col49" value="N/A" class="btn-radio"><label for="col49_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>50. ¿Es necesario realizar el bloqueo mecánico, e instalar tarjeta de protección que indique que personal está trabajando en la zona?</td>
+                                <td class="td-center"><input type="radio" id="col50_si" name="col50" value="SI" class="btn-radio"><label for="col50_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col50_no" name="col50" value="NO" class="btn-radio"><label for="col50_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col50_na" name="col50" value="N/A" class="btn-radio"><label for="col50_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>51. ¿Se verificó la ausencia de tensión?</td>
+                                <td class="td-center"><input type="radio" id="col51_si" name="col51" value="SI" class="btn-radio"><label for="col51_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col51_no" name="col51" value="NO" class="btn-radio"><label for="col51_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col51_na" name="col51" value="N/A" class="btn-radio"><label for="col51_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>52. ¿Se aseguró el área de trabajo aterrizando? (puestas a tierra)</td>
+                                <td class="td-center"><input type="radio" id="col52_si" name="col52" value="SI" class="btn-radio"><label for="col52_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col52_no" name="col52" value="NO" class="btn-radio"><label for="col52_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col52_na" name="col52" value="N/A" class="btn-radio"><label for="col52_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>53. ¿El área de trabajo se encuentra señalizada?</td>
+                                <td class="td-center"><input type="radio" id="col53_si" name="col53" value="SI" class="btn-radio"><label for="col53_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col53_no" name="col53" value="NO" class="btn-radio"><label for="col53_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col53_na" name="col53" value="N/A" class="btn-radio"><label for="col53_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>54. ¿Se cumple con las 5 Reglas de Oro para trabajos eléctricos en línea desenergizada o muerta?</td>
+                                <td class="td-center"><input type="radio" id="col54_si" name="col54" value="SI" class="btn-radio"><label for="col54_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col54_no" name="col54" value="NO" class="btn-radio"><label for="col54_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col54_na" name="col54" value="N/A" class="btn-radio"><label for="col54_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>55. ¿Ha verificado la fuente de las líneas secundarias (en caso de haber dos o más secundarios en el mismo poste)?</td>
+                                <td class="td-center"><input type="radio" id="col55_si" name="col55" value="SI" class="btn-radio"><label for="col55_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col55_no" name="col55" value="NO" class="btn-radio"><label for="col55_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col55_na" name="col55" value="N/A" class="btn-radio"><label for="col55_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>56. ¿Es viable realizar el trabajo con el equipo, las herramientas y el personal que dispone para la tarea?</td>
+                                <td class="td-center"><input type="radio" id="col56_si" name="col56" value="SI" class="btn-radio"><label for="col56_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col56_no" name="col56" value="NO" class="btn-radio"><label for="col56_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col56_na" name="col56" value="N/A" class="btn-radio"><label for="col56_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                            <tr>
+                                <td>57. ¿Algún trabajador del equipo de trabajo se encuentra actualmente bajo la influencia de sustancias psicoactivas?</td>
+                                <td class="td-center"><input type="radio" id="col57_si" name="col57" value="SI" class="btn-radio"><label for="col57_si" class="btn-label si">SI</label></td>
+                                <td class="td-center"><input type="radio" id="col57_no" name="col57" value="NO" class="btn-radio"><label for="col57_no" class="btn-label no">NO</label></td>
+                                <td class="td-center"><input type="radio" id="col57_na" name="col57" value="N/A" class="btn-radio"><label for="col57_na" class="btn-label na">N/A</label></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
-<div class="table-responsive">
-    <table class="tabla-sino">
-        <thead>
-            <tr>
-                <th>Pregunta de Validación</th>
-                <th>SI</th>
-                <th>NO</th>
-                <th>N/A</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>31. ¿Han inspeccionado sus herramientas y se encuentran en estado funcional?</td>
-                <td class="td-center"><input type="radio" id="col31_si" name="col31" value="SI" class="btn-radio"><label for="col31_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col31_no" name="col31" value="NO" class="btn-radio"><label for="col31_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col31_na" name="col31" value="N/A" class="btn-radio"><label for="col31_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>32. ¿Todo el personal cuenta con los elementos de protección personal y dotación?</td>
-                <td class="td-center"><input type="radio" id="col32_si" name="col32" value="SI" class="btn-radio"><label for="col32_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col32_no" name="col32" value="NO" class="btn-radio"><label for="col32_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col32_na" name="col32" value="N/A" class="btn-radio"><label for="col32_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>33. ¿Han recibido capacitación de trabajo en altura?</td>
-                <td class="td-center"><input type="radio" id="col33_si" name="col33" value="SI" class="btn-radio"><label for="col33_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col33_no" name="col33" value="NO" class="btn-radio"><label for="col33_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col33_na" name="col33" value="N/A" class="btn-radio"><label for="col33_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>34. ¿Todo el sistema de Protección contra caídas se encuentra en buen estado para ser utilizado?</td>
-                <td class="td-center"><input type="radio" id="col34_si" name="col34" value="SI" class="btn-radio"><label for="col34_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col34_no" name="col34" value="NO" class="btn-radio"><label for="col34_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col34_na" name="col34" value="N/A" class="btn-radio"><label for="col34_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>35. ¿Ha sido capacitado sobre el trabajo a realizar?</td>
-                <td class="td-center"><input type="radio" id="col35_si" name="col35" value="SI" class="btn-radio"><label for="col35_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col35_no" name="col35" value="NO" class="btn-radio"><label for="col35_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col35_na" name="col35" value="N/A" class="btn-radio"><label for="col35_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>36. ¿Es claro el procedimiento de trabajo?</td>
-                <td class="td-center"><input type="radio" id="col36_si" name="col36" value="SI" class="btn-radio"><label for="col36_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col36_no" name="col36" value="NO" class="btn-radio"><label for="col36_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col36_na" name="col36" value="N/A" class="btn-radio"><label for="col36_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>37. ¿Conoce los riesgos y métodos de control de los peligros a los que esta expuesto?</td>
-                <td class="td-center"><input type="radio" id="col37_si" name="col37" value="SI" class="btn-radio"><label for="col37_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col37_no" name="col37" value="NO" class="btn-radio"><label for="col37_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col37_na" name="col37" value="N/A" class="btn-radio"><label for="col37_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>38. ¿Conoce el ATS (Análisis de Trabajo Seguro) para las labores a ejecutar?</td>
-                <td class="td-center"><input type="radio" id="col38_si" name="col38" value="SI" class="btn-radio"><label for="col38_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col38_no" name="col38" value="NO" class="btn-radio"><label for="col38_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col38_na" name="col38" value="N/A" class="btn-radio"><label for="col38_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>39. ¿El área de trabajo ha sido inspeccionada para asegurar que esta libre de riesgo no planificados o esperados?</td>
-                <td class="td-center"><input type="radio" id="col39_si" name="col39" value="SI" class="btn-radio"><label for="col39_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col39_no" name="col39" value="NO" class="btn-radio"><label for="col39_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col39_na" name="col39" value="N/A" class="btn-radio"><label for="col39_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>40. ¿Se han tomado las precauciones necesarias para asegurar que NO se estén realizando otras actividades simultáneas que puedan generar accidentes en el área de trabajo?</td>
-                <td class="td-center"><input type="radio" id="col40_si" name="col40" value="SI" class="btn-radio"><label for="col40_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col40_no" name="col40" value="NO" class="btn-radio"><label for="col40_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col40_na" name="col40" value="N/A" class="btn-radio"><label for="col40_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>41. ¿Existe un encargado supervisor o ingeniero durante la actividad?</td>
-                <td class="td-center"><input type="radio" id="col41_si" name="col41" value="SI" class="btn-radio"><label for="col41_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col41_no" name="col41" value="NO" class="btn-radio"><label for="col41_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col41_na" name="col41" value="N/A" class="btn-radio"><label for="col41_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>42. ¿El poste o estructura donde va a trabajar se encuentra en buen estado?</td>
-                <td class="td-center"><input type="radio" id="col42_si" name="col42" value="SI" class="btn-radio"><label for="col42_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col42_no" name="col42" value="NO" class="btn-radio"><label for="col42_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col42_na" name="col42" value="N/A" class="btn-radio"><label for="col42_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>43. ¿Ha verificado que NO haya presencia de abejas en la zona de trabajo?</td>
-                <td class="td-center"><input type="radio" id="col43_si" name="col43" value="SI" class="btn-radio"><label for="col43_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col43_no" name="col43" value="NO" class="btn-radio"><label for="col43_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col43_na" name="col43" value="N/A" class="btn-radio"><label for="col43_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>44. ¿En caso de haber abejas, que controles implementó para ejecutar el trabajo?</td>
-                <td class="td-center"><input type="radio" id="col44_si" name="col44" value="SI" class="btn-radio"><label for="col44_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col44_no" name="col44" value="NO" class="btn-radio"><label for="col44_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col44_na" name="col44" value="N/A" class="btn-radio"><label for="col44_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>45. ¿Ha identificado que dispositivo alimenta el suministro de energía en la zona de trabajo?</td>
-                <td class="td-center"><input type="radio" id="col45_si" name="col45" value="SI" class="btn-radio"><label for="col45_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col45_no" name="col45" value="NO" class="btn-radio"><label for="col45_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col45_na" name="col45" value="N/A" class="btn-radio"><label for="col45_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>46. ¿Es necesario solicitar apertura de línea al COD? Cual circuito</td>
-                <td class="td-center"><input type="radio" id="col46_si" name="col46" value="SI" class="btn-radio"><label for="col46_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col46_no" name="col46" value="NO" class="btn-radio"><label for="col46_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col46_na" name="col46" value="N/A" class="btn-radio"><label for="col46_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>47. ¿Se realizó despeje o apertura de línea con el COD?</td>
-                <td class="td-center"><input type="radio" id="col47_si" name="col47" value="SI" class="btn-radio"><label for="col47_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col47_no" name="col47" value="NO" class="btn-radio"><label for="col47_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col47_na" name="col47" value="N/A" class="btn-radio"><label for="col47_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>48. ¿Se realizó la apertura manual de los Re-conectadores, transformadores o cortacircuitos?</td>
-                <td class="td-center"><input type="radio" id="col48_si" name="col48" value="SI" class="btn-radio"><label for="col48_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col48_no" name="col48" value="NO" class="btn-radio"><label for="col48_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col48_na" name="col48" value="N/A" class="btn-radio"><label for="col48_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>49. ¿Una vez abiertas las cuchillas cortacircuitos se retiraron los portafusibles de las mismas?</td>
-                <td class="td-center"><input type="radio" id="col49_si" name="col49" value="SI" class="btn-radio"><label for="col49_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col49_no" name="col49" value="NO" class="btn-radio"><label for="col49_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col49_na" name="col49" value="N/A" class="btn-radio"><label for="col49_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>50. ¿Es necesario realizar el bloqueo mecánico, e instalar tarjeta de protección que indique que personal está trabajando en la zona?</td>
-                <td class="td-center"><input type="radio" id="col50_si" name="col50" value="SI" class="btn-radio"><label for="col50_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col50_no" name="col50" value="NO" class="btn-radio"><label for="col50_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col50_na" name="col50" value="N/A" class="btn-radio"><label for="col50_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>51. ¿Se verificó la ausencia de tensión?</td>
-                <td class="td-center"><input type="radio" id="col51_si" name="col51" value="SI" class="btn-radio"><label for="col51_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col51_no" name="col51" value="NO" class="btn-radio"><label for="col51_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col51_na" name="col51" value="N/A" class="btn-radio"><label for="col51_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>52. ¿Se aseguró el área de trabajo aterrizando? (puestas a tierra)</td>
-                <td class="td-center"><input type="radio" id="col52_si" name="col52" value="SI" class="btn-radio"><label for="col52_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col52_no" name="col52" value="NO" class="btn-radio"><label for="col52_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col52_na" name="col52" value="N/A" class="btn-radio"><label for="col52_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>53. ¿El área de trabajo se encuentra señalizada?</td>
-                <td class="td-center"><input type="radio" id="col53_si" name="col53" value="SI" class="btn-radio"><label for="col53_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col53_no" name="col53" value="NO" class="btn-radio"><label for="col53_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col53_na" name="col53" value="N/A" class="btn-radio"><label for="col53_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>54. ¿Se cumple con las 5 Reglas de Oro para trabajos eléctricos en línea desenergizada o muerta?</td>
-                <td class="td-center"><input type="radio" id="col54_si" name="col54" value="SI" class="btn-radio"><label for="col54_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col54_no" name="col54" value="NO" class="btn-radio"><label for="col54_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col54_na" name="col54" value="N/A" class="btn-radio"><label for="col54_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>55. ¿Ha verificado la fuente de las líneas secundarias (en caso de haber dos o más secundarios en el mismo poste)?</td>
-                <td class="td-center"><input type="radio" id="col55_si" name="col55" value="SI" class="btn-radio"><label for="col55_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col55_no" name="col55" value="NO" class="btn-radio"><label for="col55_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col55_na" name="col55" value="N/A" class="btn-radio"><label for="col55_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>56. ¿Es viable realizar el trabajo con el equipo, las herramientas y el personal que dispone para la tarea?</td>
-                <td class="td-center"><input type="radio" id="col56_si" name="col56" value="SI" class="btn-radio"><label for="col56_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col56_no" name="col56" value="NO" class="btn-radio"><label for="col56_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col56_na" name="col56" value="N/A" class="btn-radio"><label for="col56_na" class="btn-label na">N/A</label></td>
-            </tr>
-            <tr>
-                <td>57. ¿Algún trabajador del equipo de trabajo se encuentra actualmente bajo la influencia de sustancias psicoactivas?</td>
-                <td class="td-center"><input type="radio" id="col57_si" name="col57" value="SI" class="btn-radio"><label for="col57_si" class="btn-label si">SI</label></td>
-                <td class="td-center"><input type="radio" id="col57_no" name="col57" value="NO" class="btn-radio"><label for="col57_no" class="btn-label no">NO</label></td>
-                <td class="td-center"><input type="radio" id="col57_na" name="col57" value="N/A" class="btn-radio"><label for="col57_na" class="btn-label na">N/A</label></td>
-            </tr>
-        </tbody>
-    </table>
-</div>
-
-<div class="form-group" style="margin-top: 30px;">
-    <label style="color: #ffc107; font-weight: bold;">
-        58. NOTA: Si alguna de las respuestas anteriores es negativa o N/A, por favor argumente en este segmento el porqué "NO" o "N/A":
-    </label>
-    <textarea id="col58" name="col58" class="form-control" rows="5" placeholder="Escriba aquí sus observaciones..."></textarea>
-</div>
-   
-    </div>
-
-
-<div class="step-content" id="step-6">
-    <h3 class="titulo-seccion">Paso 6: Firmas de Responsabilidad</h3>
-    
-    <div style="margin-bottom: 25px; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background-color: var(--card-color);">
-        <div style="background-color: #003366; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 14px;">
-            PERSONA ENCARGADA DE LA ACTIVIDAD
-        </div>
-        <div style="padding: 15px;">
-            <div class="form-group">
-                <label class="label-firma">Nombre y Apellidos:</label>
-                <input type="text" id="col59" name="col59" class="form-control" placeholder="Escriba el nombre...">
+                <div class="form-group" style="margin-top: 30px;">
+                    <label style="color: #ffc107; font-weight: bold;">
+                        58. NOTA: Si alguna de las respuestas anteriores es negativa o N/A, por favor argumente en este segmento el porqué "NO" o "N/A":
+                    </label>
+                    <textarea id="col58" name="col58" class="form-control" rows="5" placeholder="Escriba aquí sus observaciones..."></textarea>
+                </div>
             </div>
-            <div class="form-group" style="margin-top: 12px;">
-                <label class="label-firma">Cargo:</label>
-                <input type="text" id="col60" name="col60" class="form-control" placeholder="Ej. Supervisor de Obra">
+
+            <div class="step-content" id="step-6">
+                <h3 class="titulo-seccion">Paso 6: Firmas de Responsabilidad</h3>
+                <div style="margin-bottom: 25px; border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background-color: var(--card-color);">
+                    <div style="background-color: #003366; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 14px;">
+                        PERSONA ENCARGADA DE LA ACTIVIDAD
+                    </div>
+                    <div style="padding: 15px;">
+                        <div class="form-group">
+                            <label class="label-firma">Nombre y Apellidos:</label>
+                            <input type="text" id="col59" name="col59" class="form-control" placeholder="Escriba el nombre...">
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label class="label-firma">Cargo:</label>
+                            <input type="text" id="col60" name="col60" class="form-control" placeholder="Ej. Supervisor de Obra">
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label class="label-firma">Teléfono:</label>
+                            <input type="text" id="col61" name="col61" class="form-control" placeholder="Ej. 9999-9999">
+                        </div>
+                        <div class="form-group" style="margin-top: 20px; text-align: center;">
+                            <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col62')">
+                                <i class="fas fa-pen-nib"></i> Firmar Pantalla
+                            </button>
+                            <img id="img_col62" class="preview-firma" style="display: none; margin: 10px auto 0;" />
+                            <input type="hidden" id="col62" name="col62">
+                        </div>
+                    </div>
+                </div>
+
+                <div style="border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background-color: var(--card-color);">
+                    <div style="background-color: #003366; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 14px;">
+                        PERSONA UTCD-ENEE A CARGO DE LAS MANIOBRAS
+                    </div>
+                    <div style="padding: 15px;">
+                        <div class="form-group">
+                            <label class="label-firma">Nombre y Apellidos:</label>
+                            <input type="text" id="col63" name="col63" class="form-control" placeholder="Escriba el nombre...">
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label class="label-firma">Cargo:</label>
+                            <input type="text" id="col64" name="col64" class="form-control" placeholder="Ej. Ingeniero Encargado">
+                        </div>
+                        <div class="form-group" style="margin-top: 12px;">
+                            <label class="label-firma">Teléfono:</label>
+                            <input type="text" id="col65" name="col65" class="form-control" placeholder="Ej. 9999-9999">
+                        </div>
+                        <div class="form-group" style="margin-top: 20px; text-align: center;">
+                            <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col66')">
+                                <i class="fas fa-pen-nib"></i> Firmar Pantalla
+                            </button>
+                            <img id="img_col66" class="preview-firma" style="display: none; margin: 10px auto 0;" />
+                            <input type="hidden" id="col66" name="col66">
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="form-group" style="margin-top: 12px;">
-                <label class="label-firma">Teléfono:</label>
-                <input type="text" id="col61" name="col61" class="form-control" placeholder="Ej. 9999-9999">
-            </div>
-            <div class="form-group" style="margin-top: 20px; text-align: center;">
-                <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col62')">
-                    <i class="fas fa-pen-nib"></i> Firmar Pantalla
+
+            <div class="step-content" id="step-7">
+                <h3 class="titulo-seccion">Paso 7: PERSONAL QUE PARTICIPA EN LA ACTIVIDAD</h3>
+                <div class="alert-info" style="margin-bottom: 15px; font-size: 0.9em; color: #a0aec0;">
+                    <i class="fas fa-info-circle"></i> Agregue a todos los integrantes que participan en la labor. Firme cada uno en su ficha correspondiente.
+                </div>
+                <div id="contenedorPersonal" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
+                </div>
+                <button type="button" class="btn-agregar-fila" onclick="abrirModalIntegrante()" style="width: 100%;">
+                    <i class="fas fa-user-plus"></i> Agregar Integrante
                 </button>
-                <img id="img_col62" class="preview-firma" style="display: none; margin: 10px auto 0;" />
-                <input type="hidden" id="col62" name="col62">
             </div>
-        </div>
-    </div>
-
-    <div style="border: 1px solid var(--border-color); border-radius: 10px; overflow: hidden; background-color: var(--card-color);">
-        <div style="background-color: #003366; color: white; padding: 12px; text-align: center; font-weight: bold; font-size: 14px;">
-            PERSONA UTCD-ENEE A CARGO DE LAS MANIOBRAS
-        </div>
-        <div style="padding: 15px;">
-            <div class="form-group">
-                <label class="label-firma">Nombre y Apellidos:</label>
-                <input type="text" id="col63" name="col63" class="form-control" placeholder="Escriba el nombre...">
-            </div>
-            <div class="form-group" style="margin-top: 12px;">
-                <label class="label-firma">Cargo:</label>
-                <input type="text" id="col64" name="col64" class="form-control" placeholder="Ej. Ingeniero Encargado">
-            </div>
-            <div class="form-group" style="margin-top: 12px;">
-                <label class="label-firma">Teléfono:</label>
-                <input type="text" id="col65" name="col65" class="form-control" placeholder="Ej. 9999-9999">
-            </div>
-            <div class="form-group" style="margin-top: 20px; text-align: center;">
-                <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('col66')">
-                    <i class="fas fa-pen-nib"></i> Firmar Pantalla
-                </button>
-                <img id="img_col66" class="preview-firma" style="display: none; margin: 10px auto 0;" />
-                <input type="hidden" id="col66" name="col66">
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="step-content" id="step-7">
-    <h3 class="titulo-seccion">Paso 7: PERSONAL QUE PARTICIPA EN LA ACTIVIDAD</h3>
-    
-    <div class="alert-info" style="margin-bottom: 15px; font-size: 0.9em; color: #a0aec0;">
-        <i class="fas fa-info-circle"></i> Agregue a todos los integrantes que participan en la labor. Firme cada uno en su ficha correspondiente.
-    </div>
-
-    <div id="contenedorPersonal" style="display: flex; flex-direction: column; gap: 15px; margin-bottom: 20px;">
-        </div>
-    
-    <button type="button" class="btn-agregar-fila" onclick="abrirModalIntegrante()" style="width: 100%;">
-        <i class="fas fa-user-plus"></i> Agregar Integrante
-    </button>
-</div>
             
             <div class="espacio-footer"></div>
 
@@ -976,51 +970,118 @@
         </form>
     </div>     
  
-<div id="modalNuevoIntegrante" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9998; justify-content: center; align-items: center;">
-    <div class="modal-firma-content" style="background: var(--card-color); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; color: var(--text-color); text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
-        <h4 style="margin-top: 0; color: var(--blue-active); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;"><i class="fas fa-user-plus"></i> Nuevo Integrante</h4>
-        
-        <div class="form-group" style="margin-bottom: 12px;">
-            <label style="font-size: 13px; color: var(--muted-text);">Nombres y Apellidos:</label>
-            <input type="text" id="temp_nombre" placeholder="Nombre completo">
-        </div>
-        <div class="form-group" style="margin-bottom: 12px;">
-            <label style="font-size: 13px; color: var(--muted-text);">Empresa:</label>
-            <input type="text" id="temp_empresa" placeholder="Ej. UTCD">
-        </div>
-        <div class="form-group" style="margin-bottom: 15px;">
-            <label style="font-size: 13px; color: var(--muted-text);">N° Identidad:</label>
-            <input type="text" id="temp_identidad" placeholder="Ej. 0000-0000-00000">
-        </div>
-        <div class="form-group" style="text-align: center; border-top: 1px dashed var(--border-color); padding-top: 15px;">
-            <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('temp_firma')">
-                <i class="fas fa-pen-nib"></i> Firmar en pantalla
-            </button>
-            <img id="img_temp_firma" class="preview-firma" style="display: none; margin: 10px auto 0;" />
-            <input type="hidden" id="temp_firma">
-        </div>
-        <div class="modal-botones" style="margin-top: 20px;">
-            <button type="button" class="btn-firma-cancelar" onclick="cerrarModalIntegrante()">Cancelar</button>
-            <button type="button" class="btn-firma-guardar" onclick="guardarNuevoIntegrante()">Agregar a Lista</button>
+    <div id="modalNuevoIntegrante" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9998; justify-content: center; align-items: center;">
+        <div class="modal-firma-content" style="background: var(--card-color); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; color: var(--text-color); text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
+            <h4 style="margin-top: 0; color: var(--blue-active); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;"><i class="fas fa-user-plus"></i> Nuevo Integrante</h4>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="font-size: 13px; color: var(--muted-text);">Nombres y Apellidos:</label>
+                <input type="text" id="temp_nombre" placeholder="Nombre completo">
+            </div>
+            <div class="form-group" style="margin-bottom: 12px;">
+                <label style="font-size: 13px; color: var(--muted-text);">Empresa:</label>
+                <input type="text" id="temp_empresa" placeholder="Ej. UTCD">
+            </div>
+            <div class="form-group" style="margin-bottom: 15px;">
+                <label style="font-size: 13px; color: var(--muted-text);">N° Identidad:</label>
+                <input type="text" id="temp_identidad" placeholder="Ej. 0000-0000-00000">
+            </div>
+            <div class="form-group" style="text-align: center; border-top: 1px dashed var(--border-color); padding-top: 15px;">
+                <button type="button" class="btn-abrir-firma" onclick="abrirModalFirma('temp_firma')">
+                    <i class="fas fa-pen-nib"></i> Firmar en pantalla
+                </button>
+                <img id="img_temp_firma" class="preview-firma" style="display: none; margin: 10px auto 0;" />
+                <input type="hidden" id="temp_firma">
+            </div>
+            <div class="modal-botones" style="margin-top: 20px;">
+                <button type="button" class="btn-firma-cancelar" onclick="cerrarModalIntegrante()">Cancelar</button>
+                <button type="button" class="btn-firma-guardar" onclick="guardarNuevoIntegrante()">Agregar a Lista</button>
+            </div>
         </div>
     </div>
-</div>
 
-<div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
-    <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
-        <h4>Firma Digital</h4>
-        <canvas id="pizarraFirma" width="320" height="200" style="border: 1px solid #ccc; background: #fff;"></canvas>
-        <div class="modal-botones" style="margin-top: 10px;">
-            <button type="button" onclick="limpiarPizarra()">Limpiar</button>
-            <button type="button" onclick="cerrarModalFirma()">Cancelar</button>
-            <button type="button" onclick="guardarFirma()">Aceptar</button>
+    <div id="modalFirma" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9999; justify-content: center; align-items: center;">
+        <div class="modal-firma-content" style="background: #fff; padding: 20px; border-radius: 8px; color: #000;">
+            <h4>Firma Digital</h4>
+            <canvas id="pizarraFirma" width="320" height="200" style="border: 1px solid #ccc; background: #fff;"></canvas>
+            <div class="modal-botones" style="margin-top: 10px;">
+                <button type="button" onclick="limpiarPizarra()">Limpiar</button>
+                <button type="button" onclick="cerrarModalFirma()">Cancelar</button>
+                <button type="button" onclick="guardarFirma()">Aceptar</button>
+            </div>
         </div>
     </div>
-</div>
 
 <script>
+// FUNCIONES UI PARA TIPO DE ACTIVIDAD (COL_7)
+function toggleMultiSelect(e) {
+    if(e) e.stopPropagation();
+    const container = document.getElementById('opciones_col_7');
+    const box = document.querySelector('#multiSelectCol7 .select-box');
+    container.classList.toggle('show');
+    box.classList.toggle('open');
+}
 
-// 2. FUNCIÓN PARA GENERAR ID ÚNICO
+document.addEventListener('click', function(e) {
+    const container = document.getElementById('opciones_col_7');
+    const multiSelect = document.getElementById('multiSelectCol7');
+    if (container && container.classList.contains('show') && multiSelect && !multiSelect.contains(e.target)) {
+        container.classList.remove('show');
+        document.querySelector('#multiSelectCol7 .select-box').classList.remove('open');
+    }
+});
+
+function actualizarCol7() {
+    const checkboxes = document.querySelectorAll('#opciones_col_7 input[type="checkbox"]:checked');
+    const valores = Array.from(checkboxes).map(cb => cb.value);
+    document.getElementById('col_7').value = valores.join(', ');
+
+    const display = document.getElementById('display_col_7');
+    if (valores.length === 0) {
+        display.textContent = "Seleccione...";
+    } else if (valores.length <= 2) {
+        display.textContent = valores.join(', ');
+    } else {
+        display.textContent = valores.length + " seleccionadas";
+    }
+}
+
+function cargarDatosCheckboxes(valorGuardado) {
+    if (!valorGuardado) return;
+    const checkboxes = document.querySelectorAll('#opciones_col_7 input[type="checkbox"]');
+    checkboxes.forEach(cb => cb.checked = false);
+
+    const valoresArray = valorGuardado.split(',').map(s => s.trim());
+    checkboxes.forEach(cb => {
+        if (valoresArray.includes(cb.value)) {
+            cb.checked = true;
+        }
+    });
+    actualizarCol7(); // Actualiza tanto visual como el input hidden
+}
+
+// OTRAS FUNCIONES REQUERIDAS
+window.verificarEmpresa = function() {
+    const select = document.getElementById("col_15");
+    const divContratista = document.getElementById("grupo_col_16");
+    if (select && select.value === "CONTRATISTA") {
+        divContratista.style.display = "flex";
+    } else {
+        divContratista.style.display = "none";
+        document.getElementById("col_16").value = "";
+    }
+}
+
+window.verificarOtroEquipo = function() {
+    const select = document.getElementById("col28");
+    const divOtro = document.getElementById("divCol29");
+    if (select && select.value === "Otro") {
+        divOtro.style.display = "flex";
+    } else {
+        divOtro.style.display = "none";
+        document.getElementById("col29").value = "";
+    }
+}
+
 function generarIDUnico() {
     const caracteres = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let id = '';
@@ -1030,10 +1091,8 @@ function generarIDUnico() {
     return id;
 }
 
-// 3. INICIO DE LA PÁGINA (NUEVO O EDICIÓN)
 document.addEventListener("DOMContentLoaded", () => {
     inicializarPizarra();
-
     const urlParams = new URLSearchParams(window.location.search);
     const modo = urlParams.get('modo');
     const idRegistro = urlParams.get('id');
@@ -1048,7 +1107,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-// 4. NAVEGACIÓN DEL WIZARD (PASOS)
 let pasoActual = 1;
 const totalPasos = 7;
 window.contadorPersonal = 0;
@@ -1094,7 +1152,6 @@ function actualizarBotones() {
     if (btnGuardar) btnGuardar.style.display = esUltimo ? "flex" : "none";
 }
 
-// LÓGICA SOLICITADA PARA EL STEP 2: CÁLCULO DE TIEMPO ESTIMADO
 window.calcularTiempoEstimado = function() {
     const t1 = document.getElementById('col_17').value;
     const t2 = document.getElementById('col_18').value;
@@ -1107,7 +1164,6 @@ window.calcularTiempoEstimado = function() {
         let totalMin1 = h1 * 60 + m1;
         let totalMin2 = h2 * 60 + m2;
         
-        // Si la hora final es menor a la inicial, significa que cruza la medianoche
         if(totalMin2 < totalMin1) totalMin2 += 24 * 60;
         
         let diff = totalMin2 - totalMin1;
@@ -1120,54 +1176,18 @@ window.calcularTiempoEstimado = function() {
     }
 };
 
-     // CAMPO DE STEP 1 tipo actividad
-    /
-// Actualizar texto visual y el campo oculto
-function actualizarCol7() {
-    // 1. Buscamos todos los checkboxes marcados dentro del contenedor
-    const checkboxes = document.querySelectorAll('#container_col_7 input[type="checkbox"]:checked');
-    
-    // 2. Extraemos los valores
-    const valores = Array.from(checkboxes).map(cb => cb.value);
-    
-    // 3. Guardamos en el campo oculto (que es el que lee tu función enviarFormulario)
-    document.getElementById('col_7').value = valores.join(', ');
-}
-    function cargarDatosCheckboxes(valorGuardado) {
-    if (!valorGuardado) return;
-    
-    // Limpiamos todo primero
-    document.querySelectorAll('#container_col_7 input[type="checkbox"]').forEach(cb => cb.checked = false);
-    
-    // Separamos el string guardado
-    const valoresArray = valorGuardado.split(', ');
-    
-    // Marcamos los checkboxes
-    document.querySelectorAll('#container_col_7 input[type="checkbox"]').forEach(cb => {
-        if (valoresArray.includes(cb.value)) {
-            cb.checked = true;
-        }
-    });
-    
-    // Sincronizamos el hidden input
-    document.getElementById('col_7').value = valorGuardado;
-}
- // CAMPO DE STEP 3 
 function verificarRiesgosOtros() {
     const checkbox = document.getElementById('chk_otros');
     const contenedor = document.getElementById('grupo_col_27');
-    
-    // Si está marcado, lo mostramos; si no, lo ocultamos
     if (checkbox.checked) {
-        contenedor.style.display = 'block'; // O 'flex' si prefieres
+        contenedor.style.display = 'flex'; 
     } else {
         contenedor.style.display = 'none';
-        // Opcional: Limpiar el campo si lo desmarcan
         document.getElementById('col_27').value = ''; 
     }
 }
- 
-// 5. CARGAR REGISTRO PARA EDITAR
+
+// CORRECCIÓN PRINCIPAL DE EDICIÓN
 async function cargarRegistroParaEditar(id) {
     try {
         const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistro&id=${id}`;
@@ -1186,6 +1206,13 @@ async function cargarRegistroParaEditar(id) {
             if (valorGuardado === null || valorGuardado === undefined || valorGuardado === "") return;
 
             let nombreSinGuion = columnaName.replace('_', '');
+
+            // EXCEPCIÓN: Multi-Select (Columna 7)
+            if (columnaName === "col_7" || nombreSinGuion === "col7") {
+                cargarDatosCheckboxes(valorGuardado);
+                return; // Ignoramos la logica estandar para esta columna
+            }
+
             const opciones = document.querySelectorAll(`[name="${columnaName}"], [name="${nombreSinGuion}"]`);
             
             let esRadioOCheck = false;
@@ -1235,7 +1262,11 @@ async function cargarRegistroParaEditar(id) {
                     else {
                         inputElement.value = valorGuardado;
                     }
+                    
+                    // DISPARADOR: Simular evento change para abrir divs dependientes (Ej. especificar Otro, Empresa Contratista, Horas)
+                    inputElement.dispatchEvent(new Event('change', { bubbles: true }));
 
+                    // Carga de imágenes de firma en vista de edición
                     if ((columnaName === "col_62" || columnaName === "col_66" || nombreSinGuion === "col62" || nombreSinGuion === "col66") && valorGuardado.toString().startsWith("data:image")) {
                         const imgPreview = document.getElementById("img_" + columnaName) || document.getElementById("img_" + nombreSinGuion);
                         if (imgPreview) {
@@ -1272,7 +1303,6 @@ async function cargarRegistroParaEditar(id) {
     }
 }
 
-// 6. GUARDAR FORMULARIO (ESTÉTICA DE CARGANDO APLICADA)
 async function enviarFormulario() {
     const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
     let textoOriginal = "";
@@ -1336,7 +1366,6 @@ async function enviarFormulario() {
     } catch (error) {
         console.error("Error al guardar:", error);
         alert("Hubo un error al guardar: " + error.message);
-        // Si hay error, regresamos el botón a la normalidad
         if (btnGuardar) {
             btnGuardar.disabled = false;
             btnGuardar.innerHTML = textoOriginal;
@@ -1344,11 +1373,7 @@ async function enviarFormulario() {
     }
 }
 
-// ==========================================
-// 7. LÓGICA DE PERSONAL Y FIRMAS (MODAL MÓVIL)
-// ==========================================
-
-// Abrir el modal para nuevo integrante
+// LÓGICA DE PERSONAL Y FIRMAS
 window.abrirModalIntegrante = function() {
     document.getElementById('temp_nombre').value = '';
     document.getElementById('temp_empresa').value = '';
@@ -1359,12 +1384,10 @@ window.abrirModalIntegrante = function() {
     document.getElementById('modalNuevoIntegrante').style.display = 'flex';
 };
 
-// Cerrar el modal
 window.cerrarModalIntegrante = function() {
     document.getElementById('modalNuevoIntegrante').style.display = 'none';
 };
 
-// Pasar del modal a la lista de tarjetas
 window.guardarNuevoIntegrante = function() {
     const nombre = document.getElementById('temp_nombre').value;
     const empresa = document.getElementById('temp_empresa').value;
@@ -1377,7 +1400,6 @@ window.guardarNuevoIntegrante = function() {
     window.cerrarModalIntegrante();
 };
 
-// Crear la tarjeta estéticamente
 window.agregarTarjetaIntegrante = function(nombre, empresa, identidad, firma) {
     window.contadorPersonal = (window.contadorPersonal || 0) + 1;
     const idContenedor = `tarjeta_per_${window.contadorPersonal}`;
@@ -1414,7 +1436,6 @@ window.eliminarIntegranteTarjeta = function(idFila) {
     if (fila) fila.remove();
 };
 
-// Nueva forma de extraer la información de las tarjetas
 window.obtenerDatosPersonal = function() {
     const idChecklist = document.getElementById('col_0') ? document.getElementById('col_0').value : ""; 
     const tarjetas = document.querySelectorAll('#contenedorPersonal .tarjeta-personal');
