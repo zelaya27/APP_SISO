@@ -499,12 +499,12 @@
         }
         .option-item:last-child { border-bottom: none; }
         .option-item:hover { background-color: rgba(59, 130, 246, 0.1); }
-        .option-item input[type="checkbox"] {
-            margin-right: 12px;
-            width: 20px;
-            height: 20px;
-            accent-color: var(--blue-active);
-            cursor: pointer;
+        /* Iluminar la opción cuando el checkbox está marcado */
+        .option-item:has(input:checked) {
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--blue-active);
+            border-left: 4px solid var(--blue-active);
+            font-weight: bold;
         }
         
     </style>
