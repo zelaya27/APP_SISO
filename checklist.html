@@ -1396,7 +1396,7 @@ async function enviarFormulario() {
 
     try {
         let datosChecklist = {};
-        for (let i = 0; i <= 66; i++) {
+        for (let i = 0; i <= 67; i++) {
             let checkboxes = document.querySelectorAll(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
             if (checkboxes.length > 0 && checkboxes[0].type === 'checkbox') {
                 datosChecklist[`col_${i}`] = Array.from(checkboxes).map(cb => cb.value).join(', ');
