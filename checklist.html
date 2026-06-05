@@ -488,23 +488,35 @@
             display: none;
         }
         .options-container.show { display: block; animation: fadeIn 0.2s ease; }
-        .option-item {
+      .option-item {
             display: flex;
             align-items: center;
             padding: 12px 15px;
             border-bottom: 1px solid var(--border-color);
+            border-left: 4px solid transparent; /* Mantiene el espacio del borde para que no brinque */
             cursor: pointer;
             color: var(--text-color);
             font-size: 15px;
         }
         .option-item:last-child { border-bottom: none; }
         .option-item:hover { background-color: rgba(59, 130, 246, 0.1); }
+        
+        .option-item input[type="checkbox"] {
+            margin-right: 12px;
+            width: 20px;
+            height: 20px;
+            accent-color: var(--blue-active);
+            cursor: pointer;
+            flex-shrink: 0; /* ¡MAGIA! Evita que el checkbox se estire o deforme */
+        }
+
         /* Iluminar la opción cuando el checkbox está marcado */
         .option-item:has(input:checked) {
             background-color: rgba(59, 130, 246, 0.15);
             color: var(--blue-active);
             border-left: 4px solid var(--blue-active);
             font-weight: bold;
+            /* Se eliminó el margin-right: 12px que deformaba la caja */
         }
         
     </style>
