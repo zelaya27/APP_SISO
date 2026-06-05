@@ -1303,15 +1303,22 @@ async function cargarRegistroParaEditar(id) {
                         }
                     });
                 } 
-                else if (opciones[0].type === "checkbox") {
-                    let valoresArray = valorGuardado.toString().split(',').map(s => s.trim());
-                    opciones.forEach(cb => {
-                        if (valoresArray.includes(cb.value)) cb.checked = true;
-                    });
-                    if (document.getElementById('chk_otros') && document.getElementById('chk_otros').checked) {
-                        if (typeof verificarRiesgosOtros === "function") verificarRiesgosOtros();
-                    }
-                }
+             else if (opciones[0].type === "checkbox") {
+    let valoresArray = valorGuardado.toString().split(',').map(s => s.trim());
+
+    opciones.forEach(cb => {
+        if (valoresArray.includes(cb.value)) {
+            cb.checked = true;
+
+            // 🔥 IMPORTANTE: activar UI igual que selección manual
+            cb.dispatchEvent(new Event('change', { bubbles: true }));
+        }
+    });
+
+    if (document.getElementById('chk_otros') && document.getElementById('chk_otros').checked) {
+        if (typeof verificarRiesgosOtros === "function") verificarRiesgosOtros();
+    }
+}
             } else {
                 const inputElement = document.getElementById(columnaName) || 
                                      document.getElementById(nombreSinGuion) || 
