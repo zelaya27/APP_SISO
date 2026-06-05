@@ -559,15 +559,21 @@
             }
             window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
         };
-  // Sustituye tu función actual por esta versión más informativa
+  // Sustituye tu función actual por esta versión más segura
 window.generarPDF = async function(id) {
     const registro = registrosGlobales.find(r => r.col_0 == id);
     if (!registro) return alert("Error: No se encontraron los datos del registro.");
 
-    const btn = event.target.closest('button');
-    const originalContent = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    btn.disabled = true;
+    // Rescate del evento global de forma segura
+    const evento = window.event || arguments[0]; 
+    const btn = evento ? evento.target.closest('button') : null;
+    let originalContent = "PDF"; // Texto por defecto por si acaso
+
+    if (btn) {
+        originalContent = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+        btn.disabled = true;
+    }
 
     try {
         registro.action = "generarPDF"; 
@@ -589,12 +595,15 @@ window.generarPDF = async function(id) {
         
     } catch (error) {
         console.error("Error en PDF:", error);
-        alert(error.message); // Muestra el error exacto (ej: "Error al generar PDF: No se encuentra plantilla")
+        alert(error.message); // Muestra el error exacto
     } finally {
-        btn.innerHTML = originalContent;
-        btn.disabled = false;
+        if (btn) {
+            btn.innerHTML = originalContent;
+            btn.disabled = false;
+        }
     }
 };
+
     </script>
 </body>
 </html>
