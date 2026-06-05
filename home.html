@@ -562,48 +562,43 @@
   // Sustituye tu función actual por esta versión más segura
 window.generarPDF = async function(id) {
     const registro = registrosGlobales.find(r => r.col_0 == id);
-    if (!registro) return alert("Error: No se encontraron los datos del registro.");
+    if (!registro) return alert("Error: Registro no encontrado en memoria.");
 
-    // Rescate del evento global de forma segura
-    const evento = window.event || arguments[0]; 
-    const btn = evento ? evento.target.closest('button') : null;
-    let originalContent = "PDF"; // Texto por defecto por si acaso
-
-    if (btn) {
-        originalContent = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        btn.disabled = true;
-    }
+    const btn = event.target.closest('button');
+    const originalText = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generando...';
+    btn.disabled = true;
 
     try {
         registro.action = "generarPDF"; 
+        console.log("Enviando a:", CONFIG.URL_APPS_SCRIPT, registro);
 
         const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
+            mode: 'no-cors', // Intentamos no-cors si falla el modo cors
             body: JSON.stringify(registro)
         });
         
-        const respuesta = await response.text();
-        
-        // Verificamos si la respuesta es un error
-        if (respuesta.startsWith("Error")) {
-            throw new Error(respuesta);
+        // AQUÍ ESTÁ EL TRUCO:
+        // Si usas mode: 'no-cors', la respuesta.text() vendrá vacía.
+        // Si usas 'cors', necesitamos que Google devuelva headers correctos.
+        const respuesta = await response.text(); 
+        console.log("Respuesta cruda del servidor:", respuesta);
+
+        if (!respuesta || respuesta.includes("Error")) {
+            throw new Error(respuesta || "Respuesta vacía del servidor");
         }
         
-        // Si no es error, es la URL
         window.open(respuesta, '_blank');
         
     } catch (error) {
-        console.error("Error en PDF:", error);
-        alert(error.message); // Muestra el error exacto
+        console.error("DETALLE DEL ERROR:", error);
+        alert("Fallo crítico: " + error.message + ". Revisa la consola F12.");
     } finally {
-        if (btn) {
-            btn.innerHTML = originalContent;
-            btn.disabled = false;
-        }
+        btn.innerHTML = originalText;
+        btn.disabled = false;
     }
 };
-
     </script>
 </body>
 </html>
