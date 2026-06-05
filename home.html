@@ -559,39 +559,42 @@
             }
             window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
         };
-  window.generarPDF = async function(id) {
-            // Buscamos el registro completo en la lista que ya cargamos
-            const registro = registrosGlobales.find(r => r.col_0 == id);
-            if (!registro) return alert("Error: No se encontraron los datos del registro.");
+  // Sustituye tu función actual por esta versión más informativa
+window.generarPDF = async function(id) {
+    const registro = registrosGlobales.find(r => r.col_0 == id);
+    if (!registro) return alert("Error: No se encontraron los datos del registro.");
 
-            // Visual feedback
-            const btn = event.target.closest('button');
-            const originalContent = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-            btn.disabled = true;
+    const btn = event.target.closest('button');
+    const originalContent = btn.innerHTML;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    btn.disabled = true;
 
-            try {
-                // Preparamos los datos
-                registro.action = "generarPDF"; 
+    try {
+        registro.action = "generarPDF"; 
 
-                const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
-                    method: 'POST',
-                    body: JSON.stringify(registro)
-                });
-                
-                const urlPDF = await response.text();
-                
-                // Abrimos el PDF en una pestaña nueva
-                window.open(urlPDF, '_blank');
-                
-            } catch (error) {
-                console.error("Error:", error);
-                alert("Hubo un error al generar el PDF. Inténtalo de nuevo.");
-            } finally {
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
-            }
-        };
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+            method: 'POST',
+            body: JSON.stringify(registro)
+        });
+        
+        const respuesta = await response.text();
+        
+        // Verificamos si la respuesta es un error
+        if (respuesta.startsWith("Error")) {
+            throw new Error(respuesta);
+        }
+        
+        // Si no es error, es la URL
+        window.open(respuesta, '_blank');
+        
+    } catch (error) {
+        console.error("Error en PDF:", error);
+        alert(error.message); // Muestra el error exacto (ej: "Error al generar PDF: No se encuentra plantilla")
+    } finally {
+        btn.innerHTML = originalContent;
+        btn.disabled = false;
+    }
+};
     </script>
 </body>
 </html>
