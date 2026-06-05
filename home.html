@@ -559,7 +559,7 @@
             }
             window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
         };
-  // Sustituye tu función actual por esta versión más segura
+// Sustituye tu función actual por esta versión sin la mordaza de no-cors
 window.generarPDF = async function(id) {
     const registro = registrosGlobales.find(r => r.col_0 == id);
     if (!registro) return alert("Error: Registro no encontrado en memoria.");
@@ -573,27 +573,27 @@ window.generarPDF = async function(id) {
         registro.action = "generarPDF"; 
         console.log("Enviando a:", CONFIG.URL_APPS_SCRIPT, registro);
 
+        // FETCH ESTÁNDAR (SIN NO-CORS)
         const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
-            mode: 'no-cors', // Intentamos no-cors si falla el modo cors
             body: JSON.stringify(registro)
+            // Hemos eliminado la línea mode: 'no-cors'
         });
         
-        // AQUÍ ESTÁ EL TRUCO:
-        // Si usas mode: 'no-cors', la respuesta.text() vendrá vacía.
-        // Si usas 'cors', necesitamos que Google devuelva headers correctos.
+        // Ahora sí podremos leer la URL real o el error real del servidor
         const respuesta = await response.text(); 
         console.log("Respuesta cruda del servidor:", respuesta);
 
-        if (!respuesta || respuesta.includes("Error")) {
+        if (!respuesta || respuesta.includes("Error") || respuesta.includes("Acción POST no reconocida")) {
             throw new Error(respuesta || "Respuesta vacía del servidor");
         }
         
+        // Si todo sale bien, abrirá la pestaña con el PDF
         window.open(respuesta, '_blank');
         
     } catch (error) {
         console.error("DETALLE DEL ERROR:", error);
-        alert("Fallo crítico: " + error.message + ". Revisa la consola F12.");
+        alert("Fallo al generar PDF: " + error.message + ". Revisa la consola (F12).");
     } finally {
         btn.innerHTML = originalText;
         btn.disabled = false;
