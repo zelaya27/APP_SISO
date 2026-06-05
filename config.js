@@ -1,4 +1,4 @@
 // config_nuevo.js
 const CONFIG = {
-    URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycbw3p3q8IYLB3Y44j5-S1qZlMMaTZTOb0WXK4DPA5E3BgXNFm0aDseEggK2H72XQCcOe/exec"
+    URL_APPS_SCRIPT: "https://script.google.com/macros/s/AKfycbzy43GlXP9iinRnD5gpjQvhpT_4Rx92NTgGVnTNAKuINtqtVj0jcOqVk49ft-4P9ruX/exec"
 };
