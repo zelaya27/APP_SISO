@@ -1158,9 +1158,30 @@ document.addEventListener("DOMContentLoaded", () => {
         document.body.style.cursor = "wait"; 
         cargarRegistroParaEditar(idRegistro);
     } else {
+        // 1. Generar ID Único
         const nuevoId = generarIDUnico();
         const campoId = document.getElementById("col_0");
         if (campoId) campoId.value = nuevoId;
+
+        // 2. Extraer Usuario y Sector de la memoria (SessionStorage / LocalStorage)
+        // (Uso ambos por si guardaste la sesión en local o session)
+        const usuarioActual = sessionStorage.getItem("usuario") || localStorage.getItem("usuario") || "";
+        const sectorActual = sessionStorage.getItem("sector") || localStorage.getItem("sector") || "";
+
+        const campoUsuario = document.getElementById("col_1");
+        const campoSector = document.getElementById("col_2");
+
+        if (campoUsuario) campoUsuario.value = usuarioActual;
+        if (campoSector) campoSector.value = sectorActual;
+
+        // 3. Asignar la Fecha actual automáticamente
+        const campoFecha = document.getElementById("col_3");
+        if (campoFecha) {
+            const hoy = new Date();
+            // Formatea la fecha a YYYY-MM-DD (requerido por inputs type="date")
+            const fechaFormateada = hoy.toISOString().split('T')[0];
+            campoFecha.value = fechaFormateada;
+        }
     }
 });
 
