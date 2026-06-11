@@ -3,11 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - APP SISO</title>
+    <title>Checklist - Login</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <script src="config.js"></script>
-
     <style>
         :root {
             --bg-color: #0b141d;
@@ -16,39 +14,150 @@
             --text-color: #ffffff;
             --muted-text: #a0aec0;
             --border-color: #2c3e50;
-            --hover-color: #f39c12;
+            --mint-color: #7fffd4;
+            --mint-hover: #5ee7bd;
+            --danger-color: #e74c3c;
         }
-
-        body { font-family: 'Segoe UI', Arial, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-wrapper { background: var(--card-color); padding: 40px 30px; border-radius: 10px; width: 100%; max-width: 350px; box-shadow: 0 8px 16px rgba(0,0,0,0.5); border: 1px solid var(--border-color); text-align: center; }
-        .logo-container { background: white; padding: 15px; border-radius: 8px; display: inline-block; margin-bottom: 25px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); }
-        .logo-container img { width: 160px; display: block; }
-        .login-title { margin: 0 0 20px 0; font-size: 18px; font-weight: 600; letter-spacing: 1px; }
-        .input-group { position: relative; margin-bottom: 20px; text-align: left; }
-        .input-group i.icon-left { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--muted-text); }
-        .input-group input { width: 100%; padding: 12px 15px 12px 40px; box-sizing: border-box; background-color: var(--bg-color); border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-color); font-size: 15px; outline: none; transition: all 0.3s ease; }
-        .input-group input:focus { border-color: #3498db; }
-        .btn-toggle-pass { position: absolute; right: 15px; top: 50%; transform: translateY(-50%); border: none; background: none; cursor: pointer; color: var(--muted-text); padding: 0; }
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+        .login-wrapper {
+            background: var(--card-color);
+            padding: 32px 26px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 370px;
+            box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+        .logo-container {
+            background: white;
+            padding: 12px;
+            border-radius: 8px;
+            display: inline-block;
+            margin-bottom: 18px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        }
+        .logo-container img { width: 145px; display: block; }
+        .login-title {
+            margin: 0 0 22px 0;
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .input-group { position: relative; margin-bottom: 18px; text-align: left; }
+        .input-group i.icon-left {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--muted-text);
+            z-index: 2;
+        }
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 12px 15px 12px 40px;
+            box-sizing: border-box;
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-color);
+            font-size: 15px;
+            outline: none;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+        .input-group select {
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%23a0aec0" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+        }
+        .input-group input:focus,
+        .input-group select:focus { border-color: #3498db; }
+        .input-group select:disabled { opacity: .6; cursor: not-allowed; }
+        .btn-toggle-pass {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: var(--muted-text);
+            padding: 0;
+        }
         .btn-toggle-pass:hover { color: var(--text-color); }
-        .btn-enviar { background: var(--accent-color); color: white; border: none; padding: 14px; width: 100%; cursor: pointer; border-radius: 6px; font-weight: bold; font-size: 15px; letter-spacing: 1px; transition: background 0.3s ease; display: flex; justify-content: center; align-items: center; gap: 10px; }
-        .btn-enviar:hover { background: var(--hover-color); }
-        .btn-enviar:disabled { background: #34495e; cursor: not-allowed; }
-        .error-message { color: #e74c3c; font-size: 13px; margin-top: 15px; display: none; font-weight: bold; }
+        .btn-enviar {
+            background: var(--mint-color);
+            color: #000000;
+            border: none;
+            padding: 14px;
+            width: 100%;
+            cursor: pointer;
+            border-radius: 6px;
+            font-weight: 900;
+            font-size: 15px;
+            letter-spacing: 1px;
+            transition: background 0.3s ease, transform 0.2s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn-enviar:hover { background: var(--mint-hover); transform: translateY(-1px); }
+        .btn-enviar:disabled { background: #34495e; color: #d1d5db; cursor: not-allowed; transform: none; }
+        .error-message { color: var(--danger-color); font-size: 13px; margin-top: 15px; display: none; font-weight: bold; }
+        .help-text { font-size: 12px; color: var(--muted-text); margin-top: -8px; margin-bottom: 14px; display: none; }
     </style>
 </head>
 <body>
-
     <div class="login-wrapper">
         <div class="logo-container">
             <img src="https://github.com/zelaya27/IMAGENES_AZ/blob/main/UTCD%20Vertical.png?raw=true" alt="Logo UTCD">
         </div>
-        
-        <h2 class="login-title">ACCESO AL SISTEMA</h2>
+        <h2 class="login-title">Checklist</h2>
+
+        <div class="input-group">
+            <i class="fas fa-map-marker-alt icon-left"></i>
+            <select id="sector" onchange="cargarUsuariosPorSector()">
+                <option value="">Seleccione sector...</option>
+                <option value="BRUS LAGUNA">BRUS LAGUNA</option>
+                <option value="CHOLUTECA">CHOLUTECA</option>
+                <option value="COMAYAGUA">COMAYAGUA</option>
+                <option value="DANLI">DANLI</option>
+                <option value="EL PROGRESO">EL PROGRESO</option>
+                <option value="GUANAJA">GUANAJA</option>
+                <option value="JUTICALPA">JUTICALPA</option>
+                <option value="LA CEIBA">LA CEIBA</option>
+                <option value="SAN PEDRO SULA CENTRO">SAN PEDRO SULA CENTRO</option>
+                <option value="SANTA CRUZ DE YOJOA">SANTA CRUZ DE YOJOA</option>
+                <option value="SANTA ROSA DE COPAN">SANTA ROSA DE COPAN</option>
+                <option value="TEGUCIGALPA">TEGUCIGALPA</option>
+                <option value="TOCOA">TOCOA</option>
+                <option value="VILLANUEVA">VILLANUEVA</option>
+                <option value="SANTA BARBARA">SANTA BARBARA</option>
+            </select>
+        </div>
 
         <div class="input-group">
             <i class="fas fa-user icon-left"></i>
-            <input type="text" id="user" placeholder="Usuario" autocomplete="off">
+            <select id="user" disabled>
+                <option value="">Seleccione primero un sector...</option>
+            </select>
         </div>
+        <div id="usuarios-help" class="help-text">Cargando usuarios del sector...</div>
 
         <div class="input-group">
             <i class="fas fa-lock icon-left"></i>
@@ -79,61 +188,108 @@
                 icon.classList.add('fa-eye');
             }
         }
-    async function iniciarSesion() {
+
+        function mostrarError(mensaje) {
+            const errorMsg = document.getElementById('mensaje-error');
+            errorMsg.innerText = mensaje;
+            errorMsg.style.display = 'block';
+        }
+
+        async function cargarUsuariosPorSector() {
+            const sector = document.getElementById('sector').value;
+            const userSelect = document.getElementById('user');
+            const help = document.getElementById('usuarios-help');
+            const errorMsg = document.getElementById('mensaje-error');
+
+            errorMsg.style.display = 'none';
+            userSelect.innerHTML = '<option value="">Seleccione usuario...</option>';
+
+            if (!sector) {
+                userSelect.disabled = true;
+                userSelect.innerHTML = '<option value="">Seleccione primero un sector...</option>';
+                return;
+            }
+
+            userSelect.disabled = true;
+            help.style.display = 'block';
+
+            try {
+                const url = `${CONFIG.URL_APPS_SCRIPT}?action=usuariosPorSector&sector=${encodeURIComponent(sector)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+
+                const usuarios = Array.isArray(data) ? data : (data.usuarios || []);
+
+                if (!usuarios.length) {
+                    userSelect.innerHTML = '<option value="">No hay usuarios para este sector</option>';
+                    mostrarError('No se encontraron usuarios para el sector seleccionado.');
+                    return;
+                }
+
+                userSelect.innerHTML = '<option value="">Seleccione usuario...</option>';
+                usuarios.forEach(u => {
+                    const nombre = typeof u === 'string' ? u : (u.usuario || u.nombre || '');
+                    if (!nombre) return;
+                    const opt = document.createElement('option');
+                    opt.value = nombre;
+                    opt.textContent = nombre;
+                    userSelect.appendChild(opt);
+                });
+                userSelect.disabled = false;
+            } catch (error) {
+                console.error('Error cargando usuarios:', error);
+                mostrarError('Error cargando usuarios del sector.');
+                userSelect.innerHTML = '<option value="">Error cargando usuarios</option>';
+            } finally {
+                help.style.display = 'none';
+            }
+        }
+
+        async function iniciarSesion() {
+            const sector = document.getElementById('sector').value.trim();
             const user = document.getElementById('user').value.trim();
             const pass = document.getElementById('pass').value.trim();
             const btn = document.getElementById('btn-login');
             const errorMsg = document.getElementById('mensaje-error');
-            
-            if(!user || !pass) {
-                errorMsg.innerText = "Por favor, completa todos los campos.";
-                errorMsg.style.display = "block";
+
+            if (!sector || !user || !pass) {
+                mostrarError('Por favor, selecciona sector, usuario y contraseña.');
                 return;
             }
 
             btn.disabled = true;
             btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-            errorMsg.style.display = "none";
+            errorMsg.style.display = 'none';
 
-            // AQUÍ ESTÁ LA SOLUCIÓN: Empaquetamos en JSON igual que en home.js
-            const datosJSON = {
-                action: "login",
-                user: user,
-                pass: pass
-            };
+            const datosJSON = { action: 'login', sector, user, pass };
 
             try {
                 const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
                     method: 'POST',
                     mode: 'cors',
-                    body: JSON.stringify(datosJSON) // Se envía oculto en el cuerpo
+                    body: JSON.stringify(datosJSON)
                 });
-                
                 const data = await response.json();
-                
+
                 if (data.acceso) {
-                    sessionStorage.setItem("usuario", data.usuario);
-                    sessionStorage.setItem("sector", data.sector);
-                    window.location.href = "home.html"; // Redirige al inicio
+                    sessionStorage.setItem('usuario', data.usuario || user);
+                    sessionStorage.setItem('sector', data.sector || sector);
+                    sessionStorage.setItem('tipoUsuario', data.tipoUsuario || data.tipo || data.tipo_usuario || '3');
+                    window.location.href = 'home.html';
                 } else {
-                    errorMsg.innerText = data.error || "Usuario o contraseña incorrectos.";
-                    errorMsg.style.display = "block";
+                    mostrarError(data.error || 'Usuario o contraseña incorrectos.');
                 }
             } catch (error) {
-                console.error("Error en login:", error);
-                errorMsg.innerText = "Error de conexión. Revisa consola (F12).";
-                errorMsg.style.display = "block";
+                console.error('Error en login:', error);
+                mostrarError('Error de conexión. Revisa consola (F12).');
             } finally {
                 btn.disabled = false;
                 btn.innerHTML = '<span>INICIAR SESIÓN</span> <i class="fas fa-sign-in-alt"></i>';
             }
         }
-       
 
-        document.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                iniciarSesion();
-            }
+        document.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') iniciarSesion();
         });
     </script>
 </body>
