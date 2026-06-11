@@ -246,7 +246,8 @@
             gap: 8px; 
         }
 
-        .btn-back-header { background-color: transparent; color: var(--muted-text); border: 1px solid var(--border-color); padding: 6px 12px; border-radius: 5px; cursor: pointer; }
+        .btn-back-header { background-color: #ff1744; color: #ffffff; border: 1px solid #ff1744; padding: 6px 12px; border-radius: 5px; cursor: pointer; box-shadow: 0 0 8px rgba(255, 23, 68, 0.55); }
+        .btn-back-header:hover { background-color: #d50000; border-color: #d50000; }
         .btn-back { background-color: #2c3e50; color: white; }
         .btn-next { background-color: var(--blue-active); color: white; }
         .btn-save { background-color: var(--success-color); color: white; transition: 0.3s; }
@@ -519,12 +520,82 @@
             /* Se eliminó el margin-right: 12px que deformaba la caja */
         }
         
+    
+
+        /* =========================================
+           STEP 8 / FINALIZACIÓN / SEGURIDAD
+        ========================================= */
+        .final-card {
+            background-color: var(--bg-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            margin-bottom: 16px;
+        }
+        .final-actions {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 16px;
+        }
+        .btn-final {
+            border: none;
+            border-radius: 8px;
+            padding: 13px 15px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+        }
+        .btn-final:disabled { opacity: .45; cursor: not-allowed; }
+        .btn-guardar-final { background-color: var(--success-color); color: white; }
+        .btn-crear-pdf { background-color: #e74c3c; color: white; }
+        .btn-ver-pdf { background-color: #f1c40f; color: #111; }
+        .mensaje-exito-final {
+            display: none;
+            background: rgba(39,174,96,.14);
+            border: 1px solid var(--success-color);
+            color: #7dffb2;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 14px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .modal-seguridad {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.78);
+            z-index: 10000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .modal-seguridad-box {
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.55);
+        }
+        .modal-seguridad-box h3 { margin-top: 0; color: var(--blue-active); }
+        .modal-seguridad-actions { display: flex; gap: 10px; margin-top: 15px; }
+        .modal-seguridad-actions button { flex: 1; border: none; border-radius: 8px; padding: 11px; font-weight: bold; cursor: pointer; }
+        .btn-continuar-sin-guardar { background: #34495e; color: white; }
+        .btn-guardar-seguir { background: var(--success-color); color: white; }
+
     </style>
 </head>
 <body>
 
     <header>
-        <button class="btn-back-header" onclick="location.href='home.html'">
+        <button class="btn-back-header" onclick="salirAlHome()">
             <i class="fas fa-arrow-left"></i>
         </button>
         <h2>CHECKLIST</h2>
@@ -545,6 +616,8 @@
             <div class="step-indicator" id="ind-6"><div class="step-circle">6</div><div class="step-label"></div></div> 
             <div class="step-line"></div>
             <div class="step-indicator" id="ind-7"><div class="step-circle">7</div><div class="step-label"></div></div>
+            <div class="step-line"></div>
+            <div class="step-indicator" id="ind-8"><div class="step-circle">8</div><div class="step-label"></div></div>
         </div>
 
         <form id="checklistForm">
@@ -556,11 +629,6 @@
                     <div class="form-group"><label>Usuario</label><input type="text" id="col_1" readonly></div>
                     <div class="form-group"><label>Sector</label><input type="text" id="col_2" readonly></div>
                     <div class="form-group"><label>Fecha</label><input type="text" id="col_3" readonly></div>
-                    
-                    <div class="form-group">
-                        <label>Estado</label>
-                        <select id="col_4"><option value="Pendiente">Pendiente</option><option value="Revisado">Revisado</option></select>
-                    </div>
                     <div class="form-group"><label>Ciudad/Municipio</label><input type="text" id="col_5" placeholder="Municipio"></div>
                     
                     <div class="form-group">
@@ -1006,6 +1074,52 @@
                 </button>
             </div>
             
+
+
+            <div class="step-content" id="step-8">
+                <h3 class="titulo-seccion"><i class="fas fa-flag-checkered"></i> Paso 8: Finalizar Checklist</h3>
+
+                <div class="final-card">
+                    <div class="form-group">
+                        <label>Estado del Checklist</label>
+                        <select id="col_4" name="col_4">
+                            <option value="Pendiente">Pendiente</option>
+                        </select>
+                    </div>
+                    <p style="font-size:13px;color:var(--muted-text);margin-bottom:0;">
+                        El estado disponible depende del tipo de usuario que inició sesión.
+                    </p>
+                </div>
+
+                <div class="final-card">
+                    <h4 style="margin-top:0;color:var(--blue-active);"><i class="fas fa-save"></i> Guardado y PDF</h4>
+                    <p style="font-size:13px;color:var(--muted-text);">
+                        Primero guarde el checklist. Después podrá crear el PDF. Cuando el PDF esté listo, se habilitará el botón para verlo.
+                    </p>
+
+                    <div class="final-actions">
+                        <button type="button" class="btn-final btn-guardar-final" id="btnGuardarFinal" onclick="enviarFormulario()">
+                            <i class="fas fa-save"></i> Guardar Checklist
+                        </button>
+                        <button type="button" class="btn-final btn-crear-pdf" id="btnCrearPDF" onclick="crearPDFChecklist()" disabled>
+                            <i class="fas fa-plus"></i><i class="fas fa-file-pdf"></i> Crear PDF
+                        </button>
+                        <button type="button" class="btn-final btn-ver-pdf" id="btnVerPDF" onclick="verPDFChecklist()" disabled>
+                            <i class="fas fa-eye"></i> Ver PDF
+                        </button>
+                    </div>
+
+                    <div id="mensajeGuardadoFinal" class="mensaje-exito-final">
+                        <i class="fas fa-check-circle"></i> Sus datos fueron cargados exitosamente.
+                    </div>
+                </div>
+
+                <input type="hidden" id="col_68" name="col_68">
+                <input type="hidden" id="col_69" name="col_69">
+                <input type="hidden" id="col_70" name="col_70">
+                <input type="hidden" id="col_71" name="col_71">
+            </div>
+
             <div class="espacio-footer"></div>
 
             <div class="form-actions">
@@ -1022,6 +1136,20 @@
         </form>
     </div>     
  
+
+    <div id="modalGuardadoPreventivo" class="modal-seguridad">
+        <div class="modal-seguridad-box">
+            <h3><i class="fas fa-shield-alt"></i> Guardado preventivo</h3>
+            <p style="color: var(--muted-text); font-size: 14px; line-height: 1.4;">
+                Ya completaste varios pasos. ¿Deseas guardar el avance antes de continuar?
+            </p>
+            <div class="modal-seguridad-actions">
+                <button type="button" class="btn-continuar-sin-guardar" onclick="continuarSinGuardadoPreventivo()">No, continuar</button>
+                <button type="button" class="btn-guardar-seguir" onclick="guardarPreventivoYSeguir()">Guardar y seguir</button>
+            </div>
+        </div>
+    </div>
+
     <div id="modalNuevoIntegrante" class="modal-firma-container" style="display: none; position: fixed; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.8); z-index: 9998; justify-content: center; align-items: center;">
         <div class="modal-firma-content" style="background: var(--card-color); padding: 20px; border-radius: 12px; width: 90%; max-width: 400px; color: var(--text-color); text-align: left; box-shadow: 0 10px 25px rgba(0,0,0,0.5);">
             <h4 style="margin-top: 0; color: var(--blue-active); border-bottom: 1px solid var(--border-color); padding-bottom: 10px;"><i class="fas fa-user-plus"></i> Nuevo Integrante</h4>
@@ -1150,6 +1278,8 @@ function generarIDUnico() {
 
 document.addEventListener("DOMContentLoaded", () => {
     inicializarPizarra();
+    configurarEstadoPorTipoUsuario();
+    activarProteccionSalida();
     const urlParams = new URLSearchParams(window.location.search);
     const modo = urlParams.get('modo');
     const idRegistro = urlParams.get('id');
@@ -1182,15 +1312,28 @@ document.addEventListener("DOMContentLoaded", () => {
             const fechaFormateada = hoy.toISOString().split('T')[0];
             campoFecha.value = fechaFormateada;
         }
+        const estado = document.getElementById("col_4");
+        if (estado) estado.value = "Pendiente";
     }
+
+    document.getElementById("checklistForm")?.addEventListener("input", () => {
+        cambiosSinGuardar = true;
+    });
+    document.getElementById("checklistForm")?.addEventListener("change", () => {
+        cambiosSinGuardar = true;
+    });
 });
 
 let pasoActual = 1;
-const totalPasos = 7;
+const totalPasos = 8;
 window.contadorPersonal = 0;
 let canvas, ctx;
 let dibujando = false;
 window.campoDestino = "";
+let formularioGuardado = false;
+let cambiosSinGuardar = false;
+let guardadoPreventivoMostrado = false;
+let urlPDFActual = "";
 
 function cambiarVisibilidadPaso(numeroPaso, mostrar) {
     const paso = document.getElementById(`step-${numeroPaso}`);
@@ -1210,10 +1353,16 @@ function cambiarVisibilidadPaso(numeroPaso, mostrar) {
 }
 
 window.cambiarPaso = function(direccion) {
+    if (direccion === 1 && pasoActual === 4 && !guardadoPreventivoMostrado) {
+        const modal = document.getElementById('modalGuardadoPreventivo');
+        if (modal) modal.style.display = 'flex';
+        return;
+    }
+
     if ((direccion === 1 && pasoActual < totalPasos) || (direccion === -1 && pasoActual > 1)) {
         cambiarVisibilidadPaso(pasoActual, false);
-        pasoActual += direccion;                   
-        cambiarVisibilidadPaso(pasoActual, true);  
+        pasoActual += direccion;
+        cambiarVisibilidadPaso(pasoActual, true);
         actualizarBotones();
     }
 };
@@ -1227,8 +1376,97 @@ function actualizarBotones() {
     
     const esUltimo = (pasoActual === totalPasos);
     if (btnSiguiente) btnSiguiente.style.display = esUltimo ? "none" : "flex";
-    if (btnGuardar) btnGuardar.style.display = esUltimo ? "flex" : "none";
+    if (btnGuardar) btnGuardar.style.display = "none";
 }
+
+
+function configurarEstadoPorTipoUsuario() {
+    const tipo = String(sessionStorage.getItem("tipoUsuario") || "3");
+    const estado = document.getElementById("col_4");
+    if (!estado) return;
+    let opciones = ["Pendiente"];
+    if (tipo === "2") opciones = ["Pendiente", "Revisado"];
+    if (tipo === "1") opciones = ["Pendiente", "Revisado", "Auditado"];
+    const valorActual = estado.value || "Pendiente";
+    estado.innerHTML = opciones.map(op => `<option value="${op}">${op}</option>`).join("");
+    estado.value = opciones.includes(valorActual) ? valorActual : opciones[0];
+    estado.disabled = tipo === "3";
+}
+
+function recolectarDatosChecklist() {
+    if (typeof actualizarCol67 === "function") actualizarCol67();
+    let datosChecklist = {};
+    for (let i = 0; i <= 71; i++) {
+        let checkboxes = document.querySelectorAll(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
+        if (checkboxes.length > 0 && checkboxes[0].type === 'checkbox') {
+            datosChecklist[`col_${i}`] = Array.from(checkboxes).map(cb => cb.value).join(', ');
+            continue;
+        }
+        let radioSeleccionado = document.querySelector(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
+        if (radioSeleccionado && radioSeleccionado.type === 'radio') {
+            datosChecklist[`col_${i}`] = radioSeleccionado.value;
+            continue;
+        }
+        let elemento = document.getElementById(`col_${i}`) || document.getElementById(`col${i}`);
+        datosChecklist[`col_${i}`] = elemento ? elemento.value : "";
+    }
+    return datosChecklist;
+}
+
+function activarProteccionSalida() {
+    window.addEventListener('beforeunload', function(e) {
+        if (cambiosSinGuardar && !formularioGuardado) {
+            e.preventDefault();
+            e.returnValue = '¿Estás seguro que quieres salir sin guardar los datos?';
+            return e.returnValue;
+        }
+    });
+}
+
+window.salirAlHome = function() {
+    if (cambiosSinGuardar && !formularioGuardado) {
+        const ok = confirm('¿Estás seguro que quieres salir sin guardar los datos?');
+        if (!ok) return;
+    }
+    window.location.href = 'home.html';
+};
+
+window.continuarSinGuardadoPreventivo = function() {
+    guardadoPreventivoMostrado = true;
+    const modal = document.getElementById('modalGuardadoPreventivo');
+    if (modal) modal.style.display = 'none';
+    cambiarPaso(1);
+};
+
+window.guardarPreventivoYSeguir = async function() {
+    guardadoPreventivoMostrado = true;
+    const modal = document.getElementById('modalGuardadoPreventivo');
+    const btns = modal ? modal.querySelectorAll('button') : [];
+    btns.forEach(b => b.disabled = true);
+    try {
+        const paqueteFinal = {
+            action: "guardarRespuestasChecklist",
+            guardadoPreventivo: true,
+            checklist: recolectarDatosChecklist(),
+            personal: (typeof window.obtenerDatosPersonal === "function") ? window.obtenerDatosPersonal() : []
+        };
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(paqueteFinal) });
+        const result = await response.json();
+        if (result.status === 'Éxito' || result.success) {
+            cambiosSinGuardar = false;
+            if (modal) modal.style.display = 'none';
+            cambiarPaso(1);
+        } else {
+            throw new Error(result.message || result.error || "Error desconocido devuelto por el servidor");
+        }
+    } catch (error) {
+        alert("No se pudo guardar preventivamente: " + error.message);
+        if (modal) modal.style.display = 'none';
+        cambiarPaso(1);
+    } finally {
+        btns.forEach(b => b.disabled = false);
+    }
+};
 
 window.calcularTiempoEstimado = function() {
     const t1 = document.getElementById('col_17').value;
@@ -1363,6 +1601,21 @@ async function cargarRegistroParaEditar(id) {
             }
         });
 
+        configurarEstadoPorTipoUsuario();
+        urlPDFActual = (document.getElementById('col_69') && document.getElementById('col_69').value) ? document.getElementById('col_69').value : "";
+        if (urlPDFActual) {
+            const btnVer = document.getElementById('btnVerPDF');
+            if (btnVer) btnVer.disabled = false;
+            const btnCrear = document.getElementById('btnCrearPDF');
+            if (btnCrear) btnCrear.disabled = false;
+        }
+        const estadoActual = document.getElementById('col_4') ? document.getElementById('col_4').value : 'Pendiente';
+        if (estadoActual === 'Revisado' || estadoActual === 'Auditado') {
+            alert('Este checklist ya está revisado/auditado. El modo edición está bloqueado.');
+            window.location.href = 'home.html';
+            return;
+        }
+
         // CARGA DE PERSONAL EN FORMA DE TARJETAS (Paso 7)
         if (data.personal && Array.isArray(data.personal)) {
             const contenedor = document.getElementById('contenedorPersonal');
@@ -1389,61 +1642,47 @@ async function cargarRegistroParaEditar(id) {
 }
 
 async function enviarFormulario() {
-    const btnGuardar = document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
+    const btnGuardar = document.getElementById("btnGuardarFinal") || document.getElementById("btnGuardar") || document.querySelector(".btn-guardar-principal");
     let textoOriginal = "";
     if (btnGuardar) {
         textoOriginal = btnGuardar.innerHTML;
         btnGuardar.disabled = true;
-        btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cargando...';
+        btnGuardar.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
     }
 
     try {
-        let datosChecklist = {};
-        for (let i = 0; i <= 67; i++) {
-            let checkboxes = document.querySelectorAll(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
-            if (checkboxes.length > 0 && checkboxes[0].type === 'checkbox') {
-                datosChecklist[`col_${i}`] = Array.from(checkboxes).map(cb => cb.value).join(', ');
-                continue;
-            }
-
-            let radioSeleccionado = document.querySelector(`input[name="col_${i}"]:checked, input[name="col${i}"]:checked`);
-            if (radioSeleccionado && radioSeleccionado.type === 'radio') {
-                datosChecklist[`col_${i}`] = radioSeleccionado.value;
-                continue;
-            }
-
-            let inputIdConGuion = `col_${i}`;
-            let inputIdSinGuion = `col${i}`;
-            let elemento = document.getElementById(inputIdConGuion) || document.getElementById(inputIdSinGuion);
-            
-            if (elemento) {
-                datosChecklist[`col_${i}`] = elemento.value;
-            } else {
-                datosChecklist[`col_${i}`] = "";
-            }
-        }
-
-        let personalData = [];
-        if (typeof window.obtenerDatosPersonal === "function") {
-            personalData = window.obtenerDatosPersonal(); 
-        }
-
+        const datosChecklist = recolectarDatosChecklist();
         const paqueteFinal = {
             action: "guardarRespuestasChecklist",
             checklist: datosChecklist,
-            personal: personalData
+            personal: (typeof window.obtenerDatosPersonal === "function") ? window.obtenerDatosPersonal() : []
         };
 
         const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
             method: 'POST',
-            body: JSON.stringify(paqueteFinal) 
+            body: JSON.stringify(paqueteFinal)
         });
 
         const result = await response.json();
 
         if (result.status === 'Éxito' || result.success) {
-            alert("Registro guardado correctamente");
-            window.location.href = "home.html";
+            formularioGuardado = true;
+            cambiosSinGuardar = false;
+            const mensaje = document.getElementById('mensajeGuardadoFinal');
+            if (mensaje) mensaje.style.display = 'block';
+
+            const btnPDF = document.getElementById('btnCrearPDF');
+            if (btnPDF) btnPDF.disabled = false;
+
+            if (result.urlPDF || result.pdfUrl || result.url) {
+                urlPDFActual = result.urlPDF || result.pdfUrl || result.url;
+                const col69 = document.getElementById('col_69');
+                if (col69) col69.value = urlPDFActual;
+                const btnVer = document.getElementById('btnVerPDF');
+                if (btnVer) btnVer.disabled = false;
+            }
+
+            alert("Sus datos fueron cargados exitosamente");
         } else {
             throw new Error(result.message || result.error || "Error desconocido devuelto por el servidor");
         }
@@ -1451,12 +1690,79 @@ async function enviarFormulario() {
     } catch (error) {
         console.error("Error al guardar:", error);
         alert("Hubo un error al guardar: " + error.message);
+    } finally {
         if (btnGuardar) {
             btnGuardar.disabled = false;
-            btnGuardar.innerHTML = textoOriginal;
+            btnGuardar.innerHTML = textoOriginal || '<i class="fas fa-save"></i> Guardar Checklist';
         }
     }
 }
+
+window.crearPDFChecklist = async function() {
+    const btn = document.getElementById('btnCrearPDF');
+    const btnVer = document.getElementById('btnVerPDF');
+    const original = btn ? btn.innerHTML : '';
+
+    if (!formularioGuardado && cambiosSinGuardar) {
+        alert('Primero debes guardar el checklist antes de crear el PDF.');
+        return;
+    }
+
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando PDF...';
+    }
+
+    try {
+        const datosChecklist = recolectarDatosChecklist();
+        datosChecklist.col_71 = sessionStorage.getItem('usuario') || datosChecklist.col_1 || '';
+        const paquetePDF = {
+            ...datosChecklist,
+            action: 'generarPDF',
+            usuarioPDF: sessionStorage.getItem('usuario') || datosChecklist.col_1 || ''
+        };
+
+        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
+            method: 'POST',
+            body: JSON.stringify(paquetePDF)
+        });
+        const texto = await response.text();
+        let url = texto;
+        try {
+            const json = JSON.parse(texto);
+            if (json.error) throw new Error(json.error);
+            url = json.urlPDF || json.pdfUrl || json.url || '';
+            if (json.fechaPDF && document.getElementById('col_70')) document.getElementById('col_70').value = json.fechaPDF;
+            if (json.usuarioPDF && document.getElementById('col_71')) document.getElementById('col_71').value = json.usuarioPDF;
+        } catch(e) {
+            if (texto.startsWith('Error')) throw new Error(texto);
+        }
+
+        if (!url) throw new Error('No se recibió URL del PDF.');
+        urlPDFActual = url;
+        if (document.getElementById('col_69')) document.getElementById('col_69').value = url;
+        if (btnVer) btnVer.disabled = false;
+        alert('PDF creado correctamente.');
+        window.open(url, '_blank');
+    } catch (error) {
+        console.error('Error creando PDF:', error);
+        alert('Error creando PDF: ' + error.message);
+    } finally {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = original || '<i class="fas fa-plus"></i><i class="fas fa-file-pdf"></i> Crear PDF';
+        }
+    }
+};
+
+window.verPDFChecklist = function() {
+    const url = urlPDFActual || (document.getElementById('col_69') ? document.getElementById('col_69').value : '');
+    if (!url) {
+        alert('Primero debes crear el PDF.');
+        return;
+    }
+    window.open(url, '_blank');
+};
 
 // LÓGICA DE PERSONAL Y FIRMAS
 window.abrirModalIntegrante = function() {
