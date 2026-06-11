@@ -360,11 +360,23 @@
             return false;
         }
         function opcionesEstadoActual(estado) {
-            const tipo = String(sessionStorage.getItem('tipoUsuario') || '3');
-            if (tipo === '1') return ['Pendiente', 'Revisado', 'Auditado'];
-            if (tipo === '2') return ['Pendiente', 'Revisado'];
-            return ['Pendiente'];
+    const tipo = String(sessionStorage.getItem('tipoUsuario') || '3');
+    const estadoActual = normalizarEstado(estado);
+
+    if (tipo === '1') {
+        return ['Pendiente', 'Revisado', 'Auditado'];
+    }
+
+    if (tipo === '2') {
+        if (estadoActual === 'Auditado') {
+            return ['Auditado'];
         }
+        return ['Pendiente', 'Revisado'];
+    }
+
+    // Tipo 3: no puede cambiar estado, pero debe ver el estado real
+    return [estadoActual];
+}
 
         function renderizarTarjetas() {
             const contenedor = document.getElementById('contenedor-registros');
