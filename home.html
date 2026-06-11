@@ -3,9 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Panel Principal - Registros</title>
+    <title>Panel Principal - Checklist</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
     <style>
         :root {
             --bg-color: #0b141d;
@@ -14,73 +13,64 @@
             --success-color: #27ae60;
             --success-hover: #219653;
             --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
             --text-color: #ffffff;
             --muted-text: #a0aec0;
             --border-color: #2c3e50;
-            
-            /* Colores para el efecto iluminado */
-            --blue-active: #3b82f6; 
+            --blue-active: #3b82f6;
             --blue-hover: #2b6cb0;
+            --warning-color: #f39c12;
         }
-
-        body { 
-            font-family: 'Segoe UI', Arial, sans-serif; 
-            background-color: var(--bg-color); 
-            color: var(--text-color); 
-            margin: 0; 
-            padding: 0; 
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 0;
             overflow-x: hidden;
         }
-        
-        /* =========================================
-           1, 2 y 3. HEADER REDISEÑADO (MÓVIL)
-        ========================================= */
-        header { 
-            background-color: var(--card-color); 
-            padding: 20px 15px 15px 15px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 12px;
-            border-bottom: 1px solid var(--border-color); 
-        }
-
-        .header-title-container {
+        header {
+            background-color: var(--card-color);
+            padding: 8px 12px 10px 12px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 10px;
+            gap: 8px;
+            border-bottom: 1px solid var(--border-color);
         }
-
-        .header-title-container h2 {
-            margin: 0; 
-            color: #ffffff; 
-            font-size: 22px; 
-            font-weight: bold; 
+        .top-brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+        .logo-box {
+            background: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-box img { height: 28px; display: block; }
+        .top-brand h2 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 21px;
+            font-weight: bold;
             letter-spacing: 2px;
         }
-        
-        .user-info { 
-            display: flex; 
-            gap: 12px; 
-            align-items: center; 
-            flex-wrap: wrap; 
+        .user-info {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
             background-color: rgba(0, 0, 0, 0.2);
-            padding: 8px 15px;
+            padding: 6px 10px;
             border-radius: 20px;
         }
-
-        .info-item {
-            font-size: 13px;
-            color: var(--text-color);
-        }
-
-        .info-item span {
-            color: var(--blue-active);
-            font-weight: bold;
-        }
-
+        .info-item { font-size: 12px; color: var(--text-color); }
+        .info-item span { color: var(--blue-active); font-weight: bold; }
         .btn-logout {
             background-color: transparent;
             color: var(--danger-color);
@@ -91,30 +81,9 @@
             font-size: 12px;
             transition: all 0.2s ease;
         }
-
-        .btn-logout:hover {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        /* =========================================
-           PANEL PRINCIPAL Y CONTROLES (Niveles 4, 5 y 6)
-        ========================================= */
-        .container { 
-            max-width: 1400px; 
-            margin: 20px auto; 
-            padding: 15px; 
-        }
-        
-        .header-panel { 
-            display: flex; 
-            flex-direction: column; /* Apilado vertical para móvil */
-            align-items: center; 
-            gap: 20px; 
-            margin-bottom: 25px; 
-        }
-
-        /* --- 4. BOTÓN NUEVO REGISTRO (VERDE Y ANCHO) --- */
+        .btn-logout:hover { background-color: var(--danger-color); color: white; }
+        .container { max-width: 1400px; margin: 14px auto; padding: 12px; }
+        .header-panel { display: flex; flex-direction: column; align-items: center; gap: 16px; margin-bottom: 20px; }
         .btn-nueva {
             background-color: var(--success-color);
             color: white;
@@ -129,29 +98,14 @@
             justify-content: center;
             align-items: center;
             gap: 8px;
-            width: 100%; /* Ocupa todo el ancho en celular */
-            max-width: 400px; /* Límite en pantallas grandes */
+            width: 100%;
+            max-width: 400px;
             box-shadow: 0 4px 6px rgba(39, 174, 96, 0.3);
         }
-
-        .btn-nueva:hover {
-            background-color: var(--success-hover);
-        }
-
-        /* --- 5. BOTONES DE FILTRO DE ESTADO --- */
-        .filtros-flex {
-            display: flex;
-            gap: 10px;
-            width: 100%;
-            justify-content: center;
-            overflow-x: auto; /* Permite scroll horizontal si no caben */
-            padding-bottom: 5px;
-        }
-        
-        /* Ocultar barra de scroll para estética limpia */
+        .btn-nueva:hover { background-color: var(--success-hover); }
+        .filtros-flex { display: flex; gap: 10px; width: 100%; justify-content: center; overflow-x: auto; padding-bottom: 5px; }
         .filtros-flex::-webkit-scrollbar { display: none; }
         .filtros-flex { -ms-overflow-style: none; scrollbar-width: none; }
-
         .btn-filtro {
             background-color: #1a2a3a;
             color: var(--muted-text);
@@ -167,28 +121,22 @@
             gap: 6px;
             white-space: nowrap;
         }
-
-        .btn-filtro:hover {
-            border-color: var(--blue-active);
-            color: white;
-        }
-
-        .btn-filtro.activo {
-            background-color: var(--blue-active);
-            color: white;
-            border-color: var(--blue-active);
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
-        }
-
-        /* --- 6. FILTRO DE CANTIDAD (MOSTRAR) --- */
+        .btn-filtro:hover { border-color: var(--blue-active); color: white; }
+        .btn-filtro.activo { color: white; box-shadow: 0 0 10px rgba(59, 130, 246, 0.5); }
+        .btn-filtro.activo.todos { background-color: var(--blue-active); border-color: var(--blue-active); }
+        .btn-filtro.activo.pendiente { background-color: var(--danger-color); border-color: var(--danger-color); box-shadow: 0 0 10px rgba(231, 76, 60, .45); }
+        .btn-filtro.activo.revisado { background-color: var(--success-color); border-color: var(--success-color); box-shadow: 0 0 10px rgba(39, 174, 96, .45); }
+        .btn-filtro.activo.auditado { background-color: var(--blue-active); border-color: var(--blue-active); }
         .filtros-contenedor {
             width: 100%;
             display: flex;
             justify-content: center;
+            align-items: center;
+            gap: 10px;
             color: var(--muted-text);
             font-size: 14px;
+            flex-wrap: wrap;
         }
-
         .input-filtro {
             background-color: #16222f;
             color: white;
@@ -199,24 +147,9 @@
             font-size: 14px;
             cursor: pointer;
         }
-
-        /* =========================================
-            DISEÑO DE TARJETAS PARA CELULAR
-        ========================================= */
-        .registros-grid {
-            display: grid;
-            grid-template-columns: 1fr; /* 1 columna en móvil */
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        @media (min-width: 768px) {
-            .registros-grid { grid-template-columns: repeat(2, 1fr); }
-        }
-        @media (min-width: 1024px) {
-            .registros-grid { grid-template-columns: repeat(3, 1fr); }
-        }
-
+        .registros-grid { display: grid; grid-template-columns: 1fr; gap: 15px; margin-top: 10px; }
+        @media (min-width: 768px) { .registros-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (min-width: 1024px) { .registros-grid { grid-template-columns: repeat(3, 1fr); } }
         .registro-card {
             background-color: #1a2a3a;
             border: 1px solid var(--border-color);
@@ -228,113 +161,95 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.2);
             transition: transform 0.2s ease, border-color 0.2s ease;
         }
-
-        .registro-card:hover {
-            border-color: var(--blue-active);
-            transform: translateY(-2px);
-        }
-
-        .registro-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 10px;
-        }
-
-        .registro-id {
-            font-weight: bold;
-            color: var(--text-color);
-            font-size: 16px;
-        }
-
-        .registro-body p {
-            margin: 6px 0;
-            font-size: 14px;
-            color: var(--muted-text);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .registro-body i {
-            color: var(--blue-active);
-            width: 16px;
-            text-align: center;
-        }
-
-        .registro-footer {
-            margin-top: 5px;
-            display: flex;
-            justify-content: flex-end;
-        }
-
-        .btn-editar {
-            background-color: transparent;
-            color: var(--blue-active);
-            border: 1px solid var(--blue-active);
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-editar:hover {
-            background-color: var(--blue-active);
+        .registro-card:hover { border-color: var(--blue-active); transform: translateY(-2px); }
+        .registro-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-color); padding-bottom: 10px; gap: 8px; }
+        .registro-id { font-weight: bold; color: var(--text-color); font-size: 16px; }
+        .estado-select {
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 5px 8px;
             color: white;
-            box-shadow: 0 0 8px rgba(59, 130, 246, 0.4);
-        }
-        .btn-pdf {
-            background-color: transparent;
-            color: #e74c3c; /* Color rojo para identificar PDF */
-            border: 1px solid #e74c3c;
-            padding: 6px 14px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-right: 8px; /* Espacio entre botones */
-        }
-
-        .btn-pdf:hover {
-            background-color: #e74c3c;
-            color: white;
-            box-shadow: 0 0 8px rgba(231, 76, 60, 0.4);
-        }
-
-        /* Badges de estado dinámicos */
-        .badge {
-            padding: 4px 10px;
-            border-radius: 12px;
             font-size: 12px;
             font-weight: bold;
-            text-transform: capitalize;
+            outline: none;
+            max-width: 125px;
         }
-        .badge-pendiente { background-color: rgba(231, 76, 60, 0.15); color: #e74c3c; border: 1px solid #e74c3c; }
-        .badge-revisado { background-color: rgba(39, 174, 96, 0.15); color: #27ae60; border: 1px solid #27ae60; }
+        .estado-select.pendiente { background-color: var(--danger-color); }
+        .estado-select.revisado { background-color: var(--success-color); }
+        .estado-select.auditado { background-color: var(--blue-active); }
+        .estado-select:disabled { opacity: .9; cursor: not-allowed; }
+        .registro-body p { margin: 6px 0; font-size: 14px; color: var(--muted-text); display: flex; align-items: center; gap: 10px; }
+        .registro-body i { color: var(--blue-active); width: 16px; text-align: center; }
+        .registro-footer { margin-top: 5px; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 8px; }
+        .btn-card {
+            background-color: transparent;
+            padding: 6px 12px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+        }
+        .btn-editar { color: var(--blue-active); border: 1px solid var(--blue-active); }
+        .btn-editar:hover:not(:disabled) { background-color: var(--blue-active); color: white; box-shadow: 0 0 8px rgba(59, 130, 246, 0.4); }
+        .btn-bloqueado { color: var(--muted-text); border: 1px solid var(--border-color); cursor: not-allowed; opacity: .75; }
+        .btn-pdf { color: #e74c3c; border: 1px solid #e74c3c; }
+        .btn-pdf:hover:not(:disabled) { background-color: #e74c3c; color: white; box-shadow: 0 0 8px rgba(231, 76, 60, 0.4); }
+        .btn-ver-pdf { color: #f1c40f; border: 1px solid #f1c40f; }
+        .btn-ver-pdf:hover:not(:disabled) { background-color: #f1c40f; color: #111; }
+        .btn-card:disabled { opacity: .45; cursor: not-allowed; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,.78);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        .modal-box {
+            width: 100%;
+            max-width: 420px;
+            background: var(--card-color);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,.55);
+        }
+        .modal-box h3 { margin: 0 0 12px 0; color: var(--blue-active); }
+        .modal-box textarea {
+            width: 100%;
+            min-height: 110px;
+            background: var(--bg-color);
+            color: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px;
+            box-sizing: border-box;
+            resize: vertical;
+        }
+        .modal-actions { display: flex; gap: 10px; margin-top: 14px; }
+        .modal-actions button { flex: 1; border: none; border-radius: 8px; padding: 11px; font-weight: bold; cursor: pointer; }
+        .btn-cancelar { background: #34495e; color: white; }
+        .btn-guardar-auditoria { background: var(--blue-active); color: white; }
     </style>
 </head>
 <body>
-
     <header>
-        <div class="header-title-container">
-            <div style="background: white; padding: 6px 12px; border-radius: 6px; display: inline-block;">
-                <img src="https://raw.githubusercontent.com/zelaya27/IMAGENES_AZ/main/UTCD%20Vertical.png" height="35" alt="Logo UTCD">
-            </div>
+        <div class="top-brand">
+            <div class="logo-box"><img src="https://raw.githubusercontent.com/zelaya27/IMAGENES_AZ/main/UTCD%20Vertical.png" alt="Logo UTCD"></div>
             <h2>CHECKLIST</h2>
         </div>
-        
         <div class="user-info">
             <span class="info-item"><i class="fas fa-user-circle"></i> <span id="nombre-usuario">Usuario</span></span>
             <span style="color: var(--border-color);">|</span>
             <span class="info-item"><i class="fas fa-map-marker-alt"></i> <span id="nombre-sector">Sector</span></span>
+            <span style="color: var(--border-color);">|</span>
+            <span class="info-item"><i class="fas fa-user-shield"></i> Tipo <span id="tipo-usuario">3</span></span>
             <span style="color: var(--border-color);">|</span>
             <button class="btn-logout" onclick="cerrarSesion()"><i class="fas fa-sign-out-alt"></i> Salir</button>
         </div>
@@ -342,25 +257,14 @@
 
     <div class="container">
         <div class="header-panel">
-            
-            <button class="btn-nueva" onclick="nuevoRegistro()">
-                <i class="fas fa-plus-circle"></i> NUEVO REGISTRO
-            </button>
-            
+            <button class="btn-nueva" onclick="nuevoRegistro()"><i class="fas fa-plus-circle"></i> NUEVO REGISTRO</button>
             <div class="filtros-flex">
-                <button class="btn-filtro activo" onclick="filtrar('Todos')">
-                    <i class="fas fa-list"></i> Todos
-                </button>
-                <button class="btn-filtro" onclick="filtrar('Pendiente')">
-                    <i class="fas fa-clock"></i> Pendientes
-                </button>
-                <button class="btn-filtro" onclick="filtrar('Revisado')">
-                    <i class="fas fa-check-double"></i> Revisados
-                </button>
+                <button class="btn-filtro activo todos" data-estado="Todos" onclick="filtrar('Todos')"><i class="fas fa-list"></i> Todos</button>
+                <button class="btn-filtro pendiente" data-estado="Pendiente" onclick="filtrar('Pendiente')"><i class="fas fa-clock"></i> Pendientes</button>
+                <button class="btn-filtro revisado" data-estado="Revisado" onclick="filtrar('Revisado')"><i class="fas fa-check-double"></i> Revisados</button>
             </div>
-
             <div class="filtros-contenedor">
-                <div class="filtros-grupo" style="display: flex; align-items: center; gap: 10px;">
+                <div style="display: flex; align-items: center; gap: 10px;">
                     <label style="font-weight: 600;">Mostrar:</label>
                     <select id="limitSelector" class="input-filtro">
                         <option value="10">10 registros</option>
@@ -368,233 +272,255 @@
                         <option value="ALL">Todos</option>
                     </select>
                 </div>
+                <button class="btn-filtro auditado" data-estado="Auditado" onclick="filtrar('Auditado')"><i class="fas fa-search"></i> Auditados</button>
             </div>
         </div>
-
-        <div id="contenedor-registros" class="registros-grid">
-            </div>
+        <div id="contenedor-registros" class="registros-grid"></div>
     </div>
-<script src="config.js"></script>
 
+    <div id="modalAuditoria" class="modal-overlay">
+        <div class="modal-box">
+            <h3><i class="fas fa-search"></i> Observaciones de la auditoría</h3>
+            <p style="color: var(--muted-text); font-size: 13px; margin-top: 0;">Escriba el comentario que quedará guardado en la columna 68.</p>
+            <textarea id="observacionAuditoria" placeholder="Ingrese observaciones de la auditoría..."></textarea>
+            <div class="modal-actions">
+                <button class="btn-cancelar" onclick="cancelarAuditoria()">Cancelar</button>
+                <button class="btn-guardar-auditoria" onclick="confirmarAuditoria()">Guardar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
     <script>
-        // VARIABLES GLOBALES (Necesarias para que los filtros funcionen al instante)
         let registrosGlobales = [];
         let filtroEstadoActual = 'Todos';
+        let auditoriaPendiente = null;
 
-        // 1. CARGA INICIAL Y CONTROL DE SESIÓN
         document.addEventListener('DOMContentLoaded', () => {
-            const user = sessionStorage.getItem("usuario");
-            const sector = sessionStorage.getItem("sector");
+            const user = sessionStorage.getItem('usuario');
+            const sector = sessionStorage.getItem('sector');
+            const tipo = sessionStorage.getItem('tipoUsuario') || '3';
 
             if (!user) {
-                window.location.href = "index.html";
-            } else {
-                document.getElementById("nombre-usuario").textContent = user;
-                document.getElementById("nombre-sector").textContent = sector;
-                // Llamamos a la función principal para pintar los registros
-                cargarRegistros();
+                window.location.href = 'index.html';
+                return;
             }
+            document.getElementById('nombre-usuario').textContent = user;
+            document.getElementById('nombre-sector').textContent = sector || '';
+            document.getElementById('tipo-usuario').textContent = tipo;
+            cargarRegistros();
 
-            // --- ESTÉTICA: ILUMINACIÓN DINÁMICA DE BOTONES DE FILTRO ---
-            const botonesFiltro = document.querySelectorAll('.btn-filtro');
-            botonesFiltro.forEach(boton => {
-                boton.addEventListener('click', function() {
-                    botonesFiltro.forEach(btn => btn.classList.remove('activo'));
-                    this.classList.add('activo');
-                });
-            });
-
-            // Listener para el selector de "Mostrar 10, 20 o Todos"
-            const limitSelector = document.getElementById("limitSelector");
-            if (limitSelector) {
-                limitSelector.addEventListener("change", renderizarTarjetas);
-            }
+            const limitSelector = document.getElementById('limitSelector');
+            if (limitSelector) limitSelector.addEventListener('change', renderizarTarjetas);
         });
 
-        // 2. FUNCIÓN CERRAR SESIÓN
-        function cerrarSesion() {
-            sessionStorage.clear();
-            window.location.href = "index.html";
-        }
-        
-        // 4. CARGAR REGISTROS (Y FILTRADO POR SECTOR COL_2)
+        function cerrarSesion() { sessionStorage.clear(); window.location.href = 'index.html'; }
+        window.nuevoRegistro = function() { window.location.href = 'checklist.html'; };
+
         async function cargarRegistros() {
-            const contenedor = document.getElementById("contenedor-registros");
-            if (!contenedor) return;
-            
-            // Animación/Aviso de carga estructurado para el Grid
+            const contenedor = document.getElementById('contenedor-registros');
             contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; padding: 30px;"><i class="fas fa-spinner fa-spin fa-2x" style="color:var(--blue-active)"></i><p style="margin-top:10px;">Cargando datos...</p></div>';
-
             try {
-                // GET limpio apuntando al Script definido en config.js
-                const urlFinal = `${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`;
-                
-                const res = await fetch(urlFinal);
+                const res = await fetch(`${CONFIG.URL_APPS_SCRIPT}?action=obtenerRegistros`);
                 const data = await res.json();
-                
                 if (data.error) throw new Error(data.error);
-
-                // --- SOLUCIÓN PUNTO 2: FILTRAR POR SECTOR (COL_2) ---
-                const sectorUsuario = sessionStorage.getItem("sector") || "";
+                const sectorUsuario = sessionStorage.getItem('sector') || '';
                 registrosGlobales = data.filter(row => {
                     if (!row.col_2) return false;
-                    // (Opcional) Si es perfil "General" permitimos ver todos
-                    if (sectorUsuario.toUpperCase() === "GENERAL") return true; 
-                    // Comparar el sector de la fila con el sector del usuario logueado
+                    if (sectorUsuario.toUpperCase() === 'GENERAL') return true;
                     return String(row.col_2).trim().toUpperCase() === String(sectorUsuario).trim().toUpperCase();
                 });
-
-                // Mandamos a dibujar las tarjetas
                 renderizarTarjetas();
-
             } catch (error) {
-                console.error("Error al cargar registros:", error);
+                console.error('Error al cargar registros:', error);
                 contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--danger-color); padding: 20px;"><i class="fas fa-exclamation-triangle"></i> Error de conexión al cargar el panel.</div>';
             }
         }
 
-        // --- SOLUCIÓN PUNTO 1: FUNCIONES DE FILTRO DINÁMICO ---
         window.filtrar = function(estado) {
             filtroEstadoActual = estado;
+            document.querySelectorAll('.btn-filtro').forEach(btn => btn.classList.remove('activo'));
+            const activo = document.querySelector(`.btn-filtro[data-estado="${estado}"]`);
+            if (activo) activo.classList.add('activo');
             renderizarTarjetas();
         };
 
-        // MOTOR DE DIBUJADO DE TARJETAS (Separado para que los filtros funcionen)
+        function normalizarEstado(estado) { return String(estado || 'Pendiente').trim(); }
+        function claseEstado(estado) { return normalizarEstado(estado).toLowerCase(); }
+        function fechaLegible(fechaOriginal) {
+            if (!fechaOriginal) return 'Sin fecha';
+            const d = new Date(fechaOriginal);
+            if (isNaN(d.getTime())) return fechaOriginal;
+            return `${String(d.getUTCDate()).padStart(2,'0')}/${String(d.getUTCMonth()+1).padStart(2,'0')}/${d.getUTCFullYear()}`;
+        }
+        function puedeCambiarEstado(estado) {
+            const tipo = String(sessionStorage.getItem('tipoUsuario') || '3');
+            if (tipo === '1') return true;
+            if (tipo === '2') return estado === 'Pendiente';
+            return false;
+        }
+        function opcionesEstadoActual(estado) {
+            const tipo = String(sessionStorage.getItem('tipoUsuario') || '3');
+            if (tipo === '1') return ['Pendiente', 'Revisado', 'Auditado'];
+            if (tipo === '2') return ['Pendiente', 'Revisado'];
+            return ['Pendiente'];
+        }
+
         function renderizarTarjetas() {
-            const contenedor = document.getElementById("contenedor-registros");
-            contenedor.innerHTML = "";
-            
+            const contenedor = document.getElementById('contenedor-registros');
+            contenedor.innerHTML = '';
             if (registrosGlobales.length === 0) {
                 contenedor.innerHTML = '<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text); padding: 20px;">No hay registros en tu sector aún.</div>';
                 return;
             }
-
-            // 1. Aplicamos Filtro de Estado (Todos, Pendientes, Revisados)
             let datosAMostrar = registrosGlobales;
             if (filtroEstadoActual !== 'Todos') {
-                datosAMostrar = registrosGlobales.filter(row => {
-                    const estado = String(row.col_4 || "Pendiente").trim().toLowerCase();
-                    return estado === filtroEstadoActual.toLowerCase();
-                });
+                datosAMostrar = registrosGlobales.filter(row => normalizarEstado(row.col_4).toLowerCase() === filtroEstadoActual.toLowerCase());
             }
-
-            // Invertimos para que los últimos aparezcan arriba
             datosAMostrar = [...datosAMostrar].reverse();
-
-            // 2. Aplicamos Filtro de Cantidad (10, 20 o Todos)
-            const limitSelector = document.getElementById("limitSelector");
-            if (limitSelector) {
-                const limiteText = limitSelector.value;
-                if (limiteText !== 'ALL') {
-                    const limiteNum = parseInt(limiteText, 10);
-                    datosAMostrar = datosAMostrar.slice(0, limiteNum);
-                }
-            }
-
+            const limiteText = document.getElementById('limitSelector')?.value || '10';
+            if (limiteText !== 'ALL') datosAMostrar = datosAMostrar.slice(0, parseInt(limiteText, 10));
             if (datosAMostrar.length === 0) {
                 contenedor.innerHTML = `<div style="text-align:center; grid-column: 1 / -1; color: var(--muted-text); padding: 20px;">No hay registros con estado "${filtroEstadoActual}".</div>`;
                 return;
             }
-
-            // 3. Dibujamos las tarjetas finales
             datosAMostrar.forEach(row => {
-                let fechaOriginal = row.col_3; 
-                let fechaFormateada = "";
-                
-                if (fechaOriginal) {
-                    let d = new Date(fechaOriginal);
-                    if (!isNaN(d.getTime())) {
-                        let dia = String(d.getUTCDate()).padStart(2, '0');
-                        let mes = String(d.getUTCMonth() + 1).padStart(2, '0');
-                        let anio = d.getUTCFullYear();
-                        
-                        fechaFormateada = `${dia}/${mes}/${anio}`; 
-                    } else {
-                        fechaFormateada = fechaOriginal;
-                    }
-                } else {
-                    fechaFormateada = "Sin fecha";
-                }
-
-                // Limpieza del estado usando col_4 (Antes ESTADO)
-                const estadoTexto = row.col_4 || "Pendiente"; 
-                const estadoClase = estadoTexto.toLowerCase().trim();
-
-                // --- INYECCIÓN DIRECTA DE LA COMPOSICIÓN DE TARJETA MÓVIL ---
-                const card = document.createElement("div");
-                card.className = "registro-card";
+                const estado = normalizarEstado(row.col_4);
+                const estadoClase = claseEstado(estado);
+                const bloqueoEdicion = estado === 'Revisado' || estado === 'Auditado';
+                const pdfUrl = row.col_69 || row.col69 || row.urlPDF || '';
+                const opciones = opcionesEstadoActual(estado).map(op => `<option value="${op}" ${op === estado ? 'selected' : ''}>${op}</option>`).join('');
+                const card = document.createElement('div');
+                card.className = 'registro-card';
                 card.innerHTML = `
                     <div class="registro-header">
-                        <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.col_0 || "N/A"}</span>
-                        <span class="badge badge-${estadoClase}">${estadoTexto}</span>
+                        <span class="registro-id"><i class="fas fa-hashtag"></i> ${row.col_0 || 'N/A'}</span>
+                        <select class="estado-select ${estadoClase}" ${puedeCambiarEstado(estado) ? '' : 'disabled'} onchange="cambiarEstadoRegistro('${row.col_0}', this.value, '${estado}')">${opciones}</select>
                     </div>
                     <div class="registro-body">
-                        <p><i class="far fa-calendar-alt"></i> <b>Fecha:</b> ${fechaFormateada}</p>
-                        <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.col_2 || "N/A"}</p>
-                        <p><i class="fas fa-user"></i> <b>Responsable:</b> ${row.col_59 || "N/A"}</p>
+                        <p><i class="far fa-calendar-alt"></i> <b>Fecha:</b> ${fechaLegible(row.col_3)}</p>
+                        <p><i class="fas fa-map-marker-alt"></i> <b>Sector:</b> ${row.col_2 || 'N/A'}</p>
+                        <p><i class="fas fa-user"></i> <b>Responsable:</b> ${row.col_59 || row.col59 || 'N/A'}</p>
                     </div>
                     <div class="registro-footer">
-                        <button class="btn-pdf" onclick="generarPDF('${row.col_0}')">
-                            <i class="fas fa-file-pdf"></i> PDF
+                        <button class="btn-card btn-pdf" onclick="generarPDF('${row.col_0}', this)"><i class="fas fa-plus"></i><i class="fas fa-file-pdf"></i> PDF</button>
+                        <button class="btn-card btn-ver-pdf" ${pdfUrl ? '' : 'disabled'} onclick="verPDF('${row.col_0}')"><i class="fas fa-eye"></i> Ver PDF</button>
+                        <button class="btn-card ${bloqueoEdicion ? 'btn-bloqueado' : 'btn-editar'}" ${bloqueoEdicion ? 'disabled' : ''} onclick="editar('${row.col_0}')">
+                            <i class="fas ${bloqueoEdicion ? 'fa-lock' : 'fa-pen'}"></i> ${bloqueoEdicion ? 'Bloqueado' : 'Editar'}
                         </button>
-                        <button class="btn-editar" onclick="editar('${row.col_0}')">
-                            <i class="fas fa-pen"></i> Editar
-                        </button>
-                    </div>
-                `;
+                    </div>`;
                 contenedor.appendChild(card);
             });
         }
-    
-        // 3. NUEVO REGISTRO (Forzado Global)
-        window.nuevoRegistro = function() {
-            window.location.href = "checklist.html";
-        };
-        
-        // 5. ACCIÓN DE REDIRECCIÓN EN MODO EDICIÓN (Forzado Global)
+
         window.editar = function(idRegistro) {
-            if (!idRegistro || idRegistro === "undefined" || idRegistro === "null") {
-                alert("Error: Este registro no tiene un ID válido.");
+            const registro = registrosGlobales.find(r => String(r.col_0) === String(idRegistro));
+            const estado = normalizarEstado(registro?.col_4);
+            if (estado === 'Revisado' || estado === 'Auditado') {
+                alert('Este checklist ya está revisado/auditado y no puede editarse.');
                 return;
             }
-            window.location.href = `checklist.html?id=${idRegistro}&modo=editar`;
+            window.location.href = `checklist.html?id=${encodeURIComponent(idRegistro)}&modo=editar`;
         };
-  // Sustituye tu función actual por esta versión más informativa
-window.generarPDF = async function(id) {
-    const registro = registrosGlobales.find(r => r.col_0 == id);
-    if (!registro) return alert("Error: No se encontraron los datos del registro.");
 
-    const btn = event.target.closest('button');
-    const originalContent = btn.innerHTML;
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-    btn.disabled = true;
+        window.cambiarEstadoRegistro = async function(id, nuevoEstado, estadoAnterior) {
+            const tipo = String(sessionStorage.getItem('tipoUsuario') || '3');
+            if (nuevoEstado === estadoAnterior) return;
+            if (nuevoEstado === 'Auditado') {
+                if (tipo !== '1') { alert('Solo usuarios tipo 1 pueden auditar.'); renderizarTarjetas(); return; }
+                auditoriaPendiente = { id, nuevoEstado, estadoAnterior };
+                document.getElementById('observacionAuditoria').value = '';
+                document.getElementById('modalAuditoria').style.display = 'flex';
+                return;
+            }
+            if (nuevoEstado === 'Revisado' && !(tipo === '1' || tipo === '2')) {
+                alert('No tienes permisos para revisar este checklist.');
+                renderizarTarjetas();
+                return;
+            }
+            await guardarEstado(id, nuevoEstado, '');
+        };
 
-    try {
-        registro.action = "generarPDF"; 
+        window.cancelarAuditoria = function() {
+            auditoriaPendiente = null;
+            document.getElementById('modalAuditoria').style.display = 'none';
+            renderizarTarjetas();
+        };
 
-        const response = await fetch(CONFIG.URL_APPS_SCRIPT, {
-            method: 'POST',
-            body: JSON.stringify(registro)
-        });
-        
-        const respuesta = await response.text();
-        
-        // Verificamos si la respuesta es un error
-        if (respuesta.startsWith("Error")) {
-            throw new Error(respuesta);
+        window.confirmarAuditoria = async function() {
+            if (!auditoriaPendiente) return;
+            const obs = document.getElementById('observacionAuditoria').value.trim();
+            if (!obs) { alert('Debe escribir las observaciones de la auditoría.'); return; }
+            const { id, nuevoEstado } = auditoriaPendiente;
+            document.getElementById('modalAuditoria').style.display = 'none';
+            auditoriaPendiente = null;
+            await guardarEstado(id, nuevoEstado, obs);
+        };
+
+        async function guardarEstado(id, estado, observacionAuditoria) {
+            try {
+                const payload = {
+                    action: 'actualizarEstadoChecklist',
+                    id: id,
+                    estado: estado,
+                    observacionAuditoria: observacionAuditoria || '',
+                    usuario: sessionStorage.getItem('usuario') || ''
+                };
+                const res = await fetch(CONFIG.URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(payload) });
+                const data = await res.json();
+                if (data.error || data.success === false) throw new Error(data.error || data.message || 'Error al actualizar estado');
+                const registro = registrosGlobales.find(r => String(r.col_0) === String(id));
+                if (registro) {
+                    registro.col_4 = estado;
+                    if (observacionAuditoria) registro.col_68 = observacionAuditoria;
+                }
+                renderizarTarjetas();
+            } catch (error) {
+                console.error('Error actualizando estado:', error);
+                alert('No se pudo actualizar el estado: ' + error.message);
+                cargarRegistros();
+            }
         }
-        
-        // Si no es error, es la URL
-        window.open(respuesta, '_blank');
-        
-    } catch (error) {
-        console.error("Error en PDF:", error);
-        alert(error.message); // Muestra el error exacto (ej: "Error al generar PDF: No se encuentra plantilla")
-    } finally {
-        btn.innerHTML = originalContent;
-        btn.disabled = false;
-    }
-};
+
+        window.generarPDF = async function(id, btn) {
+            const registro = registrosGlobales.find(r => String(r.col_0) === String(id));
+            if (!registro) return alert('Error: No se encontraron los datos del registro.');
+            const originalContent = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creando...';
+            btn.disabled = true;
+            try {
+                const payload = { ...registro, action: 'generarPDF', usuarioPDF: sessionStorage.getItem('usuario') || '' };
+                const response = await fetch(CONFIG.URL_APPS_SCRIPT, { method: 'POST', body: JSON.stringify(payload) });
+                const texto = await response.text();
+                let url = texto;
+                try {
+                    const json = JSON.parse(texto);
+                    if (json.error) throw new Error(json.error);
+                    url = json.urlPDF || json.url || json.pdfUrl || '';
+                    if (json.fechaPDF) registro.col_70 = json.fechaPDF;
+                    if (json.usuarioPDF) registro.col_71 = json.usuarioPDF;
+                } catch(e) {
+                    if (texto.startsWith('Error')) throw new Error(texto);
+                }
+                if (!url) throw new Error('No se recibió URL del PDF.');
+                registro.col_69 = url;
+                renderizarTarjetas();
+                window.open(url, '_blank');
+            } catch (error) {
+                console.error('Error en PDF:', error);
+                alert(error.message);
+            } finally {
+                btn.innerHTML = originalContent;
+                btn.disabled = false;
+            }
+        };
+
+        window.verPDF = function(id) {
+            const registro = registrosGlobales.find(r => String(r.col_0) === String(id));
+            const url = registro?.col_69 || registro?.col69 || registro?.urlPDF || '';
+            if (!url) return alert('Este registro todavía no tiene PDF creado.');
+            window.open(url, '_blank');
+        };
     </script>
 </body>
 </html>
